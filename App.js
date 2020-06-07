@@ -3,9 +3,13 @@ import { StyleSheet, Text, View } from 'react-native';
 import { enableScreens } from 'react-native-screens';
 
 import * as Font from 'expo-font';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
 import { AppLoading } from 'expo';
+import ReduxThunk from 'redux-thunk';
 
 import DashboardNavigator from './src/navigation/DashboardNavigator';
+import authReducer from './src/redux/reducers/auth';
 
 enableScreens();
 
@@ -16,14 +20,29 @@ const fecthFonts = () => {
   });
 };
 
+const rootReducer = combineReducers({
+  auth: authReducer,
+});
+
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
+
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
 
   if(!fontLoaded){
-    return <AppLoading startAsync={fecthFonts} onFinish={() => setFontLoaded(true)} />;
+    return (
+      <AppLoading
+        startAsync={fecthFonts}
+        onFinish={() => setFontLoaded(true)}
+      />
+    );
   }
 
-  return <DashboardNavigator styles={styles.container} />;
+  return (
+    <Provider store={store}>
+      <DashboardNavigator style={styles.container} />
+    </Provider>
+  );
 }
 
 const styles = StyleSheet.create({
