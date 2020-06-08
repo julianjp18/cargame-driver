@@ -61,22 +61,29 @@ const AuthScreen = props => {
 
     const authHandler = async () => {
         let action;
+        let nextPage = '';
+        const email = formState.inputValues.email;
+        const password = formState.inputValues.password;
         if (isSignUp) {
             action = authActions.signup(
-                formState.inputValues.email,
-                formState.inputValues.password
+                email,
+                password
             );
+
+            nextPage = 'Member';
         } else {
             action = authActions.signin(
-                formState.inputValues.email,
-                formState.inputValues.password
+                email,
+                password
             );
+
+            nextPage = 'Dashboard';
         }
         setError(null);
         setIsLoading(true);
         try {
             await dispatch(action);
-            props.navigation.navigate('Dashboard');
+            props.navigation.navigate(nextPage);
         } catch (err) {
             setError(err.message);
             setIsLoading(false);
@@ -149,21 +156,24 @@ const AuthScreen = props => {
                         <Text style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Text>
                     </View>
                     <View style={styles.btnActionContainer}>
-                        {isLoading
-                            ? <ActivityIndicator size='large' color='red' />
-                            : <Button
-                                title="Iniciar sesión"
-                                onPress={authHandler}
+                        {isLoading ? (
+                            <ActivityIndicator size='large' color='red' />
+                        ) : (
+                            <Button
+                            title={isSignUp ? 'Quiero ser socio' : 'Iniciar sesión'}
+                            onPress={authHandler}
                             />
-                        }
+                        )}
                     </View>
                     <View style={styles.btnSwitchContainer}>
                         <Button
-                            title="Quiero ser socio"
+                            title={`Cambiar a ${isSignUp ? 'iniciar sesión' : 'quiero ser socio'}`}
                             colorOne={'white'}
                             colorTwo={'white'}
                             fontColor={'#1D59A2'}
-                            onPress={() => {}}
+                            onPress={() => {
+                                setIsSignUp(prevState => !prevState);
+                                }}
                         />
                     </View>
                     <View>
@@ -173,10 +183,6 @@ const AuthScreen = props => {
             </LinearGradient>
         </KeyboardAvoidingView>
     );
-};
-
-AuthScreen.navigationOptions = {
-    headerTitle: 'Iniciar sesión',
 };
 
 const styles = StyleSheet.create({

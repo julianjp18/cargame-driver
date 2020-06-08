@@ -15,6 +15,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import DashboardScreen from '../screens/Driver/DashboardScreen';
 import TruckActivationFormScreen from '../screens/Driver/TruckScreens/TruckActivationFormScreen';
 import AuthScreen from '../screens/Auth/AuthScreen';
+import RegisterForm from '../screens/Auth/Register/RegisterForm';
 
 const tabNavigator = createBottomTabNavigator({
         Home: {
@@ -108,7 +109,13 @@ const AuthNavigator = createStackNavigator({
     Auth: {
         screen: AuthScreen,
         navigationOptions: {
-            headerTitle: 'Iniciar sesión'
+            headerTitle: 'Autenticación'
+        }
+    },
+    Member: {
+        screen: RegisterForm,
+        navigationOptions: {
+            headerTitle: 'Cuentanos de ti'
         }
     }
 }, {

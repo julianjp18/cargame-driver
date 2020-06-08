@@ -39,6 +39,8 @@ export const signup = (email, password) => {
 };
 
 export const signin = (email, password) => {
+
+    console.log(email, password);
     return async dispatch => {
         const response = await fetch(
             'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDIw1u3pmQkq_0dBcvDHUMIIvcJ7nPxqmo',
@@ -56,14 +58,16 @@ export const signin = (email, password) => {
         );
 
         if (!response.ok) {
+            
             const errorResData = await response.json();
             const errorId = errorResData.error.message;
-            let message = '¡UPS! Algo ocurrió.';
+            let message = '¡UPS! Algo ocurrió. Por favor intentalo nuevamente.';
             if (errorId === 'EMAIL_NOT_FOUND') {
                 message = 'No reconocemos este correo electrónico. Intentalo nuevamente.'
             } else if (errorId === 'INVALID_PASSWORD') {
                 message = 'Usuario y/o contraseña incorrecta. Intentelo nuevamente.'
             }
+            console.log(errorId);
             throw new Error(message);
         }
 
