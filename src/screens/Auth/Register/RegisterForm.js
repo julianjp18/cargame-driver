@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import Button from '../../../components/UI/Button';
 import Input from '../../../components/UI/Input';
 import Card from '../../../components/UI/Card';
-import * as authActions from '../../../redux/actions/auth';
+import * as userActions from '../../../redux/actions/users';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
@@ -38,17 +38,22 @@ const formReducer = (state, action) => {
 const RegisterForm = props => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
-    const [isSignUp, setIsSignUp] = useState(false);
     const dispatch = useDispatch();
 
     const [formState, dispatchFormState] = useReducer(formReducer, {
         inputValues: {
+            name: '',
             email: '',
-            password: ''
+            numberId: '',
+            phone: '',
+            referidNumber: ''
         },
         inputValidities: {
+            name: false,
             email: false,
-            password: false
+            numberId: false,
+            phone: false,
+            referidNumber: false
         },
         formIsValid: false
     });
@@ -59,19 +64,14 @@ const RegisterForm = props => {
         }
     }, [error]);
 
-    const authHandler = async () => {
-        let action;
-        if (isSignUp) {
-            action = authActions.signup(
-                formState.inputValues.email,
-                formState.inputValues.password
-            );
-        } else {
-            action = authActions.signin(
-                formState.inputValues.email,
-                formState.inputValues.password
-            );
-        }
+    const registerHandler = async () => {
+        const action = userActions.createUser({
+            name: formState.inputValues.name,
+            email: formState.inputValues.email,
+            numberId: formState.inputValues.numberId,
+            phone: formState.inputValues.phone,
+            referidNumber: formState.inputValues.referidNumber
+        });
         setError(null);
         setIsLoading(true);
         try {
@@ -130,7 +130,7 @@ const RegisterForm = props => {
                             underlineColorAndroid= 'transparent'
                         />
                         <Input
-                            id="idNumber"
+                            id="numberId"
                             label="Cédula de ciudadania"
                             keyboardType="numeric"
                             required
@@ -168,7 +168,7 @@ const RegisterForm = props => {
                             underlineColorAndroid= 'transparent'
                         />
                         <Input
-                            id="referid"
+                            id="referidNumber"
                             label="Número de referido"
                             keyboardType="numeric"
                             required
@@ -181,14 +181,14 @@ const RegisterForm = props => {
                         />
                     </ScrollView>
                     <View style={styles.btnActionContainer}>
-                            {isLoading
-                                ? <ActivityIndicator size='large' color='red' />
-                                : <Button
-                                    title="Siguiente"
-                                    onPress={authHandler}
-                                />
-                            }
-                        </View>
+                        {isLoading
+                            ? <ActivityIndicator size='large' color='red' />
+                            : <Button
+                                title="Siguiente"
+                                onPress={registerHandler}
+                            />
+                        }
+                    </View>
                 </Card>
             </LinearGradient>
         </KeyboardAvoidingView>
