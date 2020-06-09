@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer, useCallback } from 'react';
 import {
     Text, StyleSheet, View, KeyboardAvoidingView,
-    ActivityIndicator, Alert, Image,
+    ActivityIndicator, Alert, Image, Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch } from 'react-redux';
