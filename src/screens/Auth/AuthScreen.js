@@ -2,15 +2,20 @@ import React, { useState, useEffect, useReducer, useCallback } from 'react';
 import {
     Text, StyleSheet, View, KeyboardAvoidingView,
     ActivityIndicator, Alert, Image, Platform,
+    ImageBackground,
+    ScrollView,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch } from 'react-redux';
 import Button from '../../components/UI/Button';
 import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons'; 
 import * as authActions from '../../redux/actions/auth';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
+
+const backgroundImage = { uri: "../../../assets/fondo.png" };
 
 const formReducer = (state, action) => {
     if(action.type == FORM_INPUT_UPDATE) {
@@ -101,19 +106,13 @@ const AuthScreen = props => {
         },
         [dispatchFormState]
     );
-
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
             style={styles.screen}
             keyboardVerticalOffset={3}
         >
-            <LinearGradient
-                start={{ x: -1, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                colors={['#1D59A2', '#18A7C9']}
-                style={styles.gradient}
-            >
+            <ImageBackground source={require('../../../assets/fondo.png')} style={styles.mainContainer}>
                 <View>
                     <Image
                         style={styles.logo}
@@ -126,32 +125,59 @@ const AuthScreen = props => {
                            ¡Gana dinero y conviertete en socio!
                         </Text>
                     </View>
-                    <Input
-                        id="email"
-                        label="Correo electrónico"
-                        keyboardType="email-address"
-                        required
-                        email
-                        autoCapitalize="none"
-                        errorText="¡UPS! Por favor ingresa un correo válido."
-                        onInputChange={inputChangeHandler}
-                        initialValue=""
-                        inlineImageLeft='username'
-                        inlineImagePadding={2}
-                        underlineColorAndroid= 'transparent'
-                    />
-                    <Input
-                        id="password"
-                        label="Contraseña"
-                        keyboardType="default"
-                        secureTextEntry
-                        required
-                        minLength={6}
-                        autoCapitalize="none"
-                        errorText="¡UPS! Por favor ingresa una contraseña válida."
-                        onInputChange={inputChangeHandler}
-                        initialValue=""
-                    />
+                    <View style={styles.inputsContainer}>
+                        <ScrollView>
+                            <Input
+                                id="email"
+                                label="Correo electrónico"
+                                keyboardType="email-address"
+                                required
+                                email
+                                leftIcon={
+                                    <MaterialIcons name="email" size={24} color="black" />
+                                }
+                                autoCapitalize="none"
+                                errorText="¡UPS! Por favor ingresa un correo válido."
+                                onInputChange={inputChangeHandler}
+                                initialValue=""
+                                inlineImageLeft='username'
+                                inlineImagePadding={2}
+                                underlineColorAndroid= 'transparent'
+                            />
+                            <Input
+                                id="password"
+                                label="Contraseña"
+                                keyboardType="default"
+                                secureTextEntry
+                                required
+                                leftIcon={
+                                    <MaterialIcons name="email" size={24} color="black" />
+                                }
+                                minLength={6}
+                                autoCapitalize="none"
+                                errorText="¡UPS! Por favor ingresa una contraseña válida."
+                                onInputChange={inputChangeHandler}
+                                initialValue=""
+                            />
+                            {isSignUp ? (
+                                <Input
+                                    id="repeatPassword"
+                                    label="Repite tu contraseña"
+                                    keyboardType="default"
+                                    secureTextEntry
+                                    required
+                                    leftIcon={
+                                        <Entypo name="key" size={24} color="black" />
+                                    }
+                                    minLength={6}
+                                    autoCapitalize="none"
+                                    errorText="¡UPS! Por favor ingresa una contraseña válida."
+                                    onInputChange={inputChangeHandler}
+                                    initialValue=""
+                                />
+                            ) : (<View />)}
+                        </ScrollView>
+                    </View>
                     <View style={styles.forgotPasswordContainer}>
                         <Text style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Text>
                     </View>
@@ -164,6 +190,11 @@ const AuthScreen = props => {
                             onPress={authHandler}
                             />
                         )}
+                    </View>
+                    <View style={styles.changeTextContainer}>
+                        <Text style={styles.changeText}>
+                            {isSignUp ? '¿Ya tienes una cuenta?' : '¿Todavía no tienes una cuenta?'}
+                        </Text>
                     </View>
                     <View style={styles.btnSwitchContainer}>
                         <Button
@@ -180,23 +211,23 @@ const AuthScreen = props => {
 
                     </View>
                 </Card>
-            </LinearGradient>
+            </ImageBackground>  
         </KeyboardAvoidingView>
     );
 };
 
 const styles = StyleSheet.create({
     logo: {
-        width: 150,
-        height: 150,
+        width: 120,
+        height: 120,
         marginBottom: 10,
     },
     screen: {
         flex: 1
     },
-    gradient: {
+    mainContainer: {
         flex: 1,
-        padding: 50,
+        padding: 10,
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -215,13 +246,24 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: "#808081"
     },
+    inputsContainer: {
+        height: 240
+    },
     forgotPasswordContainer: {
        marginTop: 20
-    }, 
+    },
     forgotPassword: {textAlign: "right"},
     btnActionContainer: {
-        marginTop: 60
+        marginTop: 30
     },
+    changeTextContainer: {
+        marginTop: 10,
+        marginBottom: 10
+    },
+    changeText: {
+        textAlign: "center",
+        color: "#808081"
+    }, 
     btnSwitchContainer: {
         marginTop: 5,
         marginBottom: 40

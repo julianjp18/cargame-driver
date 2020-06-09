@@ -2,8 +2,8 @@ import React, { useState, useEffect, useReducer, useCallback } from 'react';
 import {
     StyleSheet, View, KeyboardAvoidingView,
     ActivityIndicator, Alert, Image, ScrollView,
+    ImageBackground, Text,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch } from 'react-redux';
 import Button from '../../../components/UI/Button';
 import Input from '../../../components/UI/Input';
@@ -101,12 +101,7 @@ const RegisterForm = props => {
             style={styles.screen}
             keyboardVerticalOffset={3}
         >
-            <LinearGradient
-                start={{ x: -1, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                colors={['#1D59A2', '#18A7C9']}
-                style={styles.gradient}
-            >
+            <ImageBackground source={require('../../../../assets/fondo.png')} style={styles.mainContainer}>
                 <View>
                     <Image
                         style={styles.logo}
@@ -114,72 +109,61 @@ const RegisterForm = props => {
                     />
                 </View>
                 <Card style={styles.authContainer}>
-                    <ScrollView>
-                        <Input
-                            id="name"
-                            label="Nombres y apellidos"
-                            keyboardType="default"
-                            minLength={5}
-                            required
-                            autoCapitalize="words"
-                            errorText="¡UPS! Por favor ingresa tu nombre y apellido correctamente."
-                            onInputChange={inputChangeHandler}
-                            initialValue=""
-                            inlineImageLeft='username'
-                            inlineImagePadding={2}
-                            underlineColorAndroid= 'transparent'
-                        />
-                        <Input
-                            id="numberId"
-                            label="Cédula de ciudadania"
-                            keyboardType="numeric"
-                            required
-                            minLength={4}
-                            maxLength={10}
-                            autoCapitalize="none"
-                            errorText="¡UPS! Por favor ingresa un número de identificación correcto."
-                            onInputChange={inputChangeHandler}
-                            initialValue=""
-                        />
-                        <Input
-                            id="phone"
-                            label="Celular"
-                            keyboardType="numeric"
-                            required
-                            minLength={10}
-                            maxLength={10}
-                            autoCapitalize="none"
-                            errorText="¡UPS! Por favor ingresa un número de celular correcto."
-                            onInputChange={inputChangeHandler}
-                            initialValue=""
-                        />
-                        <Input
-                            id="email"
-                            label="Correo electrónico"
-                            keyboardType="email-address"
-                            required
-                            email
-                            autoCapitalize="none"
-                            errorText="¡UPS! Por favor ingresa un correo válido."
-                            onInputChange={inputChangeHandler}
-                            initialValue=""
-                            inlineImageLeft='username'
-                            inlineImagePadding={2}
-                            underlineColorAndroid= 'transparent'
-                        />
-                        <Input
-                            id="referidNumber"
-                            label="Número de referido"
-                            keyboardType="numeric"
-                            required
-                            minLength={10}
-                            maxLength={10}
-                            autoCapitalize="none"
-                            errorText="¡UPS! Por favor ingresa un número de referido correcto."
-                            onInputChange={inputChangeHandler}
-                            initialValue=""
-                        />
-                    </ScrollView>
+                    <View style={styles.scrollViewContainer}>
+                        <ScrollView>
+                            <Input
+                                id="name"
+                                label="Nombres y apellidos"
+                                keyboardType="default"
+                                minLength={5}
+                                required
+                                autoCapitalize="words"
+                                errorText="¡UPS! Por favor ingresa tu nombre y apellido correctamente."
+                                onInputChange={inputChangeHandler}
+                                initialValue=""
+                                inlineImageLeft='username'
+                                inlineImagePadding={2}
+                                underlineColorAndroid= 'transparent'
+                            />
+                            <Input
+                                id="numberId"
+                                label="Cédula de ciudadania"
+                                keyboardType="numeric"
+                                required
+                                minLength={4}
+                                maxLength={10}
+                                autoCapitalize="none"
+                                errorText="¡UPS! Por favor ingresa un número de identificación correcto."
+                                onInputChange={inputChangeHandler}
+                                initialValue=""
+                            />
+                            <Input
+                                id="phone"
+                                label="Celular"
+                                keyboardType="numeric"
+                                required
+                                minLength={10}
+                                maxLength={10}
+                                autoCapitalize="none"
+                                errorText="¡UPS! Por favor ingresa un número de celular correcto."
+                                onInputChange={inputChangeHandler}
+                                initialValue=""
+                            />
+                            <Text style={styles.referidNumberInfo}>Te enviaremos un correo para verificar</Text>
+                            <Input
+                                id="referidNumber"
+                                label="Número de referido"
+                                keyboardType="numeric"
+                                required
+                                minLength={10}
+                                maxLength={10}
+                                autoCapitalize="none"
+                                errorText="¡UPS! Por favor ingresa un número de referido correcto."
+                                onInputChange={inputChangeHandler}
+                                initialValue=""
+                            />
+                        </ScrollView>
+                    </View>
                     <View style={styles.btnActionContainer}>
                         {isLoading
                             ? <ActivityIndicator size='large' color='red' />
@@ -190,7 +174,7 @@ const RegisterForm = props => {
                         }
                     </View>
                 </Card>
-            </LinearGradient>
+            </ImageBackground>
         </KeyboardAvoidingView>
     );
 };
@@ -204,7 +188,7 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1
     },
-    gradient: {
+    mainContainer: {
         flex: 1,
         padding: 10,
         justifyContent: 'center',
@@ -219,10 +203,13 @@ const styles = StyleSheet.create({
         paddingRight: 40,
         width: 350,
     },
-    authInfoText: {
+    scrollViewContainer : {
+        height: 450
+    },
+    referidNumberInfo: {
         paddingTop: 10,
         textAlign: "center",
-        fontSize: 20,
+        fontSize: 12,
         color: "#808081"
     },
     btnActionContainer: {

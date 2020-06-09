@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TextInput } from 'react-native';
 
 const INPUT_CHANGE = 'INPUT_CHANGE';
 const INPUT_BLUR = 'INPUT_BLUR';
@@ -89,11 +89,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Quicksand',
     marginVertical: 8
   },
+  //D23900
   input: {
-    paddingHorizontal: 2,
+    paddingHorizontal: 20,
     paddingVertical: 5,
-    borderBottomColor: '#ccc',
-    borderBottomWidth: 1
+    borderColor: '#1D59A2',
+    borderEndWidth: 1,
+    borderWidth: 1,
+    borderRadius: 15
   },
   errorContainer: {
     marginVertical: 5
