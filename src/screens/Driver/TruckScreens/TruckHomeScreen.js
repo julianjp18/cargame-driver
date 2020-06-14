@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet, Button, View } from 'react-native';
 
-const TruckActivationFormScreen = props => {
+const TruckScreen = props => {
     return (
         <View>
             <Text>Truck activation form screen</Text>
@@ -11,6 +11,4 @@ const TruckActivationFormScreen = props => {
 
 const styles = StyleSheet.create({});
 
-TruckActivationFormScreen.navigationOptions = () => {};
-
-export default TruckActivationFormScreen;
+export default TruckScreen;

@@ -1,5 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { Input } from 'react-native-elements';
+import { primaryColor } from '../../constants/Colors';
 
 const INPUT_CHANGE = 'INPUT_CHANGE';
 const INPUT_BLUR = 'INPUT_BLUR';
@@ -22,7 +24,7 @@ const inputReducer = (state, action) => {
   }
 };
 
-const Input = props => {
+const TextInput = props => {
   const [inputState, dispatch] = useReducer(inputReducer, {
     value: props.initialValue ? props.initialValue : '',
     isValid: props.initiallyValid,
@@ -65,44 +67,64 @@ const Input = props => {
   return (
     <View style={styles.formControl}>
       <Text style={styles.label}>{props.label}</Text>
-      <TextInput
+      <Input
         {...props}
-        style={styles.input}
+        labelStyle={styles.disabledLabel}
+        containerStyle={styles.mainContainer}
+        inputContainerStyle={styles.inputContainer}
+        inputStyle={styles.input}
         value={inputState.value}
         onChangeText={textChangeHandler}
         onBlur={lostFocusHandler}
+        errorMessage={!inputState.isValid && inputState.touched ? props.errorText : ''}
       />
-      {!inputState.isValid && inputState.touched && (
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>{props.errorText}</Text>
-        </View>
-      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    paddingBottom: 0,
+    marginBottom: 0
+  },
+  inputContainer: {
+    paddingHorizontal: 10,
+    marginBottom: 0,
+    fontFamily: 'Quicksand',
+    fontSize: 10,
+    borderColor: '#1D59A2',
+    borderEndWidth: 1,
+    borderWidth: 1,
+    borderRadius: 15,
+  },
+  input: {
+    marginBottom: 0,
+    paddingBottom: 0,
+    fontFamily: 'Quicksand',
+  },
+  disabledLabel: {
+    display: "none"
+  },
   formControl: {
     width: '100%'
   },
   label: {
     fontFamily: 'Quicksand',
-    marginVertical: 8
-  },
-  input: {
-    paddingHorizontal: 2,
-    paddingVertical: 5,
-    borderBottomColor: '#ccc',
-    borderBottomWidth: 1
+    fontWeight: 'bold',
+    marginVertical: 1,
+    color: primaryColor
   },
   errorContainer: {
-    marginVertical: 5
+    paddingTop: 0
   },
   errorText: {
+    paddingTop: 0,
+    marginTop: 0,
+    textAlign: "center",
     fontFamily: 'Quicksand',
     color: 'red',
-    fontSize: 13
+    fontSize: 11
   }
 });
 
-export default Input;
+export default TextInput;

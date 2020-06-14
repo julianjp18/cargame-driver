@@ -1,14 +1,21 @@
 import React, { useState, useEffect, useReducer, useCallback } from 'react';
 import {
-    Text, StyleSheet, View, KeyboardAvoidingView,
-    ActivityIndicator, Alert, Image, Platform,
+    Text, StyleSheet, View,
+    ActivityIndicator, Alert, Image,
+    ScrollView,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { KeyboardAwareView } from 'react-native-keyboard-aware-view';
 import { useDispatch } from 'react-redux';
 import Button from '../../components/UI/Button';
-import Input from '../../components/UI/Input';
-import Card from '../../components/UI/Card';
+import TextInput from '../../components/UI/Input';
+import { AntDesign } from '@expo/vector-icons';
 import * as authActions from '../../redux/actions/auth';
+import {
+    shortBrandOrangeGreyUrl,
+    shortMainCargaUrl,
+} from '../../constants/Utils';
+
+import { primaryColor } from '../../constants/Colors';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
@@ -40,7 +47,6 @@ const AuthScreen = props => {
     const [error, setError] = useState();
     const [isSignUp, setIsSignUp] = useState(false);
     const dispatch = useDispatch();
-
     const [formState, dispatchFormState] = useReducer(formReducer, {
         inputValues: {
             email: '',
@@ -101,130 +107,155 @@ const AuthScreen = props => {
         },
         [dispatchFormState]
     );
-
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS == "ios" ? "padding" : "height"}
-            style={styles.screen}
-            keyboardVerticalOffset={3}
-        >
-            <LinearGradient
-                start={{ x: -1, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                colors={['#1D59A2', '#18A7C9']}
-                style={styles.gradient}
-            >
-                <View>
-                    <Image
-                        style={styles.logo}
-                        source={require('../../../assets/logos/cargame-transportador-naranja-letra-gris.png')}
-                    />
-                </View>
-                <Card style={styles.authContainer}>
-                    <View>
-                        <Text style={styles.authInfoText}>
-                           ¡Gana dinero y conviertete en socio!
-                        </Text>
-                    </View>
-                    <Input
-                        id="email"
-                        label="Correo electrónico"
-                        keyboardType="email-address"
-                        required
-                        email
-                        autoCapitalize="none"
-                        errorText="¡UPS! Por favor ingresa un correo válido."
-                        onInputChange={inputChangeHandler}
-                        initialValue=""
-                        inlineImageLeft='username'
-                        inlineImagePadding={2}
-                        underlineColorAndroid= 'transparent'
-                    />
-                    <Input
-                        id="password"
-                        label="Contraseña"
-                        keyboardType="default"
-                        secureTextEntry
-                        required
-                        minLength={6}
-                        autoCapitalize="none"
-                        errorText="¡UPS! Por favor ingresa una contraseña válida."
-                        onInputChange={inputChangeHandler}
-                        initialValue=""
-                    />
-                    <View style={styles.forgotPasswordContainer}>
-                        <Text style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Text>
-                    </View>
-                    <View style={styles.btnActionContainer}>
-                        {isLoading ? (
-                            <ActivityIndicator size='large' color='red' />
-                        ) : (
+        <View style={styles.mainContainer}>
+            <View style={styles.logoContainer}>
+                <Image
+                    style={styles.logo}
+                    source={shortBrandOrangeGreyUrl}
+                />
+            </View>
+            <KeyboardAwareView animated={true}>
+                    <View style={styles.authContainer}>
+                        <View style={styles.scrollViewContainer}>
+                            <ScrollView>
+                                <TextInput
+                                    id="email"
+                                    label="Correo electrónico"
+                                    keyboardType="email-address"
+                                    required
+                                    email
+                                    leftIcon={
+                                        <AntDesign name="user" size={20} color={primaryColor} />
+                                    }
+                                    autoCapitalize="none"
+                                    errorText="¡UPS! Por favor ingresa un correo válido."
+                                    onInputChange={inputChangeHandler}
+                                    initialValue=""
+                                />
+                                <TextInput
+                                    id="password"
+                                    label="Contraseña"
+                                    keyboardType="default"
+                                    secureTextEntry
+                                    required
+                                    leftIcon={
+                                        <AntDesign name="eyeo" size={20} color={primaryColor} />
+                                    }
+                                    minLength={6}
+                                    autoCapitalize="none"
+                                    errorText={
+                                        `¡UPS! Por favor ingresa una contraseña válida. Debe contener mínimo 6 carácteres
+                                        `
+                                    }
+                                    onInputChange={inputChangeHandler}
+                                    initialValue=""
+                                />
+                                {isSignUp ? (
+                                    <TextInput
+                                        id="repeatPassword"
+                                        label="Repite tu contraseña"
+                                        keyboardType="default"
+                                        secureTextEntry
+                                        required
+                                        leftIcon={
+                                            <AntDesign name="eyeo" size={20} color={primaryColor} />
+                                        }
+                                        minLength={6}
+                                        autoCapitalize="none"
+                                        errorText={
+                                            `¡UPS! Por favor ingresa una contraseña válida. Debe contener mínimo 6 carácteres
+                                            `
+                                        }
+                                        onInputChange={inputChangeHandler}
+                                        initialValue=""
+                                    />
+                                ) : (<View />)}
+                            </ScrollView>
+                        </View>
+                        <View style={styles.forgotPasswordContainer}>
+                            <Text style={styles.forgotPassword}>¿Olvidaste tu usuario o contraseña?</Text>
+                        </View>
+                        <View style={styles.btnActionContainer}>
+                            {isLoading ? (
+                                <ActivityIndicator size='large' color={primaryColor} />
+                            ) : (
+                                <Button
+                                title={isSignUp ? 'Quiero ser socio' : 'Iniciar sesión'}
+                                onPress={authHandler}
+                                />
+                            )}
+                        </View>
+                        <View style={styles.changeTextContainer}>
+                            <Text style={styles.changeText}>
+                                {isSignUp ? '¿Ya tienes una cuenta?' : '¿Todavía no tienes una cuenta?'}
+                            </Text>
+                        </View>
+                        <View style={styles.btnSwitchContainer}>
                             <Button
-                            title={isSignUp ? 'Quiero ser socio' : 'Iniciar sesión'}
-                            onPress={authHandler}
+                                title={`Cambiar a ${isSignUp ? 'iniciar sesión' : 'quiero ser socio'}`}
+                                colorOne={'white'}
+                                colorTwo={'white'}
+                                fontColor={'#1D59A2'}
+                                onPress={() => {
+                                    setIsSignUp(prevState => !prevState);
+                                    }}
                             />
-                        )}
+                        </View>
                     </View>
-                    <View style={styles.btnSwitchContainer}>
-                        <Button
-                            title={`Cambiar a ${isSignUp ? 'iniciar sesión' : 'quiero ser socio'}`}
-                            colorOne={'white'}
-                            colorTwo={'white'}
-                            fontColor={'#1D59A2'}
-                            onPress={() => {
-                                setIsSignUp(prevState => !prevState);
-                                }}
+                    <Image
+                            style={styles.mainCarga}
+                            source={shortMainCargaUrl}
                         />
-                    </View>
-                    <View>
-
-                    </View>
-                </Card>
-            </LinearGradient>
-        </KeyboardAvoidingView>
+                </KeyboardAwareView>    
+            
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
+    mainContainer: {
+        height: '100%',
+    },
     logo: {
         width: 150,
         height: 150,
-        marginBottom: 10,
-    },
-    screen: {
-        flex: 1
-    },
-    gradient: {
-        flex: 1,
-        padding: 50,
-        justifyContent: 'center',
-        alignItems: 'center'
+        marginTop: 30,
+        marginLeft: 132
     },
     authContainer: {
-        flex: 1,
-        flexDirection: 'column',
-        paddingTop: 10,
-        paddingBottom: 5,
-        paddingLeft: 40,
-        paddingRight: 40,
-        width: 350,
-    },
-    authInfoText: {
-        paddingTop: 10,
-        textAlign: "center",
-        fontSize: 20,
-        color: "#808081"
+        paddingLeft: 20,
+        paddingRight: 20,
+        width: 400,
+        height: 500
     },
     forgotPasswordContainer: {
-       marginTop: 20
-    }, 
-    forgotPassword: {textAlign: "right"},
-    btnActionContainer: {
-        marginTop: 60
+       marginTop: 10
     },
+    forgotPassword: {
+        textAlign: "right",
+        fontFamily: 'Quicksand'
+    },
+    btnActionContainer: {
+        marginTop: 10
+    },
+    changeTextContainer: {
+        marginTop: 10,
+        marginBottom: 10,
+        fontFamily: 'Quicksand'
+    },
+    changeText: {
+        textAlign: "center",
+        color: "#808081"
+    }, 
     btnSwitchContainer: {
         marginTop: 5,
-        marginBottom: 40
+        marginBottom: 20
+    },
+    mainCarga: {
+        position: 'relative',
+        bottom: 30,
+        right: 70
     }
 });
 

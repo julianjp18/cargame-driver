@@ -12,23 +12,25 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
-import DashboardScreen from '../screens/Driver/DashboardScreen';
-import TruckActivationFormScreen from '../screens/Driver/TruckScreens/TruckActivationFormScreen';
+import DriverDashboardScreen from '../screens/Driver/DriverDashboardScreen';
 import AuthScreen from '../screens/Auth/AuthScreen';
 import RegisterForm from '../screens/Auth/Register/RegisterForm';
+import HomeScreen from '../screens/HomeScreen';
+import DriverHomeScreen from '../screens/Driver/DriverHomeScreen';
 
 const tabNavigator = createBottomTabNavigator({
         Home: {
-            screen: DashboardScreen,
+            screen: DriverDashboardScreen,
             navigationOptions: {
+                headerShown: false,
                 tabBarLabel: 'Inicio',
                 tabBarIcon: (tabInfo) => {
                     return <AntDesign name="home" size={25} color="black" />
-                }
+                },
             }
         },
         Offers: {
-            screen: DashboardScreen,
+            screen: DriverDashboardScreen,
             navigationOptions: {
                 tabBarLabel: 'Ofertas',
                 tabBarIcon: (tabInfo) => {
@@ -37,7 +39,7 @@ const tabNavigator = createBottomTabNavigator({
             }
         },
         Notifications: {
-            screen: DashboardScreen,
+            screen: DriverDashboardScreen,
             navigationOptions: {
                 tabBarLabel: 'Notificaciones',
                 tabBarIcon: (tabInfo) => {
@@ -46,7 +48,7 @@ const tabNavigator = createBottomTabNavigator({
             }
         },
         Services: {
-            screen: DashboardScreen,
+            screen: DriverDashboardScreen,
             navigationOptions: {
                 tabBarLabel: 'Servicios',
                 tabBarIcon: (tabInfo) => {
@@ -55,7 +57,7 @@ const tabNavigator = createBottomTabNavigator({
             }
         },
         Profile: {
-            screen: DashboardScreen,
+            screen: DriverDashboardScreen,
             navigationOptions: {
                 tabBarLabel: 'Perfil',
                 tabBarIcon: (tabInfo) => {
@@ -77,7 +79,7 @@ const tabNavigator = createBottomTabNavigator({
 
 const DashboardNavigator = createStackNavigator({
     Dashboard: tabNavigator,
-    TruckActivationService: TruckActivationFormScreen,
+    DriverHome: DriverHomeScreen,
     contentComponent: props => {
         const dispatch = useDispatch();
         return (
@@ -109,13 +111,15 @@ const AuthNavigator = createStackNavigator({
     Auth: {
         screen: AuthScreen,
         navigationOptions: {
-            headerTitle: 'Autenticación'
+            headerTitle: 'Autenticación',
+            headerShown: false
         }
     },
     Member: {
         screen: RegisterForm,
         navigationOptions: {
-            headerTitle: 'Cuentanos de ti'
+            headerTitle: 'Cuentanos de ti',
+            headerShown: false
         }
     }
 }, {
@@ -128,11 +132,19 @@ const AuthNavigator = createStackNavigator({
 });
 
 const MainNavigator = createSwitchNavigator({
+    Index: {
+        screen: HomeScreen,
+        navigationOptions: {
+            headerTitle: 'Index',
+            headerShown: false
+        }
+    },
     Auth: AuthNavigator,
     Dashboard: {
         screen: DashboardNavigator,
         navigationOptions: {
-            headerTitle: 'Dashboard'
+            headerTitle: 'Dashboard',
+            headerShown: false
         }
     }
 });
