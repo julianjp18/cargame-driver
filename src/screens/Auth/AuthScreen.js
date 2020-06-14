@@ -5,7 +5,7 @@ import {
     ScrollView,
 } from 'react-native';
 import { KeyboardAwareView } from 'react-native-keyboard-aware-view';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Button from '../../components/UI/Button';
 import TextInput from '../../components/UI/Input';
 import { AntDesign } from '@expo/vector-icons';
@@ -47,6 +47,10 @@ const AuthScreen = props => {
     const [error, setError] = useState();
     const [isSignUp, setIsSignUp] = useState(false);
     const dispatch = useDispatch();
+
+    const signUpChecked = useSelector(state => state.auth.isSignUp);
+    const userToken = useSelector(state => state.auth.token);
+
     const [formState, dispatchFormState] = useReducer(formReducer, {
         inputValues: {
             email: '',
@@ -58,6 +62,10 @@ const AuthScreen = props => {
         },
         formIsValid: false
     });
+
+    useEffect(() => {
+        signUpChecked ? setIsSignUp(signUpChecked): '';
+    }, []);
 
     useEffect(() => {
         if (error) {
@@ -107,7 +115,7 @@ const AuthScreen = props => {
         },
         [dispatchFormState]
     );
-    return (
+    return !userToken ? (
         <View style={styles.mainContainer}>
             <View style={styles.logoContainer}>
                 <Image
@@ -210,7 +218,7 @@ const AuthScreen = props => {
                 </KeyboardAwareView>    
             
         </View>
-    );
+    ) : props.navigation.navigate('Dashboard');
 };
 
 const styles = StyleSheet.create({

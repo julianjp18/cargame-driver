@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
     Text, StyleSheet, View, Image,
 } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+
 import Button from '../components/UI/Button';
 import {
     shortBrandOrangeGreyUrl, shortMainCargaUrl, primaryFont,
 } from '../constants/Utils';
 import { textPrimaryColor } from '../constants/Colors';
+import { setIsSignUp } from '../redux/actions/auth';
 
 const HomeScreen = props => {
-    return (
+    const userToken = useSelector(state => state.auth.token);
+
+    const dispatch = useDispatch();
+    return !userToken ? (
         <View style={styles.mainContainer}>
             <View>
                 <Image
@@ -29,12 +35,8 @@ const HomeScreen = props => {
                         <Button
                             title="Registrate aquí"
                             onPress={() => {
-                                props.navigation.navigate({
-                                    routeName: 'Auth',
-                                    params: {
-                                        action: 'signUp'
-                                    }
-                                });
+                                dispatch(setIsSignUp());
+                                props.navigation.navigate('Auth');
                             }}
                         />
                     </View>
@@ -53,12 +55,7 @@ const HomeScreen = props => {
                         <Text
                             style={styles.signIn}
                             onPress={() => {
-                                props.navigation.navigate({
-                                    routeName: 'Auth',
-                                    params: {
-                                        action: 'signIn'
-                                    }
-                                });
+                                props.navigation.navigate('Auth');
                             }}
                         >
                             Ingresar
@@ -71,7 +68,7 @@ const HomeScreen = props => {
                 source={shortMainCargaUrl}
             />
         </View>
-    );
+    ): props.navigation.navigate('Auth');
 };
 
 const styles = StyleSheet.create({

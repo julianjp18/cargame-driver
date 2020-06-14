@@ -1,6 +1,7 @@
 export const SIGNUP = 'SIGNUP';
 export const SIGNIN = 'SIGNIN';
 export const LOGOUT = 'LOGOUT';
+export const IS_SIGNUP = 'IS_SIGNUP';
 // AIzaSyCaZhTD1MZEREJaZrkL3nJQRO4jbpeNV2U
 export const signup = (email, password) => {
     return async dispatch => {
@@ -40,7 +41,6 @@ export const signup = (email, password) => {
 
 export const signin = (email, password) => {
 
-    console.log(email, password);
     return async dispatch => {
         const response = await fetch(
             'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDIw1u3pmQkq_0dBcvDHUMIIvcJ7nPxqmo',
@@ -74,6 +74,10 @@ export const signin = (email, password) => {
         const resData = await response.json();
         dispatch({ type: SIGNIN, token: resData.idToken, userId: resData.localId});
     };
+};
+
+export const setIsSignUp = () => {
+    return { type: IS_SIGNUP , isSignUp: true};
 };
 
 export const logout = () => {
