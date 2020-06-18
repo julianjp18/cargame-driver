@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useReducer, useCallback } from 'react';
 import {
-    StyleSheet, View,
+    StyleSheet, View, Text,
     ActivityIndicator, Alert, Image, ScrollView,
-    Text,
 } from 'react-native';
 import { KeyboardAwareView } from 'react-native-keyboard-aware-view';
 import { useDispatch } from 'react-redux';
-import Button from '../../../components/UI/Button';
-import TextInput from '../../../components/UI/Input';
-import * as userActions from '../../../redux/actions/users';
+import Button from '../../components/UI/Button';
+import TextInput from '../../components/UI/Input';
+import * as userActions from '../../redux/actions/users';
 
 import { FontAwesome } from '@expo/vector-icons';
+import { shortBrandOrangeGreyUrl } from '../../constants/Utils';
+import { primaryColor, textPrimaryColor } from '../../constants/Colors';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
@@ -37,7 +38,7 @@ const formReducer = (state, action) => {
     return state;
 };
 
-const RegisterForm = props => {
+const RegisterScreen = props => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
     const dispatch = useDispatch();
@@ -60,12 +61,6 @@ const RegisterForm = props => {
         formIsValid: false
     });
 
-    useEffect(() => {
-        if (error) {
-            Alert.alert('¡Oh no, un error ha ocurrido!', error, [{ text: 'Está bien'}]);
-        }
-    }, [error]);
-
     const registerHandler = async () => {
         const action = userActions.createUser({
             name: formState.inputValues.name,
@@ -78,7 +73,7 @@ const RegisterForm = props => {
         setIsLoading(true);
         try {
             await dispatch(action);
-            props.navigation.navigate('Dashboard');
+            props.navigation.navigate('ServicesList');
         } catch (err) {
             setError(err.message);
             setIsLoading(false);
@@ -97,22 +92,28 @@ const RegisterForm = props => {
         [dispatchFormState]
     );
 
+    useEffect(() => {
+        if (error) {
+            Alert.alert('¡Oh no, un error ha ocurrido!', error, [{ text: 'Está bien'}]);
+        }
+    }, [error]);
+
     return (
         <View style={styles.mainContainer}>
-            <View>
+            <View style={styles.logoContainer}>
                 <Image
                     style={styles.logo}
-                    source={require('../../../../assets/logos/cargame-transportador-naranja-letra-gris.png')}
+                    source={shortBrandOrangeGreyUrl}
                 />
             </View>
             <Text style={styles.registerInfoText}>¡Te ayudamos a conectar directamente con los clientes!</Text>
-            <KeyboardAwareView animated={true}>
-                <View style={styles.authContainer}>
+            <View style={styles.authContainer}>
+                <KeyboardAwareView animated={true}>
                     <View style={styles.scrollViewContainer}>
                         <ScrollView>
                             <TextInput
                                 id="name"
-                                label="Nombres y apellidos"
+                                label="Nombres y apellidos (*)"
                                 keyboardType="default"
                                 minLength={5}
                                 required
@@ -121,13 +122,13 @@ const RegisterForm = props => {
                                 onInputChange={inputChangeHandler}
                                 initialValue=""
                                 leftIcon={
-                                    <FontAwesome name="user" size={20} color="black" />
+                                    <FontAwesome name="user" size={20} color={primaryColor} />
                                 }
                             />
                             <Text style={styles.referidNumberInfo}>Más tarde deberás verificar tu cédula desde tu perfil</Text>
                             <TextInput
                                 id="numberId"
-                                label="Cédula de ciudadania"
+                                label="Cédula de ciudadania (*)"
                                 keyboardType="numeric"
                                 required
                                 minLength={4}
@@ -137,12 +138,12 @@ const RegisterForm = props => {
                                 onInputChange={inputChangeHandler}
                                 initialValue=""
                                 leftIcon={
-                                    <FontAwesome name="id-card-o" size={20} color="black" />
+                                    <FontAwesome name="id-card-o" size={20} color={primaryColor} />
                                 }
                             />
                             <TextInput
                                 id="phone"
-                                label="Celular"
+                                label="Celular (*)"
                                 keyboardType="numeric"
                                 required
                                 minLength={10}
@@ -152,21 +153,20 @@ const RegisterForm = props => {
                                 onInputChange={inputChangeHandler}
                                 initialValue=""
                                 leftIcon={
-                                    <FontAwesome name="phone" size={20} color="black" />
+                                    <FontAwesome name="phone" size={20} color={primaryColor} />
                                 }
                             />
                             <TextInput
                                 id="referidNumber"
                                 label="Número de referido"
                                 keyboardType="numeric"
-                                required
-                                minLength={10}
-                                maxLength={10}
+                                minLength={6}
+                                maxLength={6}
                                 autoCapitalize="none"
                                 errorText="¡UPS! Por favor ingresa un número de referido correcto."
                                 onInputChange={inputChangeHandler}
                                 leftIcon={
-                                    <FontAwesome name="pencil" size={20} color="#1D59A2" />
+                                    <FontAwesome name="pencil" size={20} color={primaryColor} />
                                 }
                                 initialValue=""
                             />
@@ -174,53 +174,55 @@ const RegisterForm = props => {
                     </View>
                     <View style={styles.btnActionContainer}>
                         {isLoading
-                            ? <ActivityIndicator size='large' color='#1D59A2' />
+                            ? <ActivityIndicator size='large' color={primaryColor} />
                             : <Button
                                 title="Finalizar registro"
                                 onPress={registerHandler}
                             />
                         }
                     </View>
-                </View>
-            </KeyboardAwareView>
+                </KeyboardAwareView>
+            </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
+    mainContainer: {
+        height: '100%',
+    },
+    logoContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '15%'
+    },
     logo: {
         width: 150,
         height: 150,
-        marginTop: 30,
-    },
-    mainContainer: {
-        height: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     authContainer: {
-        paddingLeft: 20,
-        paddingRight: 20,
-        width: 390
+        paddingLeft: '5%',
+        paddingRight: '5%',
+        width: '100%',
+        height: '90%'
     },
     registerInfoText: {
-        paddingBottom: 40,
-        paddingHorizontal: 30,
-        textAlign: "center",
+        paddingBottom: '8%',
+        paddingHorizontal: '10%',
+        textAlign: 'center',
         fontSize: 20,
-        color: "#808081"
+        color: textPrimaryColor
     },
     referidNumberInfo: {
-        paddingTop: 10,
+        paddingTop: '1%',
         textAlign: "center",
         fontSize: 12,
-        color: "#808081"
+        color: textPrimaryColor
     },
     btnActionContainer: {
-        marginTop: 10,
-        marginBottom: 20
+        marginTop: '2%'
     },
 
 });
 
-export default RegisterForm;
+export default RegisterScreen;

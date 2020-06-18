@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet, Button, View } from 'react-native';
 
-const TruckScreen = props => {
+const TruckHomeScreen = props => {
     return (
         <View>
             <Text>Truck activation form screen</Text>
@@ -11,4 +11,4 @@ const TruckScreen = props => {
 
 const styles = StyleSheet.create({});
 
-export default TruckScreen;
+export default TruckHomeScreen;

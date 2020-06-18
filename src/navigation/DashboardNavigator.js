@@ -14,13 +14,13 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import DriverDashboardScreen from '../screens/Driver/DriverDashboardScreen';
 import AuthScreen from '../screens/Auth/AuthScreen';
-import RegisterForm from '../screens/Auth/Register/RegisterForm';
 import HomeScreen from '../screens/HomeScreen';
 import DriverHomeScreen from '../screens/Driver/DriverHomeScreen';
+import RegisterScreen from '../screens/Auth/RegisterScreen';
 
-const tabNavigator = createBottomTabNavigator({
-        Home: {
-            screen: DriverDashboardScreen,
+const DriverTabNavigator = createBottomTabNavigator({
+        HomeDriver: {
+            screen: DriverHomeScreen,
             navigationOptions: {
                 headerShown: false,
                 tabBarLabel: 'Inicio',
@@ -30,7 +30,7 @@ const tabNavigator = createBottomTabNavigator({
             }
         },
         Offers: {
-            screen: DriverDashboardScreen,
+            screen: DriverHomeScreen,
             navigationOptions: {
                 tabBarLabel: 'Ofertas',
                 tabBarIcon: (tabInfo) => {
@@ -39,7 +39,7 @@ const tabNavigator = createBottomTabNavigator({
             }
         },
         Notifications: {
-            screen: DriverDashboardScreen,
+            screen: DriverHomeScreen,
             navigationOptions: {
                 tabBarLabel: 'Notificaciones',
                 tabBarIcon: (tabInfo) => {
@@ -48,7 +48,7 @@ const tabNavigator = createBottomTabNavigator({
             }
         },
         Services: {
-            screen: DriverDashboardScreen,
+            screen: DriverHomeScreen,
             navigationOptions: {
                 tabBarLabel: 'Servicios',
                 tabBarIcon: (tabInfo) => {
@@ -57,7 +57,7 @@ const tabNavigator = createBottomTabNavigator({
             }
         },
         Profile: {
-            screen: DriverDashboardScreen,
+            screen: DriverHomeScreen,
             navigationOptions: {
                 tabBarLabel: 'Perfil',
                 tabBarIcon: (tabInfo) => {
@@ -77,59 +77,6 @@ const tabNavigator = createBottomTabNavigator({
     }
 );
 
-const DashboardNavigator = createStackNavigator({
-    Dashboard: tabNavigator,
-    DriverHome: DriverHomeScreen,
-    contentComponent: props => {
-        const dispatch = useDispatch();
-        return (
-            <View style={{ flex: 1 }}>
-                <SafeAreaView
-                    forceInset={
-                        { 
-                            top: 'always',
-                            horizontal: 'never'
-                        }
-                    }
-                >
-                    <DrawerItems {...props} />
-                    <Button
-                        title="Salir"
-                        color='red'
-                        onPress={() => {
-                            dispatch(authActions.logout());
-                            props.navigation.navigate('Auth');
-                        }}
-                    />
-                </SafeAreaView>
-            </View>
-        );
-    }
-});
-
-const AuthNavigator = createStackNavigator({
-    Auth: {
-        screen: AuthScreen,
-        navigationOptions: {
-            headerTitle: 'Autenticación',
-            headerShown: false
-        }
-    },
-    Member: {
-        screen: RegisterForm,
-        navigationOptions: {
-            headerTitle: 'Cuentanos de ti',
-            headerShown: false
-        }
-    }
-}, {
-    defaultNavigationOptions: {
-        headerTintColor: "#FFFFFF",
-        headerStyle: {
-            backgroundColor: Platform.OS === 'android' ? '#1D59A2' : '#1D59A2'
-        }
-    },
-});
 
 const MainNavigator = createSwitchNavigator({
     Index: {
@@ -139,14 +86,28 @@ const MainNavigator = createSwitchNavigator({
             headerShown: false
         }
     },
-    Auth: AuthNavigator,
-    Dashboard: {
-        screen: DashboardNavigator,
+    Auth: {
+        screen: AuthScreen,
         navigationOptions: {
-            headerTitle: 'Dashboard',
+            headerTitle: 'Autenticación',
             headerShown: false
         }
-    }
+    },
+    Member: {
+        screen: RegisterScreen,
+        navigationOptions: {
+            headerTitle: 'Cuentanos de ti',
+            headerShown: false
+        }
+    },
+    ServicesList: {
+        screen: DriverDashboardScreen,
+        navigationOptions: {
+            headerTitle: 'Home - driver',
+            headerShown: false
+        }
+    },
+    Dashboard: DriverTabNavigator,
 });
 
 export default createAppContainer(MainNavigator);

@@ -8,7 +8,7 @@ import Button from '../components/UI/Button';
 import {
     shortBrandOrangeGreyUrl, shortMainCargaUrl, primaryFont,
 } from '../constants/Utils';
-import { textPrimaryColor } from '../constants/Colors';
+import { textPrimaryColor, primaryColor } from '../constants/Colors';
 import { setIsSignUp } from '../redux/actions/auth';
 
 const HomeScreen = props => {
@@ -17,7 +17,7 @@ const HomeScreen = props => {
     const dispatch = useDispatch();
     return !userToken ? (
         <View style={styles.mainContainer}>
-            <View>
+            <View style={styles.logoContainer}>
                 <Image
                     style={styles.logo}
                     source={shortBrandOrangeGreyUrl}
@@ -49,8 +49,8 @@ const HomeScreen = props => {
                         />
                     </View>
                 </View>
-                <View style={styles.signinFormContainer}>
-                    <Text style={styles.signinForm}>
+                <View style={styles.buttonsContainer}>
+                    <Text style={styles.buttons}>
                         {`¿Ya eres miembro? `}
                         <Text
                             style={styles.signIn}
@@ -72,67 +72,66 @@ const HomeScreen = props => {
 };
 
 const styles = StyleSheet.create({
+    mainContainer: {
+        height: '100%',
+    },
+    logoContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '15%'
+    },
     logo: {
         height: 215,
         width: 188
     },
-    screen: {
-        flex: 1,
-        textAlign: 'center'
-    },
-    mainContainer: {
-        paddingTop: 200,
-        paddingBottom: 200,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
     infoContainer: {
-        width: 400,
-        textAlign: 'center',
+        paddingLeft: '5%',
+        paddingRight: '5%',
+        width: '100%',
+        height: '45%'
     },
     title: {
-        height: 97.38,
+        marginHorizontal: '20%',
+        paddingTop: 0,
         color: textPrimaryColor,
         fontFamily: primaryFont,
         fontSize: 25,
         lineHeight: 30,
-        textAlign: "center",
-        marginTop: 20,
-        marginHorizontal: 70,
-        marginBottom: 20
+        textAlign: 'center',
     },
     subtitle: {
-        height: 70,
+        marginHorizontal: '10%',
+        marginTop: '5%',
+        marginBottom: '10%',
         color:  textPrimaryColor,
         fontFamily: primaryFont,
         fontSize: 18,
         lineHeight: 22,
-        textAlign: "center",
-        marginHorizontal: 30,
-        marginVertical: 30
+        textAlign: 'center',
     },
-    signinForm: {
-        marginTop: 10,
-        color: '#808081',
-        fontFamily: 'Quicksand',
+    buttonsContainer: {
+        marginTop: '2%'
+    },
+    buttons: {
+        color: textPrimaryColor,
         fontSize: 14,
         fontWeight: "700",
         lineHeight: 20,
-        textAlign: "center"
+        textAlign: 'center'
     },
     signIn: {
-        color: '#18A7C9'
+        color: primaryColor
     },
     btnMoreInfo: {
-        marginTop: 20,
+        marginTop: '5%',
     },
     btnsContainer: {
-        paddingHorizontal: 50,
+        paddingTop: '1%'
     },
     mainCarga: {
-        margin: "auto",
-        paddingHorizontal: 110,
-        marginLeft: 40
+        margin: 0,
+        paddingHorizontal: 0,
+        marginLeft: '-15%',
     }
 });
 

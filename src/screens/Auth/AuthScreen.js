@@ -15,7 +15,7 @@ import {
     shortMainCargaUrl,
 } from '../../constants/Utils';
 
-import { primaryColor } from '../../constants/Colors';
+import { primaryColor, textPrimaryColor } from '../../constants/Colors';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
@@ -76,32 +76,42 @@ const AuthScreen = props => {
     const authHandler = async () => {
         let action;
         let nextPage = '';
+        let passwordError = false;
         const email = formState.inputValues.email;
         const password = formState.inputValues.password;
         if (isSignUp) {
-            action = authActions.signup(
-                email,
-                password
-            );
+            if(password === formState.inputValues.repeatPassword){
+                action = authActions.signup(
+                    email,
+                    password
+                );
 
-            nextPage = 'Member';
+                nextPage = 'Member';
+            } else {
+                passwordError = true;
+            }
         } else {
             action = authActions.signin(
                 email,
                 password
             );
 
-            nextPage = 'Dashboard';
+            nextPage = 'ServicesList';
         }
-        setError(null);
-        setIsLoading(true);
-        try {
-            await dispatch(action);
-            props.navigation.navigate(nextPage);
-        } catch (err) {
-            setError(err.message);
+        if (!passwordError) {
+            setError(null);
+            setIsLoading(true);
+            try {
+                await dispatch(action);
+                props.navigation.navigate(nextPage);
+            } catch (err) {
+                setError(err.message);
+            }
             setIsLoading(false);
+        } else {
+            setError('¡UPS! Las contraseñas no coinciden. Intentalo nuevamente.');
         }
+        
     };
 
     const inputChangeHandler = useCallback(
@@ -123,10 +133,10 @@ const AuthScreen = props => {
                     source={shortBrandOrangeGreyUrl}
                 />
             </View>
-            <KeyboardAwareView animated={true}>
-                    <View style={styles.authContainer}>
+            <View style={styles.authContainer}>
+                <KeyboardAwareView animated={true}>
+                    <ScrollView>
                         <View style={styles.scrollViewContainer}>
-                            <ScrollView>
                                 <TextInput
                                     id="email"
                                     label="Correo electrónico"
@@ -179,7 +189,6 @@ const AuthScreen = props => {
                                         initialValue=""
                                     />
                                 ) : (<View />)}
-                            </ScrollView>
                         </View>
                         <View style={styles.forgotPasswordContainer}>
                             <Text style={styles.forgotPassword}>¿Olvidaste tu usuario o contraseña?</Text>
@@ -209,14 +218,14 @@ const AuthScreen = props => {
                                     setIsSignUp(prevState => !prevState);
                                     }}
                             />
-                        </View>
-                    </View>
-                    <Image
-                            style={styles.mainCarga}
-                            source={shortMainCargaUrl}
-                        />
-                </KeyboardAwareView>    
-            
+                        </View>  
+                    </ScrollView>
+                </KeyboardAwareView> 
+            </View>   
+            <Image
+                style={styles.mainCarga}
+                source={shortMainCargaUrl}
+            />
         </View>
     ) : props.navigation.navigate('Dashboard');
 };
@@ -225,45 +234,47 @@ const styles = StyleSheet.create({
     mainContainer: {
         height: '100%',
     },
+    logoContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '15%'
+    },
     logo: {
         width: 150,
         height: 150,
-        marginTop: 30,
-        marginLeft: 132
     },
     authContainer: {
-        paddingLeft: 20,
-        paddingRight: 20,
-        width: 400,
-        height: 500
+        paddingLeft: '5%',
+        paddingRight: '5%',
+        width: '100%',
+        height: '58%'
     },
     forgotPasswordContainer: {
-       marginTop: 10
+       marginTop: '1%'
     },
     forgotPassword: {
         textAlign: "right",
+        color: textPrimaryColor,
         fontFamily: 'Quicksand'
     },
     btnActionContainer: {
-        marginTop: 10
+        marginTop: '5%'
     },
     changeTextContainer: {
-        marginTop: 10,
-        marginBottom: 10,
-        fontFamily: 'Quicksand'
+        marginVertical: '3%',
     },
     changeText: {
-        textAlign: "center",
-        color: "#808081"
+        color: textPrimaryColor,
+        fontSize: 14,
+        fontWeight: "700",
+        lineHeight: 20,
+        textAlign: 'center'
     }, 
     btnSwitchContainer: {
-        marginTop: 5,
-        marginBottom: 20
+        marginTop: '2%'
     },
     mainCarga: {
-        position: 'relative',
-        bottom: 30,
-        right: 70
+        marginLeft: '-15%'
     }
 });
 
