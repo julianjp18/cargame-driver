@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import {
     Text, StyleSheet, View, Image,
 } from 'react-native';
@@ -11,10 +11,16 @@ import {
 import { textPrimaryColor, primaryColor } from '../constants/Colors';
 import { setIsSignUp } from '../redux/actions/auth';
 
-const HomeScreen = props => {
-    const userToken = useSelector(state => state.auth.token);
+const reDirectToAuth = (navigation) => navigation.navigate('Auth');
 
+const onClickRegister = (dispatch, props) => {
+    dispatch(setIsSignUp());
+    reDirectToAuth(props.navigation);
+};
+
+const HomeScreen = props => {
     const dispatch = useDispatch();
+    const userToken = useSelector(state => state.auth.token);
     return !userToken ? (
         <View style={styles.mainContainer}>
             <View style={styles.logoContainer}>
@@ -34,10 +40,7 @@ const HomeScreen = props => {
                     <View>
                         <Button
                             title="Registrate aquí"
-                            onPress={() => {
-                                dispatch(setIsSignUp());
-                                props.navigation.navigate('Auth');
-                            }}
+                            onPress={() => onClickRegister(dispatch, props)}
                         />
                     </View>
                     <View style={styles.btnMoreInfo}>
@@ -54,9 +57,7 @@ const HomeScreen = props => {
                         {`¿Ya eres miembro? `}
                         <Text
                             style={styles.signIn}
-                            onPress={() => {
-                                props.navigation.navigate('Auth');
-                            }}
+                            onPress={() => reDirectToAuth(props.navigation)}
                         >
                             Ingresar
                         </Text>
@@ -68,7 +69,7 @@ const HomeScreen = props => {
                 source={shortMainCargaUrl}
             />
         </View>
-    ): props.navigation.navigate('Auth');
+    ): reDirectToAuth(props.navigation);
 };
 
 const styles = StyleSheet.create({

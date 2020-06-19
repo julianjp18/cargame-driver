@@ -2,7 +2,8 @@ export const SIGNUP = 'SIGNUP';
 export const SIGNIN = 'SIGNIN';
 export const LOGOUT = 'LOGOUT';
 export const IS_SIGNUP = 'IS_SIGNUP';
-// AIzaSyCaZhTD1MZEREJaZrkL3nJQRO4jbpeNV2U
+export const CHANGE_TYPE_SERVICE_SELECTED = 'CHANGE_TYPE_SERVICE_SELECTED';
+
 export const signup = (email, password) => {
     return async dispatch => {
         const response = await fetch(
@@ -77,7 +78,11 @@ export const signin = (email, password) => {
 };
 
 export const setIsSignUp = () => {
-    return { type: IS_SIGNUP , isSignUp: true};
+    return { type: IS_SIGNUP, isSignUp: true};
+};
+
+export const setTypeService = (service) => {
+    return { type: CHANGE_TYPE_SERVICE_SELECTED, typeServiceSelected: service};
 };
 
 export const logout = () => {

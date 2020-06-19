@@ -1,13 +1,20 @@
 import React from 'react';
 import { Text, StyleSheet, View } from 'react-native';
-import { ListItem } from 'react-native-elements'
-import { textSecondaryColor } from '../../constants/Colors';
+import { useDispatch } from 'react-redux';
+import { ListItem } from 'react-native-elements';
+import { textSecondaryColor, darkGrey } from '../../constants/Colors';
 import { CATEGORIES_LIST } from '../../constants/Utils';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import WelcomeHeader from '../../components/WelcomeHeader';
+import { setTypeService } from '../../redux/actions/auth';
+
+const selectedCategoryItem = (navigation, dispatch, categoryId, routeName) => {
+    dispatch(setTypeService(categoryId));
+    navigation.navigate({routeName});
+};
 
 const DriverDashboardScreen = props => {
-
+    const dispatch = useDispatch();
     return (
         <View style={styles.servicesContainer}>
             <WelcomeHeader />
@@ -19,15 +26,21 @@ const DriverDashboardScreen = props => {
                     {
                         CATEGORIES_LIST.map((category, i) => (
                             <TouchableOpacity
+                                key={i}
                                 style={styles.selectedItem}      
-                                onPress={() => {
-                                    props.navigation.navigate({routeName: category.routeName});
-                                }}
+                                onPress={
+                                    () => selectedCategoryItem(
+                                        props.navigation,
+                                        dispatch,
+                                        category.id,
+                                        category.routeName
+                                    )}
                             >
                                 <ListItem
                                     key={i}
                                     containerStyle={styles.listContainer}
                                     title={category.name}
+                                    titleStyle={styles.titleListItem}
                                     leftAvatar={{
                                         source: category.avatar_url,
                                         containerStyle: styles.avatarContainer,
@@ -35,6 +48,7 @@ const DriverDashboardScreen = props => {
                                         rounded: false,
                                     }}
                                     subtitle={category.subtitle}
+                                    subtitleStyle={styles.subtitleListItem}
                                     bottomDivider
                                 />
                             </TouchableOpacity>
@@ -60,8 +74,18 @@ const styles = StyleSheet.create({
         lineHeight: 22,
         textAlign: 'center',
     },
-    selectedItem:{
-        
+    titleListItem: {
+        color: darkGrey,
+        fontFamily: 'Ruda',
+        fontSize: 20,
+        fontWeight: '500',
+    },
+    subtitleListItem: {
+        color: darkGrey,
+        fontFamily: 'Ruda',
+        fontSize: 12,
+        fontWeight: '400',
+        lineHeight: 20
     },
     listContainer: {
         backgroundColor: 'transparent',

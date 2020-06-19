@@ -1,13 +1,8 @@
 import React from 'react';
-import { Platform, SafeAreaView, Button, View } from 'react-native';
-import { useDispatch } from 'react-redux';
-import * as authActions from '../redux/actions/auth';
 import {
     createAppContainer,
-    createSwitchNavigator,
-    DrawerItems
+    createSwitchNavigator
 } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -76,7 +71,6 @@ const DriverTabNavigator = createBottomTabNavigator({
         }
     }
 );
-
 
 const MainNavigator = createSwitchNavigator({
     Index: {
