@@ -12,6 +12,9 @@ import AuthScreen from '../screens/Auth/AuthScreen';
 import HomeScreen from '../screens/HomeScreen';
 import DriverHomeScreen from '../screens/Driver/DriverHomeScreen';
 import RegisterScreen from '../screens/Auth/RegisterScreen';
+import { accentColor, primaryColor } from '../constants/Colors';
+import DriverProfileScreen from '../screens/Driver/DriverProfileScreen';
+import DriverSupportScreen from '../screens/Driver/DriverSupportScreen';
 
 const DriverTabNavigator = createBottomTabNavigator({
         HomeDriver: {
@@ -20,7 +23,7 @@ const DriverTabNavigator = createBottomTabNavigator({
                 headerShown: false,
                 tabBarLabel: 'Inicio',
                 tabBarIcon: (tabInfo) => {
-                    return <AntDesign name="home" size={25} color="black" />
+                    return <AntDesign name="home" size={25} color={accentColor} />
                 },
             }
         },
@@ -29,7 +32,7 @@ const DriverTabNavigator = createBottomTabNavigator({
             navigationOptions: {
                 tabBarLabel: 'Ofertas',
                 tabBarIcon: (tabInfo) => {
-                    return <MaterialIcons name="monetization-on" size={24} color="black" />
+                    return <MaterialIcons name="monetization-on" size={24} color={accentColor} />
                 }
             }
         },
@@ -38,36 +41,37 @@ const DriverTabNavigator = createBottomTabNavigator({
             navigationOptions: {
                 tabBarLabel: 'Notificaciones',
                 tabBarIcon: (tabInfo) => {
-                    return <AntDesign name="inbox" size={25} color="black" />
+                    return <AntDesign name="inbox" size={25} color={accentColor} />
                 }
             }
         },
         Services: {
-            screen: DriverHomeScreen,
+            screen: DriverSupportScreen,
             navigationOptions: {
+                headerShown: false,
                 tabBarLabel: 'Servicios',
                 tabBarIcon: (tabInfo) => {
-                    return <AntDesign name="customerservice" size={25} color="black" />
+                    return <AntDesign name="customerservice" size={25} color={accentColor} />
                 }
             }
         },
         Profile: {
-            screen: DriverHomeScreen,
+            screen: DriverProfileScreen,
             navigationOptions: {
+                headerShown: false,
                 tabBarLabel: 'Perfil',
                 tabBarIcon: (tabInfo) => {
-                    return <AntDesign name="user" size={25} color="black" />
+                    return <AntDesign name="user" size={25} color={accentColor} />
                 }
             }
         }
     },
     {
         tabBarOptions: {
-            activeTintColor: 'red',
-            backgroundColor: 'rgb(200,200,200)'
+            activeTintColor: primaryColor,
+            activeBackgroundColor: 'rgba(200,200,200,.5)'
         },
         barStyle: {
-            backgroundColor: 'rgb(200,200,200)'
         }
     }
 );
