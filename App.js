@@ -10,6 +10,7 @@ import ReduxThunk from 'redux-thunk';
 
 import DashboardNavigator from './src/navigation/DashboardNavigator';
 import authReducer from './src/redux/reducers/auth';
+import userReducer from './src/redux/reducers/user';
 import { shortBackgroundImageUrl } from './src/constants/Utils';
 
 enableScreens();
@@ -23,6 +24,7 @@ const fecthFonts = () => {
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  user: userReducer
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));

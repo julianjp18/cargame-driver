@@ -4,10 +4,12 @@ export const LOGOUT = 'LOGOUT';
 export const IS_SIGNUP = 'IS_SIGNUP';
 export const CHANGE_TYPE_SERVICE_SELECTED = 'CHANGE_TYPE_SERVICE_SELECTED';
 
+const API_KEY = 'AIzaSyCaZhTD1MZEREJaZrkL3nJQRO4jbpeNV2U';
+const API_URL = 'https://identitytoolkit.googleapis.com/v1/accounts:';
+
 export const signup = (email, password) => {
     return async dispatch => {
-        const response = await fetch(
-            'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDIw1u3pmQkq_0dBcvDHUMIIvcJ7nPxqmo',
+        const response = await fetch(API_URL + 'signUp?key=' + API_KEY,
             {
                 method: 'POST',
                 headers: {
@@ -44,7 +46,7 @@ export const signin = (email, password) => {
 
     return async dispatch => {
         const response = await fetch(
-            'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDIw1u3pmQkq_0dBcvDHUMIIvcJ7nPxqmo',
+            API_URL + 'signInWithPassword?key='+ API_KEY,
             {
                 method: 'POST',
                 headers: {

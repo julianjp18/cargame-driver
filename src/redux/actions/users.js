@@ -1,17 +1,20 @@
 export const CREATE_USER = 'CREATE_USER';
+export const SHOW_USER = 'SHOW_USER';
+const API_URL = 'https://cargame-transporte-001.firebaseio.com/';
 
-export const createUser = (name, numberId, address, phone) => {
+export const createUser = ({ userId, name, numberId, phone, referidNumber }) => {
     return async dispatch => {
-        const response = await fetch('https://test-liftit-a74d6.firebaseio.com/users.json', {
+        const response = await fetch( API_URL + 'drivers.json', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                userId,
                 name,
                 numberId,
-                address,
-                phone
+                phone,
+                referidNumber
             })
         });
 
@@ -21,13 +24,12 @@ export const createUser = (name, numberId, address, phone) => {
 
         dispatch({
             type: CREATE_USER,
-            userData: {
-                id: resData.name,
-                name,
-                numberId,
-                address,
-                phone
-            }
+            userId,
+            id: resData.name,
+            name,
+            numberId,
+            phone,
+            referidNumber
         });
     };
 };

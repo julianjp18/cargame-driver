@@ -6,7 +6,6 @@ import { textSecondaryColor, darkGrey, primaryColor } from '../../constants/Colo
 import { ScrollView } from 'react-native-gesture-handler';
 import { CATEGORIES_LIST } from '../../constants/Utils';
 import { ListItem } from 'react-native-elements';
-import { setTypeService } from '../../redux/actions/auth';
 import TextInput from '../../components/UI/Input';
 import Button from '../../components/UI/Button';
 

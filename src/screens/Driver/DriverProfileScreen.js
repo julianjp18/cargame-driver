@@ -1,18 +1,19 @@
 import React from 'react';
 import { Text, StyleSheet, View } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ListItem } from 'react-native-elements';
 import { textSecondaryColor, darkGrey } from '../../constants/Colors';
-import { CATEGORIES_LIST } from '../../constants/Utils';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import DriverHeader from '../../components/DriverHeader';
 
-const selectedCategoryItem = (navigation, dispatch, categoryId, routeName) => {
+const selectedCategoryItem = (navigation, routeName) => {
     navigation.navigate({routeName});
 };
 
 const DriverProfileScreen = props => {
     const dispatch = useDispatch();
+    const user = useSelector(state => state.user);
+    console.log('user data', user);
     return (
         <View style={styles.servicesContainer}>
             <DriverHeader
@@ -21,37 +22,45 @@ const DriverProfileScreen = props => {
             />
             <View>
                 <ScrollView>
-                    {
-                        CATEGORIES_LIST.map((category, i) => (
-                            <TouchableOpacity
-                                key={i}
-                                style={styles.selectedItem}      
-                                onPress={
-                                    () => selectedCategoryItem(
-                                        props.navigation,
-                                        dispatch,
-                                        category.id,
-                                        category.routeName
-                                    )}
-                            >
-                                <ListItem
-                                    key={i}
-                                    containerStyle={styles.listContainer}
-                                    title={category.name}
-                                    titleStyle={styles.titleListItem}
-                                    leftAvatar={{
-                                        source: category.avatar_url,
-                                        containerStyle: styles.avatarContainer,
-                                        avatarStyle: styles.avatar,
-                                        rounded: false,
-                                    }}
-                                    subtitle={category.subtitle}
-                                    subtitleStyle={styles.subtitleListItem}
-                                    bottomDivider
-                                />
-                            </TouchableOpacity>
-                        ))
-                    }
+                    <ListItem
+                        containerStyle={styles.listContainer}
+                        title='Cédula de ciudadanía'
+                        titleStyle={styles.titleListItem}
+                        subtitle={user.numberId}
+                        subtitleStyle={styles.subtitleListItem}
+                        bottomDivider
+                    />
+                    <ListItem
+                        containerStyle={styles.listContainer}
+                        title='Número de telefono'
+                        titleStyle={styles.titleListItem}
+                        subtitle={user.phone}
+                        subtitleStyle={styles.subtitleListItem}
+                        bottomDivider
+                    />
+                    <ListItem
+                        containerStyle={styles.listContainer}
+                        title='Referido por'
+                        titleStyle={styles.titleListItem}
+                        subtitle={user.referidNumber}
+                        subtitleStyle={styles.subtitleListItem}
+                        bottomDivider
+                    />
+                    <ListItem
+                        containerStyle={styles.listContainer}
+                        title='País'
+                        titleStyle={styles.titleListItem}
+                        subtitle='Colombia'
+                        subtitleStyle={styles.subtitleListItem}
+                        bottomDivider
+                    />
+                    <ListItem
+                        containerStyle={styles.listContainer}
+                        title='Mi billetera'
+                        titleStyle={styles.titleListItem}
+                        subtitleStyle={styles.subtitleListItem}
+                        bottomDivider
+                    />
                 </ScrollView>
             </View>
         </View>
