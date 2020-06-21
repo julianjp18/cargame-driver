@@ -1,10 +1,12 @@
 import React from 'react';
-import { Text, StyleSheet, View } from 'react-native';
+import { Text, StyleSheet, View, Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ListItem } from 'react-native-elements';
-import { textSecondaryColor, darkGrey } from '../../constants/Colors';
+import { textSecondaryColor, darkGrey, primaryColor } from '../../constants/Colors';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import DriverHeader from '../../components/DriverHeader';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
+import { shortBrandOrangeGreyUrl } from '../../constants/Utils';
 
 const selectedCategoryItem = (navigation, routeName) => {
     navigation.navigate({routeName});
@@ -13,7 +15,8 @@ const selectedCategoryItem = (navigation, routeName) => {
 const DriverProfileScreen = props => {
     const dispatch = useDispatch();
     const user = useSelector(state => state.user);
-    console.log('user data', user);
+    const userEmail = useSelector(state => state.auth.email);
+
     return (
         <View style={styles.servicesContainer}>
             <DriverHeader
@@ -22,26 +25,62 @@ const DriverProfileScreen = props => {
             />
             <View>
                 <ScrollView>
+                    <View style={styles.nameListContainer}>
+                        <Text style={styles.nameListText}>
+                            {user.name}
+                        </Text>
+                    </View>
                     <ListItem
                         containerStyle={styles.listContainer}
                         title='Cédula de ciudadanía'
                         titleStyle={styles.titleListItem}
                         subtitle={user.numberId}
+                        leftAvatar={
+                            <AntDesign name="idcard" size={24} color={primaryColor} />
+                        }
                         subtitleStyle={styles.subtitleListItem}
                         bottomDivider
+                        topDivider
                     />
-                    <ListItem
-                        containerStyle={styles.listContainer}
-                        title='Número de telefono'
-                        titleStyle={styles.titleListItem}
-                        subtitle={user.phone}
-                        subtitleStyle={styles.subtitleListItem}
-                        bottomDivider
-                    />
+                    <TouchableOpacity>
+                        <ListItem
+                            containerStyle={styles.listContainer}
+                            title='Número de telefono'
+                            titleStyle={styles.titleListItem}
+                            leftAvatar={
+                                <AntDesign name="phone" size={24} color={primaryColor} />
+                            }
+                            rightAvatar={
+                                <AntDesign name="right" size={24} color={darkGrey} />
+                            }
+                            subtitle={user.phone}
+                            subtitleStyle={styles.subtitleListItem}
+                            bottomDivider
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <ListItem
+                            containerStyle={styles.listContainer}
+                            title='Correo electrónico'
+                            titleStyle={styles.titleListItem}
+                            leftAvatar={
+                                <AntDesign name="mail" size={24} color={primaryColor} />
+                            }
+                            rightAvatar={
+                                <AntDesign name="right" size={24} color={darkGrey} />
+                            }
+                            subtitle={userEmail}
+                            subtitleStyle={styles.subtitleListItem}
+                            bottomDivider
+                        />
+                    </TouchableOpacity>
                     <ListItem
                         containerStyle={styles.listContainer}
                         title='Referido por'
                         titleStyle={styles.titleListItem}
+                        leftAvatar={
+                            <FontAwesome name="pencil" size={24} color={primaryColor} />
+                        }
                         subtitle={user.referidNumber}
                         subtitleStyle={styles.subtitleListItem}
                         bottomDivider
@@ -50,17 +89,33 @@ const DriverProfileScreen = props => {
                         containerStyle={styles.listContainer}
                         title='País'
                         titleStyle={styles.titleListItem}
+                        leftAvatar={
+                            <AntDesign name="earth" size={24} color={primaryColor} />
+                        }
                         subtitle='Colombia'
                         subtitleStyle={styles.subtitleListItem}
                         bottomDivider
                     />
-                    <ListItem
-                        containerStyle={styles.listContainer}
-                        title='Mi billetera'
-                        titleStyle={styles.titleListItem}
-                        subtitleStyle={styles.subtitleListItem}
-                        bottomDivider
-                    />
+                    <TouchableOpacity>
+                        <ListItem
+                            containerStyle={styles.listContainer}
+                            title='Mi billetera'
+                            titleStyle={styles.titleListItem}
+                            leftAvatar={
+                                <AntDesign name="wallet" size={24} color={primaryColor} />
+                            }
+                            rightAvatar={
+                                <AntDesign name="right" size={24} color={darkGrey} />
+                            }
+                            subtitleStyle={styles.subtitleListItem}
+                        />
+                    </TouchableOpacity>
+                    <View style={styles.mainCargaContainer}>
+                        <Image
+                            source={shortBrandOrangeGreyUrl}
+                            style={styles.mainCarga}
+                        />
+                    </View>
                 </ScrollView>
             </View>
         </View>
@@ -72,8 +127,20 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
         height: '100%'
     },
+    nameListContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: '5%'
+    },
+    nameListText: {
+        color: darkGrey,
+        fontFamily: 'Quicksand',
+        fontSize: 20,
+        fontWeight: '700',
+        lineHeight: 24
+    },
     title: {
-        paddingTop: '4%',
+        paddingTop: '2%',
         color: textSecondaryColor,
         fontFamily: 'Quicksand',
         fontSize: 18,
@@ -82,30 +149,29 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     titleListItem: {
-        color: darkGrey,
-        fontFamily: 'Ruda',
-        fontSize: 20,
-        fontWeight: '500',
+        color: primaryColor,
+        fontFamily: 'Quicksand',
+        fontSize: 14,
+        fontWeight: '700',
+        lineHeight: 24
     },
     subtitleListItem: {
         color: darkGrey,
-        fontFamily: 'Ruda',
-        fontSize: 12,
-        fontWeight: '400',
-        lineHeight: 20
+        fontFamily: 'Quicksand',
+        fontSize: 14,
+        lineHeight: 24
     },
     listContainer: {
         backgroundColor: 'transparent',
-        paddingBottom: '10%'
+        paddingBottom: '5%'
     },
-    avatarContainer: {
-        height: '100%',
-        width: '22%'
+    mainCargaContainer: {
+        justifyContent: 'center',
+        alignItems: 'center'
     },
-    avatar: {
+    mainCarga: {
         width: '100%',
-        height: '100%'
-    }
+    },
 });
 
 export default DriverProfileScreen;

@@ -10,6 +10,7 @@ const initialState = {
     token: null,
     userId: null,
     isSignUp: false,
+    email: null,
     typeServiceSelected: null,
 };
 
@@ -26,6 +27,7 @@ export default (state = initialState, action) => {
                 ...state,
                 token: action.token,
                 userId: action.userId,
+                email: action.email,
             }
         case CHANGE_TYPE_SERVICE_SELECTED:
             return {

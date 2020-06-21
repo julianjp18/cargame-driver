@@ -20,8 +20,6 @@ export const createUser = ({ userId, name, numberId, phone, referidNumber }) => 
 
         const resData = await response.json();
 
-        console.log(resData);
-
         dispatch({
             type: CREATE_USER,
             userId,

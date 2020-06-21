@@ -38,7 +38,12 @@ export const signup = (email, password) => {
         }
 
         const resData = await response.json();
-        dispatch({ type: SIGNUP, token: resData.idToken, userId: resData.localId });
+        dispatch({
+            type: SIGNUP,
+            token: resData.idToken,
+            userId: resData.localId,
+            email
+        });
     };
 };
 
@@ -70,12 +75,16 @@ export const signin = (email, password) => {
             } else if (errorId === 'INVALID_PASSWORD') {
                 message = 'Usuario y/o contraseña incorrecta. Intentelo nuevamente.'
             }
-            console.log(errorId);
             throw new Error(message);
         }
 
         const resData = await response.json();
-        dispatch({ type: SIGNIN, token: resData.idToken, userId: resData.localId});
+        dispatch({
+            type: SIGNIN,
+            token: resData.idToken,
+            userId: resData.localId,
+            email
+        });
     };
 };
 
