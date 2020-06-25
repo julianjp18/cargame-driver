@@ -95,7 +95,6 @@ const AuthScreen = props => {
                 email,
                 password
             );
-
             nextPage = 'ServicesList';
         }
         if (!passwordError) {

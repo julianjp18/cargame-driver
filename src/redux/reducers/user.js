@@ -1,11 +1,12 @@
 import {
-  CREATE_USER
+  CREATE_USER, SHOW_USER
 } from '../actions/users';
 
 const initialState = null
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case SHOW_USER:
     case CREATE_USER:
       return {
         id: action.id,

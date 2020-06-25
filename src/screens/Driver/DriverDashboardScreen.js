@@ -1,12 +1,14 @@
 import React from 'react';
 import { Text, StyleSheet, View } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ListItem } from 'react-native-elements';
 import { textSecondaryColor, darkGrey } from '../../constants/Colors';
 import { CATEGORIES_LIST } from '../../constants/Utils';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import WelcomeHeader from '../../components/WelcomeHeader';
 import { setTypeService } from '../../redux/actions/auth';
+
+import * as userActions from '../../redux/actions/users';
 
 const selectedCategoryItem = (navigation, dispatch, categoryId, routeName) => {
     dispatch(setTypeService(categoryId));
@@ -15,6 +17,11 @@ const selectedCategoryItem = (navigation, dispatch, categoryId, routeName) => {
 
 const DriverDashboardScreen = props => {
     const dispatch = useDispatch();
+    const user = useSelector(state => state.user);
+    if(!user) {
+        const userId = useSelector(state => state.auth.userId);
+        dispatch(userActions.showUser(userId));
+    }
     return (
         <View style={styles.servicesContainer}>
             <WelcomeHeader />

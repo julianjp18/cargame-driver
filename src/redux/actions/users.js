@@ -1,30 +1,44 @@
+import { firestoreDB } from '../../constants/Firebase';
 export const CREATE_USER = 'CREATE_USER';
 export const SHOW_USER = 'SHOW_USER';
-const API_URL = 'https://cargame-transporte-001.firebaseio.com/';
 
 export const createUser = ({ userId, name, numberId, phone, referidNumber }) => {
     return async dispatch => {
-        const response = await fetch( API_URL + 'drivers.json', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                userId,
+        firestoreDB
+            .collection('Drivers')
+            .doc(userId)
+            .set({
                 name,
                 numberId,
                 phone,
                 referidNumber
-            })
-        });
-
-        const resData = await response.json();
+            });
 
         dispatch({
             type: CREATE_USER,
             userId,
-            id: resData.name,
+            id: name,
             name,
+            numberId,
+            phone,
+            referidNumber
+        });
+    };
+};
+
+export const showUser = (userId) => {
+    return async dispatch => {
+        const response = await firestoreDB
+        .collection('Drivers')
+        .doc(userId)
+        .get();
+
+        const resData = await response.json();
+        dispatch({
+            type: SHOW_USER,
+            userId,
+            id: resData.name,
+            name: resData.name,
             numberId,
             phone,
             referidNumber

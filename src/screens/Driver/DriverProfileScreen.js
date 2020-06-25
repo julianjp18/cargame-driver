@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet, View, Image } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { ListItem } from 'react-native-elements';
 import { textSecondaryColor, darkGrey, primaryColor } from '../../constants/Colors';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -8,12 +8,7 @@ import DriverHeader from '../../components/DriverHeader';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import { shortBrandOrangeGreyUrl } from '../../constants/Utils';
 
-const selectedCategoryItem = (navigation, routeName) => {
-    navigation.navigate({routeName});
-};
-
 const DriverProfileScreen = props => {
-    const dispatch = useDispatch();
     const user = useSelector(state => state.user);
     const userEmail = useSelector(state => state.auth.email);
 
@@ -23,93 +18,95 @@ const DriverProfileScreen = props => {
                 title="Mi perfil"
                 subtitle="Explora tu perfil aquí"
             />
-            <View>
+            {user && (
                 <ScrollView>
-                    <View style={styles.nameListContainer}>
-                        <Text style={styles.nameListText}>
-                            {user.name}
-                        </Text>
+                    <View style={styles.infoContainer}>
+                        <View style={styles.nameListContainer}>
+                            <Text style={styles.nameListText}>
+                                {user.name}
+                            </Text>
+                        </View>
+                        <ListItem
+                            containerStyle={styles.listContainer}
+                            title='Cédula de ciudadanía'
+                            titleStyle={styles.titleListItem}
+                            subtitle={user.numberId}
+                            leftAvatar={
+                                <AntDesign name="idcard" size={24} color={primaryColor} />
+                            }
+                            subtitleStyle={styles.subtitleListItem}
+                            bottomDivider
+                            topDivider
+                        />
+                        <TouchableOpacity>
+                            <ListItem
+                                containerStyle={styles.listContainer}
+                                title='Número de telefono'
+                                titleStyle={styles.titleListItem}
+                                leftAvatar={
+                                    <AntDesign name="phone" size={24} color={primaryColor} />
+                                }
+                                rightAvatar={
+                                    <AntDesign name="right" size={24} color={darkGrey} />
+                                }
+                                subtitle={user.phone}
+                                subtitleStyle={styles.subtitleListItem}
+                                bottomDivider
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <ListItem
+                                containerStyle={styles.listContainer}
+                                title='Correo electrónico'
+                                titleStyle={styles.titleListItem}
+                                leftAvatar={
+                                    <AntDesign name="mail" size={24} color={primaryColor} />
+                                }
+                                rightAvatar={
+                                    <AntDesign name="right" size={24} color={darkGrey} />
+                                }
+                                subtitle={userEmail}
+                                subtitleStyle={styles.subtitleListItem}
+                                bottomDivider
+                            />
+                        </TouchableOpacity>
+                        <ListItem
+                            containerStyle={styles.listContainer}
+                            title='Referido por'
+                            titleStyle={styles.titleListItem}
+                            leftAvatar={
+                                <FontAwesome name="pencil" size={24} color={primaryColor} />
+                            }
+                            subtitle={user.referidNumber}
+                            subtitleStyle={styles.subtitleListItem}
+                            bottomDivider
+                        />
+                        <ListItem
+                            containerStyle={styles.listContainer}
+                            title='País'
+                            titleStyle={styles.titleListItem}
+                            leftAvatar={
+                                <AntDesign name="earth" size={24} color={primaryColor} />
+                            }
+                            subtitle='Colombia'
+                            subtitleStyle={styles.subtitleListItem}
+                            bottomDivider
+                        />
+                        <TouchableOpacity>
+                            <ListItem
+                                containerStyle={styles.listContainer}
+                                title='Mi billetera'
+                                titleStyle={styles.titleListItem}
+                                leftAvatar={
+                                    <AntDesign name="wallet" size={24} color={primaryColor} />
+                                }
+                                rightAvatar={
+                                    <AntDesign name="right" size={24} color={darkGrey} />
+                                }
+                                subtitleStyle={styles.subtitleListItem}
+                            />
+                        </TouchableOpacity>
                     </View>
-                    <ListItem
-                        containerStyle={styles.listContainer}
-                        title='Cédula de ciudadanía'
-                        titleStyle={styles.titleListItem}
-                        subtitle={user.numberId}
-                        leftAvatar={
-                            <AntDesign name="idcard" size={24} color={primaryColor} />
-                        }
-                        subtitleStyle={styles.subtitleListItem}
-                        bottomDivider
-                        topDivider
-                    />
-                    <TouchableOpacity>
-                        <ListItem
-                            containerStyle={styles.listContainer}
-                            title='Número de telefono'
-                            titleStyle={styles.titleListItem}
-                            leftAvatar={
-                                <AntDesign name="phone" size={24} color={primaryColor} />
-                            }
-                            rightAvatar={
-                                <AntDesign name="right" size={24} color={darkGrey} />
-                            }
-                            subtitle={user.phone}
-                            subtitleStyle={styles.subtitleListItem}
-                            bottomDivider
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <ListItem
-                            containerStyle={styles.listContainer}
-                            title='Correo electrónico'
-                            titleStyle={styles.titleListItem}
-                            leftAvatar={
-                                <AntDesign name="mail" size={24} color={primaryColor} />
-                            }
-                            rightAvatar={
-                                <AntDesign name="right" size={24} color={darkGrey} />
-                            }
-                            subtitle={userEmail}
-                            subtitleStyle={styles.subtitleListItem}
-                            bottomDivider
-                        />
-                    </TouchableOpacity>
-                    <ListItem
-                        containerStyle={styles.listContainer}
-                        title='Referido por'
-                        titleStyle={styles.titleListItem}
-                        leftAvatar={
-                            <FontAwesome name="pencil" size={24} color={primaryColor} />
-                        }
-                        subtitle={user.referidNumber}
-                        subtitleStyle={styles.subtitleListItem}
-                        bottomDivider
-                    />
-                    <ListItem
-                        containerStyle={styles.listContainer}
-                        title='País'
-                        titleStyle={styles.titleListItem}
-                        leftAvatar={
-                            <AntDesign name="earth" size={24} color={primaryColor} />
-                        }
-                        subtitle='Colombia'
-                        subtitleStyle={styles.subtitleListItem}
-                        bottomDivider
-                    />
-                    <TouchableOpacity>
-                        <ListItem
-                            containerStyle={styles.listContainer}
-                            title='Mi billetera'
-                            titleStyle={styles.titleListItem}
-                            leftAvatar={
-                                <AntDesign name="wallet" size={24} color={primaryColor} />
-                            }
-                            rightAvatar={
-                                <AntDesign name="right" size={24} color={darkGrey} />
-                            }
-                            subtitleStyle={styles.subtitleListItem}
-                        />
-                    </TouchableOpacity>
                     <View style={styles.mainCargaContainer}>
                         <Image
                             source={shortBrandOrangeGreyUrl}
@@ -117,7 +114,7 @@ const DriverProfileScreen = props => {
                         />
                     </View>
                 </ScrollView>
-            </View>
+            )}
         </View>
     );
 };
@@ -163,14 +160,15 @@ const styles = StyleSheet.create({
     },
     listContainer: {
         backgroundColor: 'transparent',
-        paddingBottom: '5%'
+        paddingBottom: '4%'
     },
     mainCargaContainer: {
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     mainCarga: {
-        width: '100%',
+        width: '30%',
+        height: 100,
     },
 });
 
