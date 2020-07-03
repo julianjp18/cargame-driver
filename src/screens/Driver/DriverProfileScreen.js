@@ -17,6 +17,7 @@ const DriverProfileScreen = props => {
             <DriverHeader
                 title="Mi perfil"
                 subtitle="Explora tu perfil aquí"
+                leftIcon="user-o"
             />
             {user && (
                 <ScrollView>

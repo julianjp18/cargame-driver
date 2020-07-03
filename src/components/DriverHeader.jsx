@@ -15,7 +15,7 @@ const DriverHeader = props => (
     >
         <View style={styles.row}>
             <View style={styles.col1}>
-                <FontAwesome style={styles.col1Icon} name="user-o" size={60} color='#fff' />
+                <FontAwesome style={styles.col1Icon} name={props.leftIcon} size={60} color='#fff' />
             </View>
             <View style={styles.col2}>
                 <Text style={styles.titleHeader}>

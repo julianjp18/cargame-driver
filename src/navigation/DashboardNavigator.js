@@ -15,6 +15,8 @@ import RegisterScreen from '../screens/Auth/RegisterScreen';
 import { accentColor, primaryColor } from '../constants/Colors';
 import DriverProfileScreen from '../screens/Driver/DriverProfileScreen';
 import DriverSupportScreen from '../screens/Driver/DriverSupportScreen';
+import DriverNotificationsScreen from '../screens/Driver/DriverNotificationsScreen';
+import DriverTravelsScreen from '../screens/Driver/DriverTravelsScreen';
 
 const DriverTabNavigator = createBottomTabNavigator({
         HomeDriver: {
@@ -37,11 +39,20 @@ const DriverTabNavigator = createBottomTabNavigator({
             }
         },
         Notifications: {
-            screen: DriverHomeScreen,
+            screen: DriverNotificationsScreen,
             navigationOptions: {
                 tabBarLabel: 'Notificaciones',
                 tabBarIcon: (tabInfo) => {
                     return <AntDesign name="inbox" size={25} color={accentColor} />
+                }
+            }
+        },
+        Travels: {
+            screen: DriverTravelsScreen,
+            navigationOptions: {
+                tabBarLabel: 'Viajes',
+                tabBarIcon: (tabInfo) => {
+                    return <AntDesign name="flag" size={25} color={accentColor} />
                 }
             }
         },

@@ -3,22 +3,37 @@ import { Text, StyleSheet, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import WelcomeHeader from '../../components/WelcomeHeader';
 import { textSecondaryColor, darkGrey, primaryColor } from '../../constants/Colors';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { ScrollView } from 'react-native-gesture-handler';
 import { CATEGORIES_LIST } from '../../constants/Utils';
 import { ListItem } from 'react-native-elements';
+import moment from 'moment';
 import TextInput from '../../components/UI/Input';
 import Button from '../../components/UI/Button';
 
 const DriverHomeScreen = props => {
-
+    moment.locale(); 
     const URBAN_SERVICE = 1;
     const RURAL_SERVICE = 0;
     const typeServiceId = useSelector(state => state.auth.typeServiceSelected);
     const categorySelected = CATEGORIES_LIST.find(category => category.id === typeServiceId);
     const [typeTruckService, setTypeTruckService] = useState(RURAL_SERVICE);
-
+    const [date, setDate] = useState(new Date());
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
+    
     const changeTypeTruckService = (changeType) => {
         setTypeTruckService(changeType);
+    };
+
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShow(Platform.OS === 'ios');
+        setDate(currentDate);
+    };
+
+    const showDatePickerModal = () => {
+        setShow(!show);
     };
 
     return (
@@ -93,9 +108,27 @@ const DriverHomeScreen = props => {
                                         errorText="¡UPS! Por favor ingresa una dirección válida."
                                         initialValue=""
                                     />
-                                    <Text>
-                                        Fecha de inicio del viaje
+                                    <Text
+                                        style={styles.dateTravelTitle}
+                                    >
+                                        Fecha de inicio de viaje
                                     </Text>
+                                    <Text
+                                        onPress={showDatePickerModal}
+                                        style={styles.dateTravelContent}
+                                    >
+                                        {moment(date).format('ll')}
+                                    </Text>
+                                    {show && (
+                                        <DateTimePicker
+                                            testID="date-travel"
+                                            value={date}
+                                            mode={mode}
+                                            is24Hour={true}
+                                            display="default"
+                                            onChange={onChange}
+                                        />
+                                    )}
                                 </View>
                             ): (
                                 <View>
@@ -195,6 +228,19 @@ const styles = StyleSheet.create({
     },
     infoContainer: {
         padding: '5%'
+    },
+    dateTravelTitle: {
+        color: primaryColor,
+        fontWeight: 'bold'
+    },
+    dateTravelContent: {
+        textAlign: 'center',
+        paddingVertical: '3%',
+        marginTop: '1%',
+        marginBottom: '15%',
+        borderColor: primaryColor,
+        borderWidth: 1,
+        borderRadius: 15
     }
 });
 

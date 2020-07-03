@@ -26,22 +26,19 @@ export const createUser = ({ userId, name, numberId, phone, referidNumber }) => 
     };
 };
 
-export const showUser = (userId) => {
-    return async dispatch => {
-        const response = await firestoreDB
+export const showUser = (userId) => async dispatch => {
+    const data = await firestoreDB
         .collection('Drivers')
         .doc(userId)
-        .get();
-
-        const resData = await response.json();
-        dispatch({
-            type: SHOW_USER,
-            userId,
-            id: resData.name,
-            name: resData.name,
-            numberId,
-            phone,
-            referidNumber
-        });
-    };
+        .get().then((doc) => doc.data());
+    console.log(data);
+    dispatch({
+        type: SHOW_USER,
+        userId,
+        id: data.numberId,
+        name: data.name,
+        numberId: data.numberId,
+        phone: data.phone,
+        referidNumber: data.referidNumber
+    });
 };

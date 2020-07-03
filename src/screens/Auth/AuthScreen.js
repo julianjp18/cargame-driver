@@ -3,6 +3,7 @@ import {
     Text, StyleSheet, View,
     ActivityIndicator, Alert, Image,
     ScrollView,
+    YellowBox,
 } from 'react-native';
 import { KeyboardAwareView } from 'react-native-keyboard-aware-view';
 import { useDispatch, useSelector } from 'react-redux';
@@ -45,11 +46,27 @@ const formReducer = (state, action) => {
 const AuthScreen = props => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
-    const [isSignUp, setIsSignUp] = useState(false);
+    const [isSignUp, setIsSignUp] = useState(useSelector(state => state.auth.isSignUp));
     const dispatch = useDispatch();
-
-    const signUpChecked = useSelector(state => state.auth.isSignUp);
     const userToken = useSelector(state => state.auth.token);
+
+    useEffect(() => {
+        if (error) {
+            Alert.alert('¡Oh no, un error ha ocurrido!', error, [{ text: 'Está bien'}]);
+        }
+    }, [error]);
+
+    const inputChangeHandler = useCallback(
+        (inputIdentifier, inputValue, inputValidity ) => {
+            dispatchFormState({
+                type: FORM_INPUT_UPDATE,
+                value: inputValue,
+                isValid: inputValidity,
+                input: inputIdentifier 
+            });
+        },
+        [dispatchFormState]
+    );
 
     const [formState, dispatchFormState] = useReducer(formReducer, {
         inputValues: {
@@ -63,16 +80,6 @@ const AuthScreen = props => {
         formIsValid: false
     });
 
-    useEffect(() => {
-        signUpChecked ? setIsSignUp(signUpChecked): '';
-    }, []);
-
-    useEffect(() => {
-        if (error) {
-            Alert.alert('¡Oh no, un error ha ocurrido!', error, [{ text: 'Está bien'}]);
-        }
-    }, [error]);
-
     const authHandler = async () => {
         let action;
         let nextPage = '';
@@ -85,7 +92,7 @@ const AuthScreen = props => {
                     email,
                     password
                 );
-
+    
                 nextPage = 'Member';
             } else {
                 passwordError = true;
@@ -98,32 +105,24 @@ const AuthScreen = props => {
             nextPage = 'ServicesList';
         }
         if (!passwordError) {
+            const controller = new AbortController();
             setError(null);
             setIsLoading(true);
             try {
                 await dispatch(action);
+                controller.abort();
                 props.navigation.navigate(nextPage);
             } catch (err) {
                 setError(err.message);
             }
             setIsLoading(false);
+            controller.abort();
         } else {
             setError('¡UPS! Las contraseñas no coinciden. Intentalo nuevamente.');
         }
         
     };
 
-    const inputChangeHandler = useCallback(
-        (inputIdentifier, inputValue, inputValidity ) => {
-            dispatchFormState({
-                type: FORM_INPUT_UPDATE,
-                value: inputValue,
-                isValid: inputValidity,
-                input: inputIdentifier 
-            });
-        },
-        [dispatchFormState]
-    );
     return !userToken ? (
         <View style={styles.mainContainer}>
             <View style={styles.logoContainer}>
@@ -133,7 +132,10 @@ const AuthScreen = props => {
                 />
             </View>
             <View style={styles.authContainer}>
-                <KeyboardAwareView animated={true}>
+                <KeyboardAwareView
+                    doNotForceDismissKeyboardWhenLayoutChanges={true}
+                    animated={true}
+                >
                     <ScrollView>
                         <View style={styles.scrollViewContainer}>
                                 <TextInput
@@ -213,9 +215,7 @@ const AuthScreen = props => {
                                 colorOne={'white'}
                                 colorTwo={'white'}
                                 fontColor={'#1D59A2'}
-                                onPress={() => {
-                                    setIsSignUp(prevState => !prevState);
-                                    }}
+                                onPress={() => setIsSignUp(prevState => !prevState)}
                             />
                         </View>  
                     </ScrollView>

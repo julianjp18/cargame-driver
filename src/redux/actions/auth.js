@@ -22,10 +22,11 @@ export const signup = (email, password) => {
                 })
             }    
         );
+        
+        const resData = await response.json();
 
         if (!response.ok) {
-            const errorResData = await response.json();
-            const errorId = errorResData.error.message;
+            const errorId = resData.error.message;
             let message = '¡UPS! Algo ocurrió.';
             if (errorId === 'EMAIL_EXISTS') {
                 message = 'El correo electrónico se encuentra en uso. Intentalo nuevamente.'
@@ -37,7 +38,6 @@ export const signup = (email, password) => {
             throw new Error(message);
         }
 
-        const resData = await response.json();
         dispatch({
             type: SIGNUP,
             token: resData.idToken,

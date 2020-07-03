@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ListItem } from 'react-native-elements';
@@ -18,10 +18,9 @@ const selectedCategoryItem = (navigation, dispatch, categoryId, routeName) => {
 const DriverDashboardScreen = props => {
     const dispatch = useDispatch();
     const user = useSelector(state => state.user);
-    if(!user) {
-        const userId = useSelector(state => state.auth.userId);
-        dispatch(userActions.showUser(userId));
-    }
+    const userId = useSelector(state => state.auth.userId);
+    !user && dispatch(userActions.showUser(userId));
+
     return (
         <View style={styles.servicesContainer}>
             <WelcomeHeader />
