@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, ImageBackground } from 'react-native';
 import { enableScreens } from 'react-native-screens';
 
 import * as Font from 'expo-font';
@@ -10,6 +10,8 @@ import ReduxThunk from 'redux-thunk';
 
 import DashboardNavigator from './src/navigation/DashboardNavigator';
 import authReducer from './src/redux/reducers/auth';
+import userReducer from './src/redux/reducers/user';
+import { shortBackgroundImageUrl } from './src/constants/Utils';
 
 enableScreens();
 
@@ -22,6 +24,7 @@ const fecthFonts = () => {
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  user: userReducer
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
@@ -40,7 +43,9 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <DashboardNavigator style={styles.container} />
+      <ImageBackground source={shortBackgroundImageUrl} style={styles.image}>
+        <DashboardNavigator style={styles.container} />
+      </ImageBackground>
     </Provider>
   );
 }
@@ -52,4 +57,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center"
+  }
 });

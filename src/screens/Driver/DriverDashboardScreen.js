@@ -1,95 +1,67 @@
-import React from 'react';
-import { Text, StyleSheet, View, Image } from 'react-native';
-import { ListItem } from 'react-native-elements'
-import { textAccentColor, primaryColor, accentColor, textSecondaryColor } from '../../constants/Colors';
-import { whiteSquareUrl, shortBrandOrangeGreyUrl, truckSquareUrl, carSquareUrl, motocycleSquareUrl, craneSquareUrl, busSquareUrl, planeSquareUrl } from '../../constants/Utils';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { useEffect } from 'react';
+import { Text, StyleSheet, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { ListItem } from 'react-native-elements';
+import { textSecondaryColor, darkGrey } from '../../constants/Colors';
+import { CATEGORIES_LIST } from '../../constants/Utils';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import WelcomeHeader from '../../components/WelcomeHeader';
+import { setTypeService } from '../../redux/actions/auth';
 
-const CATEGORIES_LIST = [
-    {
-      name: 'Camión',
-      avatar_url: truckSquareUrl,
-      subtitle: 'Lleva documentos y paquetes',
-      routeName: 'Truck', 
-    },
-    {
-      name: 'Carro particular',
-      avatar_url: carSquareUrl,
-      subtitle: 'Lleva documentos, paquetes y personas'
-    },
-    {
-        name: 'Moto',
-        avatar_url: motocycleSquareUrl,
-        subtitle: 'Lleva documentos y paquetes'
-    },
-    {
-        name: 'Grúa',
-        avatar_url: craneSquareUrl,
-        subtitle: 'Solicita un servicio'
-    },
-    {
-        name: 'Viajero en Bus',
-        avatar_url: busSquareUrl,
-        subtitle: 'Lleva documentos y paquetes'
-    },
-    {
-        name: 'Viajero en Avión',
-        avatar_url: planeSquareUrl,
-        subtitle: 'Lleva documentos'
-    },
-];
+import * as userActions from '../../redux/actions/users';
+
+const selectedCategoryItem = (navigation, dispatch, categoryId, routeName) => {
+    dispatch(setTypeService(categoryId));
+    navigation.navigate({routeName});
+};
 
 const DriverDashboardScreen = props => {
+    const dispatch = useDispatch();
+    const user = useSelector(state => state.user);
+    const userId = useSelector(state => state.auth.userId);
+    !user && dispatch(userActions.showUser(userId));
 
     return (
         <View style={styles.servicesContainer}>
-            <LinearGradient
-                start={{ x: -1, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                colors={[
-                    props.colorOne ? props.colorOne : primaryColor,
-                    props.colorTwo ? props.colorTwo : accentColor
-                ]}
-            >
-                <View style={styles.row}>
-                    <View style={styles.col1}>
-                        <Text style={styles.titleHeader}>Bienvenido</Text>
-                    </View>
-                    <View style={styles.col2}>
-                        <Image
-                            style={styles.whiteSquare}
-                            source={whiteSquareUrl}
-                        />
-                        <Image
-                            style={styles.logo}
-                            source={shortBrandOrangeGreyUrl}
-                        />
-                    </View>
-                </View>
-            </LinearGradient>
+            <WelcomeHeader />
             <View style={styles.titleContainer}>
                 <Text style={styles.title}>Selecciona el servicio a utilizar</Text>
             </View>
-            {
-                CATEGORIES_LIST.map((category, i) => (
-                <ListItem
-                    key={i}
-                    containerStyle={styles.listContainer}
-                    title={category.name}
-                    leftAvatar={{
-                        source: category.avatar_url,
-                        containerStyle: styles.avatarContainer,
-                        avatarStyle: styles.avatar,
-                        rounded: false,
-                    }}
-                    subtitle={category.subtitle}
-                    bottomDivider
-                    onPress={() => {
-                        props.navigation.navigate({routeName: category.routeName});
-                    }}
-                />
-                ))
-            }
+            <View>
+                <ScrollView>
+                    {
+                        CATEGORIES_LIST.map((category, i) => (
+                            <TouchableOpacity
+                                key={i}
+                                style={styles.selectedItem}      
+                                onPress={
+                                    () => selectedCategoryItem(
+                                        props.navigation,
+                                        dispatch,
+                                        category.id,
+                                        category.routeName
+                                    )}
+                            >
+                                <ListItem
+                                    key={i}
+                                    containerStyle={styles.listContainer}
+                                    title={category.name}
+                                    titleStyle={styles.titleListItem}
+                                    leftAvatar={{
+                                        source: category.avatar_url,
+                                        containerStyle: styles.avatarContainer,
+                                        avatarStyle: styles.avatar,
+                                        rounded: false,
+                                    }}
+                                    subtitle={category.subtitle}
+                                    subtitleStyle={styles.subtitleListItem}
+                                    bottomDivider
+                                />
+                            </TouchableOpacity>
+                        ))
+                    }
+                </ScrollView>
+            </View>
         </View>
     );
 };
@@ -99,43 +71,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
         height: '100%'
     },
-    row: {
-        flexDirection: 'row',
-        height: 156,
-        width: 414,
-    },
-    col1: {
-        width: '50%'
-    },
-    titleHeader: {
-        height: '100%',
-        textAlignVertical: 'bottom',
-        paddingLeft: 20,
-        paddingBottom: 40,
-        fontFamily: 'Ruda',
-        fontSize: 28,
-        fontWeight: '700',
-        color: textAccentColor,
-        lineHeight: 24
-    },
-    col2: {
-        width: '50%',
-    },
-    logo: {
-        position: 'absolute',
-        right: 10,
-        top: 70,
-        width: 100,
-        height: 100,
-    },
-    whiteSquare: {
-        position: 'absolute',
-        right: 0,
-        bottom: 0,
-    },
     title: {
-        paddingTop: 30,
-        paddingBottom: 5,
+        paddingTop: '4%',
         color: textSecondaryColor,
         fontFamily: 'Quicksand',
         fontSize: 18,
@@ -143,15 +80,30 @@ const styles = StyleSheet.create({
         lineHeight: 22,
         textAlign: 'center',
     },
+    titleListItem: {
+        color: darkGrey,
+        fontFamily: 'Ruda',
+        fontSize: 20,
+        fontWeight: '500',
+    },
+    subtitleListItem: {
+        color: darkGrey,
+        fontFamily: 'Ruda',
+        fontSize: 12,
+        fontWeight: '400',
+        lineHeight: 20
+    },
     listContainer: {
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
+        paddingBottom: '10%'
     },
     avatarContainer: {
-        height: 70,
-        width: 70,
+        height: '100%',
+        width: '22%'
     },
     avatar: {
-        width: 80
+        width: '100%',
+        height: '100%'
     }
 });
 
