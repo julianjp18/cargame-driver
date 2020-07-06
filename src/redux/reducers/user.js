@@ -1,5 +1,5 @@
 import {
-  CREATE_USER, SHOW_USER
+  CREATE_USER, SHOW_USER, CHANGE_PHONE_NUMBER,
 } from '../actions/users';
 
 const initialState = null
@@ -16,6 +16,11 @@ export default (state = initialState, action) => {
         referidNumber: action.referidNumber,
         userId: action.userId
       };
+    case CHANGE_PHONE_NUMBER:
+      return {
+        ...state,
+        phone: action.phone,
+      }
     default:
         return state;
   }

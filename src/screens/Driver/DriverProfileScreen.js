@@ -48,7 +48,12 @@ const DriverProfileScreen = props => {
                                     <AntDesign name="phone" size={24} color={primaryColor} />
                                 }
                                 rightAvatar={
-                                    <AntDesign name="right" size={24} color={darkGrey} />
+                                    <AntDesign
+                                        name="right"
+                                        size={24}
+                                        color={darkGrey}
+                                        onPress={() => props.navigation.navigate('EditPhoneNumber')}
+                                    />
                                 }
                                 subtitle={user.phone}
                                 subtitleStyle={styles.subtitleListItem}
@@ -62,9 +67,6 @@ const DriverProfileScreen = props => {
                                 titleStyle={styles.titleListItem}
                                 leftAvatar={
                                     <AntDesign name="mail" size={24} color={primaryColor} />
-                                }
-                                rightAvatar={
-                                    <AntDesign name="right" size={24} color={darkGrey} />
                                 }
                                 subtitle={userEmail}
                                 subtitleStyle={styles.subtitleListItem}
