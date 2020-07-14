@@ -1,7 +1,7 @@
 import React, { useReducer, useCallback, useState, useEffect } from 'react';
 import { StyleSheet, View, ActivityIndicator, Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { textSecondaryColor, darkGrey, primaryColor } from '../../../constants/Colors';
+import { primaryColor } from '../../../constants/Colors';
 import DriverHeader from '../../../components/DriverHeader';
 import { AntDesign } from '@expo/vector-icons';
 import * as userActions from '../../../redux/actions/users';
@@ -39,7 +39,6 @@ const EditPhoneNumberScreen = props => {
     const dispatch = useDispatch();
     const username = useSelector(state => state.auth.name);
     const userId = useSelector(state => state.auth.userId);
-    console.log(userId);
 
     useEffect(() => {
         if (error) {

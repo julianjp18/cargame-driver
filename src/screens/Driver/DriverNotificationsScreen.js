@@ -1,15 +1,29 @@
-import React from 'react';
-import { Text, StyleSheet, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, Text } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import { ListItem } from 'react-native-elements';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { textSecondaryColor, darkGrey, primaryColor } from '../../constants/Colors';
 import DriverHeader from '../../components/DriverHeader';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
 
-const DriverNotificationsScreen = props => {
+const DriverNotificationsScreen = () => {
+    const [driverNotifications, setDriverNotifications] = useState('');
+    
+    useEffect(() => {   
+        const notifications = useSelector(state => state.notifications.driverNotifications);
+        console.log('este lo puse , ', notifications)
+        const newDriverNotifications = [];
+        notifications.then((allNotifications) => {
+            allNotifications.forEach(notification => {
+                newDriverNotifications.push(notification.data());
+            });
+        })
+        setDriverNotifications(newDriverNotifications);
+    }, []);
+
     const user = useSelector(state => state.user);
-    const userEmail = useSelector(state => state.auth.email);
+    
 
     return (
         <View style={styles.servicesContainer}>
