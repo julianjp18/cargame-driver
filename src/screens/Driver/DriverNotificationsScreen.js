@@ -8,23 +8,26 @@ import DriverHeader from '../../components/DriverHeader';
 import { AntDesign } from '@expo/vector-icons';
 
 const DriverNotificationsScreen = () => {
-    const [driverNotifications, setDriverNotifications] = useState('');
-    
-    useEffect(() => {   
-        const notifications = useSelector(state => state.notifications.driverNotifications);
-        console.log('este lo puse , ', notifications)
-        const newDriverNotifications = [];
-        notifications.then((allNotifications) => {
-            allNotifications.forEach(notification => {
-                newDriverNotifications.push(notification.data());
-            });
-        })
-        setDriverNotifications(newDriverNotifications);
-    }, []);
-
+    const [driverNotifications, setDriverNotifications] = useState();
+    const notifications = useSelector(state => state.notifications.driverNotifications);
     const user = useSelector(state => state.user);
+    useEffect(() => {   
+       if (notifications && !driverNotifications) {
+            const newDriverNotifications = [];
+            notifications.then((allNotifications) => {
+                allNotifications.forEach(notification => {
+                    if (
+                        notification.userId === "0" ||
+                        notification.userId === user.userId
+                    ) {
+                        newDriverNotifications.push(notification.data());
+                    }
+                });
+            })
+            setDriverNotifications(newDriverNotifications);
+       }
+    }, [notifications]);
     
-
     return (
         <View style={styles.servicesContainer}>
             <DriverHeader
@@ -35,6 +38,18 @@ const DriverNotificationsScreen = () => {
             {user && (
                 <ScrollView>
                     <View style={styles.infoContainer}>
+                        {driverNotifications && driverNotifications.map((notification) => (
+                            <ListItem
+                                key={notification['created_at'].seconds}
+                                containerStyle={styles.listContainer}
+                                bottomDivider
+                                leftIcon={
+                                    <AntDesign className="" name="bells" size={24} color={primaryColor} />
+                                }
+                                title={notification.message}
+                                titleStyle={styles.titleListItem}
+                            />
+                        ))}
                         <TouchableOpacity>
                             <ListItem
                                 containerStyle={styles.listContainer}
