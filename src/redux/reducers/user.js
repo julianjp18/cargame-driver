@@ -1,5 +1,8 @@
 import {
-  CREATE_USER, SHOW_USER
+  CREATE_USER,
+  SHOW_USER,
+  CHANGE_PHONE_NUMBER,
+  CHANGE_PROFILE_PICTURE,
 } from '../actions/users';
 
 const initialState = null
@@ -14,7 +17,18 @@ export default (state = initialState, action) => {
         numberId: action.numberId,
         phone: action.phone,
         referidNumber: action.referidNumber,
-        userId: action.userId
+        userId: action.userId,
+        profilePicture: action.profilePicture,
+      };
+    case CHANGE_PHONE_NUMBER:
+      return {
+        ...state,
+        phone: action.phone,
+      };
+    case CHANGE_PROFILE_PICTURE:
+      return {
+        ...state,
+        profilePicture: action.profilePicture,
       };
     default:
         return state;

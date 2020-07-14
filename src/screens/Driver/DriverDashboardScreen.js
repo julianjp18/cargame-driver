@@ -9,6 +9,7 @@ import WelcomeHeader from '../../components/WelcomeHeader';
 import { setTypeService } from '../../redux/actions/auth';
 
 import * as userActions from '../../redux/actions/users';
+import * as driverNotificationsAction from '../../redux/actions/notifications';
 
 const selectedCategoryItem = (navigation, dispatch, categoryId, routeName) => {
     dispatch(setTypeService(categoryId));
@@ -20,6 +21,7 @@ const DriverDashboardScreen = props => {
     const user = useSelector(state => state.user);
     const userId = useSelector(state => state.auth.userId);
     !user && dispatch(userActions.showUser(userId));
+    !user && dispatch(driverNotificationsAction.showDriverNotifications(userId));
 
     return (
         <View style={styles.servicesContainer}>

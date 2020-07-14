@@ -3,7 +3,6 @@ import {
     Text, StyleSheet, View,
     ActivityIndicator, Alert, Image,
     ScrollView,
-    YellowBox,
 } from 'react-native';
 import { KeyboardAwareView } from 'react-native-keyboard-aware-view';
 import { useDispatch, useSelector } from 'react-redux';

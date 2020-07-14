@@ -20,7 +20,7 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 isSignUp: action.isSignUp,
-            }
+            };
         case SIGNIN:
         case SIGNUP:
             return {
@@ -28,12 +28,12 @@ export default (state = initialState, action) => {
                 token: action.token,
                 userId: action.userId,
                 email: action.email,
-            }
+            };
         case CHANGE_TYPE_SERVICE_SELECTED:
             return {
                 ...state,
                 typeServiceSelected: action.typeServiceSelected,
-            }
+            };
         case LOGOUT:
             return initialState;
         default:
