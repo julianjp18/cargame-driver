@@ -11,6 +11,7 @@ import ImgPicker from '../../components/UI/ImagePicker';
 import * as MediaLibrary from 'expo-media-library';
 
 import * as userActions from '../../redux/actions/users';
+import * as authActions from '../../redux/actions/auth';
 
 const DriverProfileScreen = props => {
     const user = useSelector(state => state.user);
@@ -23,6 +24,10 @@ const DriverProfileScreen = props => {
             Alert.alert('¡Oh no, un error ha ocurrido!', error, [{ text: 'Está bien'}]);
         }
     }, [error]);
+
+    const logOut = () => {
+        dispatch(authActions.logout());
+    };
 
     const imageTakeHandler = async (imagePath) => {
         if (imagePath) {
@@ -124,7 +129,7 @@ const DriverProfileScreen = props => {
                             leftAvatar={
                                 <FontAwesome name="pencil" size={24} color={primaryColor} />
                             }
-                            subtitle={user.referidNumber}
+                            subtitle={user.referidNumber ? user.referidNumber : 'No tiene código de referido'}
                             subtitleStyle={styles.subtitleListItem}
                             bottomDivider
                         />
@@ -151,6 +156,22 @@ const DriverProfileScreen = props => {
                                     <AntDesign name="right" size={24} color={darkGrey} />
                                 }
                                 subtitleStyle={styles.subtitleListItem}
+                                bottomDivider
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <ListItem
+                                containerStyle={styles.listContainer}
+                                title='Cerrar sesión'
+                                titleStyle={styles.titleListItem}
+                                leftAvatar={
+                                    <AntDesign name="logout" size={24} color={primaryColor} />
+                                }
+                                subtitleStyle={styles.subtitleListItem}
+                                onPress={() => {
+                                    logOut();
+                                    props.navigation.navigate('Auth');
+                                }}
                             />
                         </TouchableOpacity>
                     </View>

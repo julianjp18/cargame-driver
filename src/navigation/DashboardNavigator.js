@@ -18,6 +18,7 @@ import DriverSupportScreen from '../screens/Driver/DriverSupportScreen';
 import DriverNotificationsScreen from '../screens/Driver/DriverNotificationsScreen';
 import DriverTravelsScreen from '../screens/Driver/DriverTravelsScreen';
 import EditPhoneNumberScreen from '../screens/Driver/EditProfile/EditPhoneNumberScreen';
+import StartupScreen from '../screens/StartUpScreen';
 
 const profileNavigator = createSwitchNavigator({
     Profile: DriverProfileScreen,
@@ -94,6 +95,13 @@ const DriverTabNavigator = createBottomTabNavigator({
 );
 
 const MainNavigator = createSwitchNavigator({
+    Startup: {
+        screen: StartupScreen,
+        navigationOptions: {
+            headerTitle: 'Index',
+            headerShown: false
+        }
+    },
     Index: {
         screen: HomeScreen,
         navigationOptions: {
