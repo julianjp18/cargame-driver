@@ -4,7 +4,8 @@ export const SHOW_NOTIFICATIONS = 'SHOW_NOTIFICATIONS';
 export const showDriverNotifications = (userId) => dispatch => {
 
     const data = firestoreDB
-    .collection("Notifications_Drivers");
+    .collection("Notifications_Drivers")
+    .get();
 
     dispatch({
         type: SHOW_NOTIFICATIONS,

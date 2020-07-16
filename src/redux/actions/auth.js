@@ -1,11 +1,21 @@
-export const SIGNUP = 'SIGNUP';
-export const SIGNIN = 'SIGNIN';
+import { AsyncStorage } from 'react-native';
+
+export const AUTHENTICATE = 'AUTHENTICATE';
 export const LOGOUT = 'LOGOUT';
 export const IS_SIGNUP = 'IS_SIGNUP';
 export const CHANGE_TYPE_SERVICE_SELECTED = 'CHANGE_TYPE_SERVICE_SELECTED';
 
 const API_KEY = 'AIzaSyCaZhTD1MZEREJaZrkL3nJQRO4jbpeNV2U';
 const API_URL = 'https://identitytoolkit.googleapis.com/v1/accounts:';
+
+export const authenticate = (userId, token, email) => {
+    return {
+        type: AUTHENTICATE,
+        userId: userId,
+        token: token,
+        email,
+    };
+};
 
 export const signup = (email, password) => {
     return async dispatch => {
@@ -38,12 +48,9 @@ export const signup = (email, password) => {
             throw new Error(message);
         }
 
-        dispatch({
-            type: SIGNUP,
-            token: resData.idToken,
-            userId: resData.localId,
-            email
-        });
+        dispatch(authenticate(resData.localId, resData.idToken, email));
+        const expirationDate = new Date(new Date().getTime() + parseInt(resData.expiresIn) * 1000);
+        saveDataToStorage(resData.idToken, resData.localId, expirationDate, email);
     };
 };
 
@@ -79,13 +86,21 @@ export const signin = (email, password) => {
         }
 
         const resData = await response.json();
-        dispatch({
-            type: SIGNIN,
-            token: resData.idToken,
-            userId: resData.localId,
-            email
-        });
+        dispatch(authenticate(resData.localId, resData.idToken, email));
+        const expirationDate = new Date(new Date().getTime() + parseInt(resData.expiresIn) * 1000);
+        saveDataToStorage(resData.idToken, resData.localId, expirationDate);
     };
+};
+
+const saveDataToStorage = (token, userId, expirationDate, email) => {
+    AsyncStorage.setItem(
+        'userData',
+        JSON.stringify({
+            token: token,
+            userId, userId,
+            expirationDate: expirationDate.toISOString(),
+            email: email,
+        }))
 };
 
 export const setIsSignUp = () => {

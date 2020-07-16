@@ -1,6 +1,5 @@
 import {
-    SIGNIN,
-    SIGNUP, 
+    AUTHENTICATE, 
     IS_SIGNUP,
     LOGOUT,
     CHANGE_TYPE_SERVICE_SELECTED,
@@ -21,8 +20,7 @@ export default (state = initialState, action) => {
                 ...state,
                 isSignUp: action.isSignUp,
             };
-        case SIGNIN:
-        case SIGNUP:
+        case AUTHENTICATE:
             return {
                 ...state,
                 token: action.token,
