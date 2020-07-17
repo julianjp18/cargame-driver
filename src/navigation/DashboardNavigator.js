@@ -18,7 +18,7 @@ import DriverSupportScreen from '../screens/Driver/DriverSupportScreen';
 import DriverNotificationsScreen from '../screens/Driver/DriverNotificationsScreen';
 import DriverTravelsScreen from '../screens/Driver/DriverTravelsScreen';
 import EditPhoneNumberScreen from '../screens/Driver/EditProfile/EditPhoneNumberScreen';
-import StartupScreen from '../screens/StartUpScreen';
+import StartupScreen from '../screens/StartupScreen';
 
 const profileNavigator = createSwitchNavigator({
     Profile: DriverProfileScreen,

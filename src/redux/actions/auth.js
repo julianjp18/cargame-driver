@@ -8,10 +8,10 @@ export const CHANGE_TYPE_SERVICE_SELECTED = 'CHANGE_TYPE_SERVICE_SELECTED';
 const API_KEY = 'AIzaSyCaZhTD1MZEREJaZrkL3nJQRO4jbpeNV2U';
 const API_URL = 'https://identitytoolkit.googleapis.com/v1/accounts:';
 
-export const authenticate = (userId, token, email) => {
+export const authenticate = (localId, token, email) => {
     return {
         type: AUTHENTICATE,
-        userId: userId,
+        userId: localId,
         token: token,
         email,
     };
@@ -97,7 +97,7 @@ const saveDataToStorage = (token, userId, expirationDate, email) => {
         'userData',
         JSON.stringify({
             token: token,
-            userId, userId,
+            userId: userId,
             expirationDate: expirationDate.toISOString(),
             email: email,
         }))

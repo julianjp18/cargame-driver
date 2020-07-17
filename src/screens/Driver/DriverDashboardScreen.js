@@ -18,9 +18,12 @@ const selectedCategoryItem = (navigation, dispatch, categoryId, routeName) => {
 
 const DriverDashboardScreen = props => {
     const dispatch = useDispatch();
-    const user = useSelector(state => state.user);
     const userId = useSelector(state => state.auth.userId);
-    !user && dispatch(userActions.showUser(userId));
+    useEffect(() => {
+        dispatch(userActions.showUser(userId));
+    }, []);
+    const user = useSelector(state => state.user);
+    console.log(user);
     !user && dispatch(driverNotificationsAction.showDriverNotifications(userId));
 
     return (
