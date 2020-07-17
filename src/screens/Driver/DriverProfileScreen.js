@@ -13,6 +13,24 @@ import * as MediaLibrary from 'expo-media-library';
 import * as userActions from '../../redux/actions/users';
 import * as authActions from '../../redux/actions/auth';
 
+const LogOutListItem = props => (
+    <TouchableOpacity>
+        <ListItem
+            containerStyle={styles.listContainer}
+            title='Cerrar sesión'
+            titleStyle={styles.titleListItem}
+            leftAvatar={
+                <AntDesign name="logout" size={24} color={primaryColor} />
+            }
+            subtitleStyle={styles.subtitleListItem}
+            onPress={() => {
+                props.dispatch(authActions.logout());
+                props.navigate('Auth');
+            }}
+        />
+    </TouchableOpacity>
+);
+
 const DriverProfileScreen = props => {
     const user = useSelector(state => state.user);
     const userEmail = useSelector(state => state.auth.email);
@@ -24,10 +42,6 @@ const DriverProfileScreen = props => {
             Alert.alert('¡Oh no, un error ha ocurrido!', error, [{ text: 'Está bien'}]);
         }
     }, [error]);
-
-    const logOut = () => {
-        dispatch(authActions.logout());
-    };
 
     const imageTakeHandler = async (imagePath) => {
         if (imagePath) {
@@ -57,7 +71,7 @@ const DriverProfileScreen = props => {
                 subtitle="Explora tu perfil aquí"
                 leftIcon="user-o"
             />
-            {user && (
+            {user ? (
                 <ScrollView>
                     <View style={styles.infoContainer}>
                         <View style={styles.nameListContainer}>
@@ -159,24 +173,14 @@ const DriverProfileScreen = props => {
                                 bottomDivider
                             />
                         </TouchableOpacity>
-                        <TouchableOpacity>
-                            <ListItem
-                                containerStyle={styles.listContainer}
-                                title='Cerrar sesión'
-                                titleStyle={styles.titleListItem}
-                                leftAvatar={
-                                    <AntDesign name="logout" size={24} color={primaryColor} />
-                                }
-                                subtitleStyle={styles.subtitleListItem}
-                                onPress={() => {
-                                    logOut();
-                                    props.navigation.navigate('Auth');
-                                }}
-                            />
-                        </TouchableOpacity>
+                        <LogOutListItem
+                            dispatch={dispatch}
+                            navigate={props.navigation.navigate}
+                        />
                     </View>
                 </ScrollView>
-            )}
+            ): (<LogOutListItem dispatch={dispatch} />)}
+            
         </View>
     );
 };
@@ -190,7 +194,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         paddingTop: '5%',
-        paddingBottom: '1%'
     },
     nameListText: {
         color: primaryColor,
