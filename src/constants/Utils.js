@@ -1,3 +1,5 @@
+import { useSelector } from 'react-redux';
+
 export const shortBackgroundImageUrl = require('../../assets/background.png');
 export const shortBrandOrangeGreyUrl = require('../../assets/logos/cargame-transportador-naranja-letra-gris.png');
 export const shortMainCargaUrl = require('../../assets/extras/main-carga.png');

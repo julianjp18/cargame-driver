@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
     titleListItem: {
         color: darkGrey,
         fontFamily: 'Quicksand',
+        fontWeight: '600',
         fontSize: 14,
         lineHeight: 24
     },

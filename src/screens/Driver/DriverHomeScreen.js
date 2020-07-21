@@ -10,12 +10,17 @@ import { ListItem } from 'react-native-elements';
 import moment from 'moment';
 import TextInput from '../../components/UI/Input';
 import Button from '../../components/UI/Button';
+import LocationPicker from '../../components/UI/LocationPicker';
 
 const DriverHomeScreen = props => {
     moment.locale(); 
     const URBAN_SERVICE = 1;
     const RURAL_SERVICE = 0;
-    const typeServiceId = useSelector(state => state.auth.typeServiceSelected);
+    const userAuth = useSelector(state => state.auth);
+    if(!userAuth) {
+        props.navigation.navigate('Auth');
+    }
+    const typeServiceId = userAuth.typeServiceSelected;
     const categorySelected = CATEGORIES_LIST.find(category => category.id === typeServiceId);
     const [typeTruckService, setTypeTruckService] = useState(RURAL_SERVICE);
     const [date, setDate] = useState(new Date());
@@ -146,6 +151,9 @@ const DriverHomeScreen = props => {
                             <Button
                                 title={`Activarme`}
                             />
+                        </View>
+                        <View>
+                            <LocationPicker />
                         </View>
                     </ScrollView>
                 </View>

@@ -31,21 +31,23 @@ export const createUser = ({ userId, name, numberId, phone, referidNumber }) => 
 };
 
 export const showUser = (userId) => async dispatch => {
-    const data = await firestoreDB
-        .collection('Drivers')
-        .doc(userId)
-        .get().then((doc) => doc.data());
+    if(userId) {
+        const data = await firestoreDB
+            .collection('Drivers')
+            .doc(userId)
+            .get().then((doc) => doc.data());
 
-    dispatch({
-        type: SHOW_USER,
-        userId,
-        id: data.numberId,
-        name: data.name,
-        numberId: data.numberId,
-        phone: data.phone,
-        referidNumber: data.referidNumber,
-        profilePicture: data.profilePicture,
-    });
+        dispatch({
+            type: SHOW_USER,
+            userId,
+            id: data.numberId,
+            name: data.name,
+            numberId: data.numberId,
+            phone: data.phone,
+            referidNumber: data.referidNumber,
+            profilePicture: data.profilePicture,
+        });
+    }
 };
 
 export const changePhoneNumber = (phoneNumber, userId) => async dispatch => {

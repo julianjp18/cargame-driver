@@ -13,7 +13,7 @@ export const authenticate = (localId, token, email) => {
         type: AUTHENTICATE,
         userId: localId,
         token: token,
-        email,
+        email: email,
     };
 };
 

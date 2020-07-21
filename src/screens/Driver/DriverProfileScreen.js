@@ -43,6 +43,10 @@ const DriverProfileScreen = props => {
         }
     }, [error]);
 
+    if(!user || !userEmail) {
+        props.navigation.navigate('Auth');
+    }
+
     const imageTakeHandler = async (imagePath) => {
         if (imagePath) {
             try {

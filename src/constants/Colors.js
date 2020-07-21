@@ -4,3 +4,4 @@ export const textPrimaryColor = '#808081';
 export const textSecondaryColor = '#1D509E';
 export const textAccentColor = '#ffffff';
 export const darkGrey = '#424B5A';
+export const yellowColor = '#FED043';

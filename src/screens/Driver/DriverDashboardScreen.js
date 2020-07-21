@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Text, StyleSheet, View } from 'react-native';
+import { Text, StyleSheet, View, YellowBox } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ListItem } from 'react-native-elements';
 import { textSecondaryColor, darkGrey } from '../../constants/Colors';
@@ -17,14 +17,20 @@ const selectedCategoryItem = (navigation, dispatch, categoryId, routeName) => {
 };
 
 const DriverDashboardScreen = props => {
+    YellowBox.ignoreWarnings(['Setting a timer']);
     const dispatch = useDispatch();
-    const userId = useSelector(state => state.auth.userId);
+    const userAuth = useSelector(state => state.auth);
+
     useEffect(() => {
-        dispatch(userActions.showUser(userId));
+        dispatch(userActions.showUser(userAuth.userId));
     }, []);
+
+    if (!userAuth) {
+        props.navigation.navigate('Auth');
+    }
+
     const user = useSelector(state => state.user);
-    console.log(user);
-    !user && dispatch(driverNotificationsAction.showDriverNotifications(userId));
+    !user && dispatch(driverNotificationsAction.showDriverNotifications(userAuth.userId));
 
     return (
         <View style={styles.servicesContainer}>

@@ -19,6 +19,7 @@ import DriverNotificationsScreen from '../screens/Driver/DriverNotificationsScre
 import DriverTravelsScreen from '../screens/Driver/DriverTravelsScreen';
 import EditPhoneNumberScreen from '../screens/Driver/EditProfile/EditPhoneNumberScreen';
 import StartupScreen from '../screens/StartupScreen';
+import DriverOffersScreen from '../screens/Driver/DriverOffersScreen';
 
 const profileNavigator = createSwitchNavigator({
     Profile: DriverProfileScreen,
@@ -37,7 +38,7 @@ const DriverTabNavigator = createBottomTabNavigator({
             }
         },
         Offers: {
-            screen: DriverHomeScreen,
+            screen: DriverOffersScreen,
             navigationOptions: {
                 tabBarLabel: 'Ofertas',
                 tabBarIcon: (tabInfo) => {
