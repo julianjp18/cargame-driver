@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
         height: '15%',
+        maxHeight: '15%',
         width: '100%',
     },
     col1: {
@@ -62,7 +63,9 @@ const styles = StyleSheet.create({
     },
     col2: {
         width: '80%',
-        height: '100%'
+        height: '100%',
+        maxHeight: '100%',
+        minHeight: '100%'
     },
 });
 

@@ -7,6 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { primaryColor, accentColor, textAccentColor } from '../../constants/Colors';
 
 const DriverSupportScreen = props => {
+    
     return (
         <View style={styles.supportContainer}>
             <View style={styles.logoContainer}>

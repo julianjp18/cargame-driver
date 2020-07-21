@@ -19,7 +19,8 @@ const Button = props => {
             <Text 
                 style={{
                     textAlign: "center",
-                    padding: 10,
+                    paddingHorizontal: props.paddingHorizontal ? props.paddingHorizontal : 10,
+                    paddingVertical: props.paddingVertical ? props.paddingVertical : 10,
                     borderWidth: props.fontColor ? 2 : 1,
                     borderColor: props.fontColor ? primaryColor : 'transparent',
                     borderRadius: 25,
