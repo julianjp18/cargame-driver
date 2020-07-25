@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import moment from 'moment';
 import WelcomeHeader from '../../components/WelcomeHeader';
 import { textSecondaryColor, darkGrey, primaryColor } from '../../constants/Colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ScrollView } from 'react-native-gesture-handler';
-import { CATEGORIES_LIST } from '../../constants/Utils';
+import { categoristList } from '../../constants/Utils';
 import { ListItem } from 'react-native-elements';
-import moment from 'moment';
 import TextInput from '../../components/UI/Input';
 import Button from '../../components/UI/Button';
 import LocationPicker from '../../components/UI/LocationPicker';
 
+import * as offersAction from '../../redux/actions/offers';
+
 const DriverHomeScreen = props => {
+    const dispatch = useDispatch();
     moment.locale(); 
     const URBAN_SERVICE = 1;
     const RURAL_SERVICE = 0;
@@ -21,12 +24,14 @@ const DriverHomeScreen = props => {
         props.navigation.navigate('Auth');
     }
     const typeServiceId = userAuth.typeServiceSelected;
-    const categorySelected = CATEGORIES_LIST.find(category => category.id === typeServiceId);
+    const categorySelected = categoristList.find(category => category.id === typeServiceId);
     const [typeTruckService, setTypeTruckService] = useState(RURAL_SERVICE);
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
-    
+
+    userAuth && dispatch(offersAction.showActiveOffers());
+
     const changeTypeTruckService = (changeType) => {
         setTypeTruckService(changeType);
     };

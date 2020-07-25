@@ -3,7 +3,7 @@ import { Text, StyleSheet, View, YellowBox } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ListItem } from 'react-native-elements';
 import { textSecondaryColor, darkGrey } from '../../constants/Colors';
-import { CATEGORIES_LIST } from '../../constants/Utils';
+import { categoristList } from '../../constants/Utils';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import WelcomeHeader from '../../components/WelcomeHeader';
 import { setTypeService } from '../../redux/actions/auth';
@@ -30,7 +30,7 @@ const DriverDashboardScreen = props => {
     }
 
     const user = useSelector(state => state.user);
-    !user && dispatch(driverNotificationsAction.showDriverNotifications(userAuth.userId));
+    !user && dispatch(driverNotificationsAction.showDriverNotifications());
 
     return (
         <View style={styles.servicesContainer}>
@@ -41,7 +41,7 @@ const DriverDashboardScreen = props => {
             <View>
                 <ScrollView>
                     {
-                        CATEGORIES_LIST.map((category, i) => (
+                        categoristList.map((category, i) => (
                             <TouchableOpacity
                                 key={i}
                                 style={styles.selectedItem}      
@@ -52,6 +52,7 @@ const DriverDashboardScreen = props => {
                                         category.id,
                                         category.routeName
                                     )}
+                                disabled={category.id !== 'truck'}
                             >
                                 <ListItem
                                     key={i}
@@ -67,6 +68,8 @@ const DriverDashboardScreen = props => {
                                     subtitle={category.subtitle}
                                     subtitleStyle={styles.subtitleListItem}
                                     bottomDivider
+                                    disabled={category.id !== 'truck'}
+                                    disabledStyle={styles.disabledListContainer}
                                 />
                             </TouchableOpacity>
                         ))
@@ -107,6 +110,9 @@ const styles = StyleSheet.create({
     listContainer: {
         backgroundColor: 'transparent',
         paddingBottom: '10%'
+    },
+    disabledListContainer: {
+        backgroundColor: '#f3f3f3'
     },
     avatarContainer: {
         height: '100%',

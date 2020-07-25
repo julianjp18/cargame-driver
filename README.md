@@ -20,6 +20,7 @@ Paquetes utilizados:
 - react-native-screens `npm i --save react-native-screens`
 - react-native-elements
 - react-native-keyboard-aware-view
+- react-native-swiper https://github.com/leecade/react-native-swiper
 
 Clonar Repo:
 `git clone `

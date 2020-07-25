@@ -13,7 +13,7 @@ export const createUser = ({ userId, name, numberId, phone, referidNumber }) => 
                 name,
                 numberId,
                 phone,
-                referidNumber,
+                referidNumber: referidNumber ? referidNumber : '',
                 profilePicture: null,
             });
 
@@ -24,7 +24,7 @@ export const createUser = ({ userId, name, numberId, phone, referidNumber }) => 
             name,
             numberId,
             phone,
-            referidNumber,
+            referidNumber: referidNumber ? referidNumber : '',
             profilePicture: null,
         });
     };

@@ -1,14 +1,38 @@
-import React from 'react';
-import { Text, StyleSheet, View, Image } from 'react-native';
-import { shortBrandOrangeGreyUrl, shortMainCargaUrl } from '../../constants/Utils';
-import { FontAwesome } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import { primaryColor, accentColor, yellowColor, darkGrey } from '../../constants/Colors';
+import React, { useState, useEffect } from 'react';
+import { Text, StyleSheet, View } from 'react-native';
+import { useSelector } from 'react-redux';
+import { primaryColor, yellowColor } from '../../constants/Colors';
 import DriverHeader from '../../components/DriverHeader';
 import Button from '../../components/UI/Button';
 import { ScrollView } from 'react-native-gesture-handler';
+import { collectionTimeSlot } from '../../constants/Utils';
+import Swiper from 'react-native-swiper'
+
+const getOffers = (offers) => offers.then((allOffers) => {
+    allOffers.forEach(offer => {
+        if (offer.data().status === "active") {
+            newActiveOffers.push(offer.data());
+        }
+    });
+});
+
+const getcollectionTimeSlot = (collectionTimeSlotItem) =>
+    collectionTimeSlot.map((collectionTime) =>
+        collectionTime.label === collectionTimeSlotItem ? collectionTime.value : '');
 
 const DriverOffersScreen = props => {
+    const [activeOffers, setActiveOffers] = useState();
+    const offers = useSelector(state => state.activeOffers.offers);
+
+    useEffect(() => {
+        if(offers && !activeOffers) {
+            if (activeOffers) setActiveOffers();
+            setActiveOffers(getOffers(offers));
+        }
+    }, [offers]);
+
+    !activeOffers && getOffers(offers);
+
     return (
         <View style={styles.supportContainer}>
             <DriverHeader
@@ -16,45 +40,61 @@ const DriverOffersScreen = props => {
                 subtitle="Explora las ofertas en tu zona"
                 leftIcon="refresh"
             />
-            <View style={styles.showMessageContainer}>
-                <Text style={styles.showMessageText}>Nadie ha ofertado</Text>
-            </View>
-            <View style={styles.showInfoContainer}>
-                <ScrollView>
-                    <View style={styles.showInfoContent}>
-                        <Text style={styles.title}>Ciudad de Origen:</Text>
-                        <Text style={styles.subtitle}>Villavicencio, meta</Text>
+            {activeOffers && <Swiper style={styles.swiperContainer} showsButtons showsPagination={false}>
+                {console.log(activeOffers)}
+                {activeOffers.map((offer) => (
+                    <View
+                        testId={`${offer.userId}-${offer.destinationCity}`}
+                        style={styles.offerContainer}
+                        key={offer.destinationCity}
+                    >
+                        <View style={styles.showMessageContainer}>
+                            <Text style={styles.showMessageText}>Nadie ha ofertado</Text>
+                        </View>
+                        <View style={styles.showInfoContainer}>
+                            <ScrollView>
+                                <View style={styles.showInfoContent}>
+                                    <Text style={styles.title}>Ciudad de Origen:</Text>
+                                    <Text style={styles.subtitle}>{offer.currentCity}</Text>
+                                </View>
+                                <View style={styles.showInfoContent}>
+                                    <Text style={styles.title}>Ciudad de Destino:</Text>
+                                    <Text style={styles.subtitle}>{offer.destinationCity}</Text>
+                                </View>
+                                <View style={styles.showInfoContent}>
+                                    <Text style={styles.title}>Fecha de recogida:</Text>
+                                    <Text style={styles.subtitle}>{offer.pickupDate}</Text>
+                                </View>
+                                <View style={styles.showInfoContent}>
+                                    <Text style={styles.title}>Franja horaria de recogida:</Text>
+                                    <Text style={styles.subtitle}>
+                                        {getcollectionTimeSlot(offer.collectionTimeSlot)}
+                                    </Text>
+                                </View>
+                                <View style={styles.showInfoContent}>
+                                    <Text style={styles.title}>Descripción:</Text>
+                                    <Text style={styles.subtitle}>
+                                        {offer.description}
+                                    </Text>
+                                </View>
+                            </ScrollView>
+                        </View>
+                        <View style={styles.buttonContainer}>
+                            <Button title="Ofertar" paddingVertical={20} />
+                        </View>
                     </View>
-                    <View style={styles.showInfoContent}>
-                        <Text style={styles.title}>Ciudad de Destino:</Text>
-                        <Text style={styles.subtitle}>Villavicencio, meta</Text>
-                    </View>
-                    <View style={styles.showInfoContent}>
-                        <Text style={styles.title}>Fecha de recogida:</Text>
-                        <Text style={styles.subtitle}>20/07/2020</Text>
-                    </View>
-                    <View style={styles.showInfoContent}>
-                        <Text style={styles.title}>Franja horaria de recogida:</Text>
-                        <Text style={styles.subtitle}>Noche (7:00pm - 10:00pm)</Text>
-                    </View>
-                    <View style={styles.showInfoContent}>
-                        <Text style={styles.title}>Descripción:</Text>
-                        <Text style={styles.subtitle}>
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                            when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                        </Text>
-                    </View>
-                </ScrollView>
-            </View>
-            <View style={styles.buttonContainer}>
-                <Button title="Ofertar" paddingVertical={20} />
-            </View>
+                ))} 
+            </Swiper>}
         </View>
     );
 };
 
 const styles = StyleSheet.create({
+    supportContainer: {
+        height: '100%'
+    },
+    offerContainer: {
+    },
     showMessageContainer: {
         backgroundColor: yellowColor,
         padding: '10%'
@@ -68,8 +108,8 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     showInfoContainer: {
-        height: '60%',
-        maxHeight: '60%',
+        height: '70%',
+        maxHeight: '70%',
         marginHorizontal: '10%',
         backgroundColor: '#eeeeee',
         padding: '5%'

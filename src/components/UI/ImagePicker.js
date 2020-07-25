@@ -49,9 +49,14 @@ const ImgPicker = props => {
                         </View>
                     </View>
                 ) : (
-                    <Image style={styles.image} source={{
-                        uri: pickedImage,
-                      }} />
+                    <View>
+                        <Image style={styles.image} source={{
+                            uri: pickedImage,
+                        }} />
+                        <View style={styles.notProfilePictureFound}>
+                            <AntDesign style={styles.notProfilePictureIcon} name="picture" size={40} />
+                        </View>
+                    </View>
                 )}
                 <AntDesign style={styles.plusIcon} name="pluscircleo" size={24} />
             </View>
@@ -69,6 +74,11 @@ const styles = StyleSheet.create({
         height: 100,
         borderRadius: 50,
     },
+    notProfilePictureFound: {
+        position: 'absolute',
+        top: '30%',
+        left: '30%'
+    },
     notProfilePictureIcon: {
         color: primaryColor
     },
@@ -76,6 +86,7 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         borderRadius: 50,
+        zIndex: 10,
     },
     plusIcon: {
         position: 'absolute',
@@ -83,7 +94,8 @@ const styles = StyleSheet.create({
         right: '5%',
         color: primaryColor,
         backgroundColor: '#ffffff',
-        borderRadius: 12
+        borderRadius: 12,
+        zIndex: 11
     }
 });
 

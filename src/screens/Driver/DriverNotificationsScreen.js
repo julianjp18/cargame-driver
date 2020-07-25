@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { StyleSheet, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import { ListItem } from 'react-native-elements';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { textSecondaryColor, darkGrey, primaryColor } from '../../constants/Colors';
 import DriverHeader from '../../components/DriverHeader';
 import { AntDesign } from '@expo/vector-icons';
 
-const DriverNotificationsScreen = () => {
+const DriverNotificationsScreen = props => {
     const [driverNotifications, setDriverNotifications] = useState();
     const notifications = useSelector(state => state.notifications.driverNotifications);
     const user = useSelector(state => state.user);
@@ -17,8 +17,8 @@ const DriverNotificationsScreen = () => {
             notifications.then((allNotifications) => {
                 allNotifications.forEach(notification => {
                     if (
-                        notification.userId === "0" ||
-                        notification.userId === user.userId
+                        notification.data().userId === "0" ||
+                        notification.data().userId === user.userId
                     ) {
                         newDriverNotifications.push(notification.data());
                     }
@@ -40,11 +40,15 @@ const DriverNotificationsScreen = () => {
                     <View style={styles.infoContainer}>
                         {driverNotifications && driverNotifications.map((notification) => (
                             <ListItem
-                                key={notification['created_at'].seconds}
+                                key={notification.message}
                                 containerStyle={styles.listContainer}
                                 bottomDivider
                                 leftIcon={
-                                    <AntDesign className="" name="bells" size={24} color={primaryColor} />
+                                    <AntDesign
+                                        name="bells"
+                                        size={24}
+                                        color={primaryColor}
+                                    />
                                 }
                                 title={notification.message}
                                 titleStyle={styles.titleListItem}
@@ -58,7 +62,12 @@ const DriverNotificationsScreen = () => {
                                     <AntDesign className="" name="bells" size={24} color={primaryColor} />
                                 }
                                 rightIcon={
-                                    <AntDesign name="right" size={24} color={primaryColor} />
+                                    <AntDesign
+                                        name="right"
+                                        size={24}
+                                        color={primaryColor}
+                                        onPress={() => props.navigation.navigate('Services')}
+                                    />
                                 }
                                 title="¡Bienvenido a Cargame! Consulta con Soporte si tienes alguna duda."
                                 titleStyle={styles.titleListItem}

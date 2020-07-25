@@ -48,14 +48,12 @@ const RegisterScreen = props => {
         inputValues: {
             name: '',
             numberId: '',
-            phone: '',
-            referidNumber: ''
+            phone: ''
         },
         inputValidities: {
             name: false,
             numberId: false,
-            phone: false,
-            referidNumber: false
+            phone: false
         },
         formIsValid: false
     });

@@ -1,5 +1,3 @@
-import { useSelector } from 'react-redux';
-
 export const shortBackgroundImageUrl = require('../../assets/background.png');
 export const shortBrandOrangeGreyUrl = require('../../assets/logos/cargame-transportador-naranja-letra-gris.png');
 export const shortMainCargaUrl = require('../../assets/extras/main-carga.png');
@@ -13,7 +11,7 @@ export const truckSquareUrl = require('../../assets/extras/truck_and_square.png'
 export const primaryFont = 'Ruda';
 export const secondaryFont = 'Quicksand';
 
-export const CATEGORIES_LIST = [
+export const categoristList = [
     {
       id: 'truck',
       name: 'Camión',
@@ -26,7 +24,6 @@ export const CATEGORIES_LIST = [
       name: 'Carro particular',
       avatar_url: carSquareUrl,
       subtitle: 'Lleva documentos, paquetes y personas',
-      routeName: 'HomeDriver',
     },
     {
         id: 'motocycle',
@@ -52,4 +49,15 @@ export const CATEGORIES_LIST = [
         avatar_url: planeSquareUrl,
         subtitle: 'Lleva documentos'
     },
+];
+
+export const collectionTimeSlot = [
+    {
+        label: 'morning',
+        value: 'Mañana (7:00am - 12:00pm)'
+    },
+    {
+        label: 'night',
+        value: 'Noche (7:00pm - 10:00pm)'
+    }
 ];

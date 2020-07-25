@@ -11,6 +11,7 @@ import ReduxThunk from 'redux-thunk';
 import DashboardNavigator from './src/navigation/DashboardNavigator';
 import authReducer from './src/redux/reducers/auth';
 import userReducer from './src/redux/reducers/user';
+import offerReducer from './src/redux/reducers/offer';
 import notificationReducer from './src/redux/reducers/notification';
 import { shortBackgroundImageUrl } from './src/constants/Utils';
 
@@ -26,7 +27,8 @@ const fecthFonts = () => {
 const rootReducer = combineReducers({
   auth: authReducer,
   user: userReducer,
-  notifications: notificationReducer, 
+  notifications: notificationReducer,
+  activeOffers: offerReducer,
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));

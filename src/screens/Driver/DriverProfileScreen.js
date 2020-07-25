@@ -44,6 +44,7 @@ const DriverProfileScreen = props => {
     }, [error]);
 
     if(!user || !userEmail) {
+        dispatch(authActions.logout());
         props.navigation.navigate('Auth');
     }
 
