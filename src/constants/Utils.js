@@ -61,3 +61,6 @@ export const collectionTimeSlot = [
         value: 'Noche (7:00pm - 10:00pm)'
     }
 ];
+
+export const URBAN_SERVICE = 1;
+export const RURAL_SERVICE = 0;

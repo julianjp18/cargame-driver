@@ -26,7 +26,7 @@ const inputReducer = (state, action) => {
 
 const TextInput = props => {
   const [inputState, dispatch] = useReducer(inputReducer, {
-    value: props.initialValue ? props.initialValue : '',
+    value: props.initialValue ? props.initialValue : props.value,
     isValid: props.initiallyValid,
     touched: false
   });
@@ -72,7 +72,7 @@ const TextInput = props => {
         labelStyle={styles.disabledLabel}
         containerStyle={styles.mainContainer}
         inputContainerStyle={styles.inputContainer}
-        inputStyle={styles.input}
+        inputStyle={{...styles.input, ...(props.isMapField ? styles.isMapField : '')}}
         value={inputState.value}
         onChangeText={textChangeHandler}
         onBlur={lostFocusHandler}
@@ -124,7 +124,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Quicksand',
     color: 'red',
     fontSize: 11
-  }
+  },
+  isMapField: {
+    fontSize: 14,
+  },
 });
 
 export default TextInput;

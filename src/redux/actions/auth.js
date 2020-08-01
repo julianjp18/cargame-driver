@@ -12,8 +12,8 @@ export const authenticate = (localId, token, email) => {
     return {
         type: AUTHENTICATE,
         userId: localId,
-        token: token,
-        email: email,
+        token,
+        email,
     };
 };
 
@@ -26,8 +26,8 @@ export const signup = (email, password) => {
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify({
-                    email: email,
-                    password: password,
+                    email,
+                    password,
                     returnSecureToken: true
                 })
             }    
@@ -65,8 +65,8 @@ export const signin = (email, password) => {
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify({
-                    email: email,
-                    password: password,
+                    email,
+                    password,
                     returnSecureToken: true
                 })
             }    
@@ -97,9 +97,9 @@ const saveDataToStorage = (token, userId, expirationDate, email) => {
         'userData',
         JSON.stringify({
             token: token,
-            userId: userId,
+            userId,
             expirationDate: expirationDate.toISOString(),
-            email: email,
+            email,
         }))
 };
 

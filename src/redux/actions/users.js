@@ -4,7 +4,7 @@ export const SHOW_USER = 'SHOW_USER';
 export const CHANGE_PHONE_NUMBER = 'CHANGE_PHONE_NUMBER';
 export const CHANGE_PROFILE_PICTURE = 'CHANGE_PROFILE_PICTURE';
 
-export const createUser = ({ userId, name, numberId, phone, referidNumber }) => {
+export const createUser = ({ userId, name, numberId, phone, referidNumber = '' }) => {
     return async dispatch => {
         firestoreDB
             .collection('Drivers')
@@ -13,7 +13,7 @@ export const createUser = ({ userId, name, numberId, phone, referidNumber }) => 
                 name,
                 numberId,
                 phone,
-                referidNumber: referidNumber ? referidNumber : '',
+                referidNumber,
                 profilePicture: null,
             });
 

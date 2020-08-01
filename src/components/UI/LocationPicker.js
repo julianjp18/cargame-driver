@@ -1,12 +1,26 @@
-import React, { useState } from 'react';
-import { View, Button, Text, ActivityIndicator, Alert, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Alert, StyleSheet, ActivityIndicator } from 'react-native';
+import { useDispatch } from 'react-redux';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 
+import MapPreview from './MapPreview';
+import { primaryColor } from '../../constants/Colors';
+import TextInput from './Input';
+
+import * as placesActions from '../../redux/actions/places';
 
 const LocationPicker = props => {
     const [isFetching, setIsFetching] = useState(false);
     const [pickedLocation, setPickedLocation] = useState();
+    const dispatch = useDispatch();
+    const mapPickedLocation = props.navigation.navigate('pickedLocation');
+
+    useEffect(() => {
+        if (mapPickedLocation) {
+            setPickedLocation(mapPickedLocation);
+        }
+    }, [mapPickedLocation]);
 
     const verifyPermissions = async () => {
         const result = await Permissions.askAsync(Permissions.LOCATION);
@@ -14,7 +28,7 @@ const LocationPicker = props => {
             Alert.alert(
                 'Permisos insuficientes',
                 'Necesita los permisos de geolocalización para poder obtener localización en tiempo real.',
-                [{text: 'Está bien'}]
+                [{ text: 'Está bien' }]
             );
             return false;
         }
@@ -28,22 +42,59 @@ const LocationPicker = props => {
         try {
             setIsFetching(true);
             const location = await Location.getCurrentPositionAsync({ timeout: 4000 });
-            console.log(location);
             setPickedLocation({
                 lat: location.coords.latitude,
                 lng: location.coords.longitude
             });
-        }catch(err) {
-            Alert.alert('No se puede obtener la localización', 'Por favor intentar nuevamente.', [{ text: 'Esta bien'}]);
+        } catch (err) {
+            Alert.alert('No se puede obtener la localización', 'Por favor intentar nuevamente.', [{ text: 'Esta bien' }]);
         }
         setIsFetching(false);
     };
 
+    const pickOnMapHandler = async () => {
+      let typeFieldSelected;
+
+      if (props.isActivationCityTruckService) {
+        typeFieldSelected = 'isActivationCityTruckService';
+      } else if (props.isOriginCityTruckService) {
+        typeFieldSelected = 'isOriginCityTruckService';
+      } else {
+        typeFieldSelected = 'isDestinyCityTruckService';
+      }
+
+      dispatch(
+        placesActions.changeFieldSelected(
+          typeFieldSelected,
+      ));
+      props.navigation.navigate('Map');
+    };
+
     return (
         <View style={styles.locationContainer}>
-            
-            <Button title="Get location" onPress={getLocationHandler} />
-        </View>
+          <MapPreview
+            style={styles.mapPreview}
+            location={pickedLocation}
+            onPress={pickOnMapHandler}
+            disabled={props.disabled}
+          >
+            {isFetching ? (
+                <ActivityIndicator size="large" color={primaryColor} />
+            ) : (
+              <TextInput
+                id={props.id}
+                label={props.label}
+                keyboardType="default"
+                required
+                autoCapitalize="sentences"
+                errorText={props.errorText}
+                initialValue={props.initialValue}
+                disabled
+                isMapField
+              />
+            )}
+        </MapPreview>
+      </View>
     );
 };
 

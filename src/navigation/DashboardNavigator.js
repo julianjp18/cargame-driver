@@ -7,12 +7,12 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
+import { accentColor, primaryColor } from '../constants/Colors';
 import DriverDashboardScreen from '../screens/Driver/DriverDashboardScreen';
 import AuthScreen from '../screens/Auth/AuthScreen';
 import HomeScreen from '../screens/HomeScreen';
 import DriverHomeScreen from '../screens/Driver/DriverHomeScreen';
 import RegisterScreen from '../screens/Auth/RegisterScreen';
-import { accentColor, primaryColor } from '../constants/Colors';
 import DriverProfileScreen from '../screens/Driver/DriverProfileScreen';
 import DriverSupportScreen from '../screens/Driver/DriverSupportScreen';
 import DriverNotificationsScreen from '../screens/Driver/DriverNotificationsScreen';
@@ -20,6 +20,7 @@ import DriverTravelsScreen from '../screens/Driver/DriverTravelsScreen';
 import EditPhoneNumberScreen from '../screens/Driver/EditProfile/EditPhoneNumberScreen';
 import StartupScreen from '../screens/StartupScreen';
 import DriverOffersScreen from '../screens/Driver/DriverOffersScreen';
+import GoogleMapScreen from '../screens/GoogleMapScreen';
 
 const profileNavigator = createSwitchNavigator({
     Profile: DriverProfileScreen,
@@ -27,64 +28,64 @@ const profileNavigator = createSwitchNavigator({
 });
 
 const DriverTabNavigator = createBottomTabNavigator({
-        HomeDriver: {
-            screen: DriverHomeScreen,
-            navigationOptions: {
-                headerShown: false,
-                tabBarLabel: 'Inicio',
-                tabBarIcon: (tabInfo) => {
-                    return <AntDesign name="home" size={25} color={accentColor} />
-                },
-            }
-        },
-        Offers: {
-            screen: DriverOffersScreen,
-            navigationOptions: {
-                tabBarLabel: 'Ofertas',
-                tabBarIcon: (tabInfo) => {
-                    return <MaterialIcons name="monetization-on" size={24} color={accentColor} />
-                }
-            }
-        },
-        Notifications: {
-            screen: DriverNotificationsScreen,
-            navigationOptions: {
-                tabBarLabel: 'Notificaciones',
-                tabBarIcon: (tabInfo) => {
-                    return <AntDesign name="inbox" size={25} color={accentColor} />
-                }
-            }
-        },
-        Travels: {
-            screen: DriverTravelsScreen,
-            navigationOptions: {
-                tabBarLabel: 'Viajes',
-                tabBarIcon: (tabInfo) => {
-                    return <AntDesign name="flag" size={25} color={accentColor} />
-                }
-            }
-        },
-        Services: {
-            screen: DriverSupportScreen,
-            navigationOptions: {
-                headerShown: false,
-                tabBarLabel: 'Servicios',
-                tabBarIcon: (tabInfo) => {
-                    return <AntDesign name="customerservice" size={25} color={accentColor} />
-                }
-            }
-        },
-        Profile: {
-            screen: profileNavigator,
-            navigationOptions: {
-                headerShown: false,
-                tabBarLabel: 'Perfil',
-                tabBarIcon: (tabInfo) => {
-                    return <AntDesign name="user" size={25} color={accentColor} />
-                }
+    HomeDriver: {
+        screen: DriverHomeScreen,
+        navigationOptions: {
+            headerShown: false,
+            tabBarLabel: 'Inicio',
+            tabBarIcon: (tabInfo) => {
+                return <AntDesign name="home" size={25} color={accentColor} />
+            },
+        }
+    },
+    Offers: {
+        screen: DriverOffersScreen,
+        navigationOptions: {
+            tabBarLabel: 'Ofertas',
+            tabBarIcon: (tabInfo) => {
+                return <MaterialIcons name="monetization-on" size={24} color={accentColor} />
             }
         }
     },
+    Notifications: {
+        screen: DriverNotificationsScreen,
+        navigationOptions: {
+            tabBarLabel: 'Notificaciones',
+            tabBarIcon: (tabInfo) => {
+                return <AntDesign name="inbox" size={25} color={accentColor} />
+            }
+        }
+    },
+    Travels: {
+        screen: DriverTravelsScreen,
+        navigationOptions: {
+            tabBarLabel: 'Viajes',
+            tabBarIcon: (tabInfo) => {
+                return <AntDesign name="flag" size={25} color={accentColor} />
+            }
+        }
+    },
+    Services: {
+        screen: DriverSupportScreen,
+        navigationOptions: {
+            headerShown: false,
+            tabBarLabel: 'Servicios',
+            tabBarIcon: (tabInfo) => {
+                return <AntDesign name="customerservice" size={25} color={accentColor} />
+            }
+        }
+    },
+    Profile: {
+        screen: profileNavigator,
+        navigationOptions: {
+            headerShown: false,
+            tabBarLabel: 'Perfil',
+            tabBarIcon: (tabInfo) => {
+                return <AntDesign name="user" size={25} color={accentColor} />
+            }
+        }
+    }
+},
     {
         tabBarOptions: {
             activeTintColor: primaryColor,
@@ -131,7 +132,14 @@ const MainNavigator = createSwitchNavigator({
             headerShown: false
         }
     },
-    Dashboard: DriverTabNavigator
+    Dashboard: DriverTabNavigator,
+    Map: {
+        screen: GoogleMapScreen,
+        navigationOptions: {
+            headerTitle: '',
+            headerShown: true
+        }
+    },
 });
 
 export default createAppContainer(MainNavigator);

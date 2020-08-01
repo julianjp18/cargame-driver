@@ -7,8 +7,17 @@ export const showActiveOffers = () => dispatch => {
     .collection("OffersNotificationCenter")
     .get();
 
+    const offersData = [];
+    data.then((allOffers) => {
+        allOffers.forEach(offer => {
+            if (offer.data().status === "active") {
+                offersData.push({...offer.data(), offerId: offer.id });
+            }
+        });
+    });
+
     dispatch({
         type: SHOW_ACTIVE_OFFERS,
-        offers: data
+        offers: offersData
     });
 };

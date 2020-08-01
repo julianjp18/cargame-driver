@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import { StyleSheet, ImageBackground } from 'react-native';
 import { enableScreens } from 'react-native-screens';
 
-import * as Font from 'expo-font';
+import { AppLoading } from 'expo';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import { AppLoading } from 'expo';
 import ReduxThunk from 'redux-thunk';
 
+import * as Font from 'expo-font';
 import DashboardNavigator from './src/navigation/DashboardNavigator';
 import authReducer from './src/redux/reducers/auth';
 import userReducer from './src/redux/reducers/user';
 import offerReducer from './src/redux/reducers/offer';
+import placeReducer from './src/redux/reducers/place';
 import notificationReducer from './src/redux/reducers/notification';
 import { shortBackgroundImageUrl } from './src/constants/Utils';
 
@@ -29,11 +30,26 @@ const rootReducer = combineReducers({
   user: userReducer,
   notifications: notificationReducer,
   activeOffers: offerReducer,
+  places: placeReducer,
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
-export default function App() {
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center"
+  }
+});
+
+const App = () => {
   const [fontLoaded, setFontLoaded] = useState(false);
 
   if(!fontLoaded){
@@ -52,18 +68,6 @@ export default function App() {
       </ImageBackground>
     </Provider>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  image: {
-    flex: 1,
-    resizeMode: "cover",
-    justifyContent: "center"
-  }
-});
+export default App;
