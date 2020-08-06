@@ -63,7 +63,6 @@ const DriverProfileScreen = props => {
                 }
                 controller.abort();
             } catch (err) {
-                console.log('yes ', err);
                 throw err;
             } 
         }

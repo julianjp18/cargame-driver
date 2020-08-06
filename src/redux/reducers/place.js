@@ -1,4 +1,5 @@
 import {
+  GET_CURRENT_POSITION,
   GET_CURRENT_RURAL_SERVICE,
   CHANGE_FIELD_SELECTED,
   GET_DESTINY_RURAL_SERVICE,
@@ -17,7 +18,7 @@ const initialState = {
   activateRuralService: false,
   ruralServiceDestinyAddress: null,
   ruralServiceDestinyCoords: null,
-  getPositionPicked: null,
+  currentPosition: null,
   typeFieldSelected: null,
 };
 
@@ -69,6 +70,14 @@ export default (state = initialState, action) => {
           ...state,
           dayActivate: null,
           activateRuralService: false,
+        };
+      case GET_CURRENT_POSITION:
+        return {
+          ...state,
+          currentPosition: {
+            lat: action.latitude,
+            lng: action.longitude,
+          },
         };
       default:
         return state;

@@ -21,10 +21,16 @@ import EditPhoneNumberScreen from '../screens/Driver/EditProfile/EditPhoneNumber
 import StartupScreen from '../screens/StartupScreen';
 import DriverOffersScreen from '../screens/Driver/DriverOffersScreen';
 import GoogleMapScreen from '../screens/GoogleMapScreen';
+import OfferForm from '../screens/Driver/DriverOffersScreen/OfferForm';
 
 const profileNavigator = createSwitchNavigator({
     Profile: DriverProfileScreen,
     EditPhoneNumber: EditPhoneNumberScreen,
+});
+
+const OffersNavigator = createSwitchNavigator({
+    Offers: DriverOffersScreen,
+    OfferForm: OfferForm,
 });
 
 const DriverTabNavigator = createBottomTabNavigator({
@@ -39,7 +45,7 @@ const DriverTabNavigator = createBottomTabNavigator({
         }
     },
     Offers: {
-        screen: DriverOffersScreen,
+        screen: OffersNavigator,
         navigationOptions: {
             tabBarLabel: 'Ofertas',
             tabBarIcon: (tabInfo) => {

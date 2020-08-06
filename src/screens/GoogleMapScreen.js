@@ -43,17 +43,25 @@ const styles = StyleSheet.create({
   }
 });
 
+const LATITUDE_DELTA = 0.2;
+const LONGITUDE_DELTA = 0.5;
+
 const GoogleMapScreen = props => {
+  const userAuth = useSelector(state => state.auth);
+  if (!userAuth) {
+    props.navigation.navigate('Auth');
+  }
   const [selectedLocation, setSelectedLocation] = useState();
+  const typeFieldSelected = useSelector(state => state.places.typeFieldSelected);
+  const currentPosition = useSelector(state => state.places.currentPosition);
   const [region, setRegion] =
     useState({
-      latitude: 37.78,
-      longitude: -122.43,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421
+      latitude: currentPosition.lat,
+      longitude: currentPosition.lng,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
     });
   const dispatch = useDispatch();
-  const typeFieldSelected = useSelector(state => state.places.typeFieldSelected)
   const savePickedLocationHandler = useCallback(() => {
     if (!selectedLocation) return;
 
@@ -81,19 +89,22 @@ const GoogleMapScreen = props => {
       latitude: location.lat,
       longitude: location.lng,
       address: savedLocation.address,
-    })
+    });
+
+    setRegion({
+      ...region,
+      latitude: location.lat,
+      longitude: location.lng,
+    });
   };
 
   const saveFunction = props.navigation.getParam('saveLocation');
 
-  const onRegionChange = (region) => {
-    setRegion(region);
-  };
-
   const acceptLocationHandler = () => {
     if (selectedLocation) {
       dispatch(
-        placesActions.savePosition(selectedLocation, typeFieldSelected));
+        placesActions.savePosition(selectedLocation, typeFieldSelected)
+      );
       props.navigation.navigate('HomeDriver');
     }
   };
@@ -128,7 +139,6 @@ const GoogleMapScreen = props => {
       <MapView
         style={styles.map}
         region={region}
-        onRegionChange={onRegionChange}
         onPress={selectLocationHandler}
       >
         {selectedLocation &&

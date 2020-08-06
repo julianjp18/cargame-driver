@@ -64,8 +64,6 @@ const DriverOffersScreen = (props) => {
     setofferForm(offerId);
   };
 
-  const navigateToOffers = props.navigation.navigate('Offers');
-
   return (
     <View style={styles.supportContainer}>
       <DriverHeader
@@ -86,7 +84,11 @@ const DriverOffersScreen = (props) => {
             ))} 
           </Swiper>
         : (
-          <OfferForm offers navigate={navigateToOffers} />
+          <OfferForm
+            offerForm={offerForm}
+            navigation={props.navigation}
+            changeToOfferFormHandler={changeToOfferFormHandler}
+          />
         )}
     </View>
   );

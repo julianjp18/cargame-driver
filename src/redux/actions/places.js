@@ -2,6 +2,7 @@ import ENV from '../../../env';
 import { URBAN_SERVICE } from '../../constants/Utils';
 
 export const GET_POSITION = 'GET_POSITION';
+export const GET_CURRENT_POSITION = 'GET_CURRENT_POSITION';
 export const GET_CURRENT_RURAL_SERVICE = 'GET_CURRENT_RURAL_SERVICE';
 export const CHANGE_FIELD_SELECTED = 'CHANGE_FIELD_SELECTED';
 export const GET_DESTINY_RURAL_SERVICE = 'GET_DESTINY_RURAL_SERVICE';
@@ -10,6 +11,15 @@ export const ACTIVATE_RURAL_SERVICE = 'ACTIVATE_RURAL_SERVICE';
 export const ACTIVATE_URBAN_SERVICE = 'ACTIVATE_URBAN_SERVICE';
 export const DEACTIVATE_URBAN_SERVICE = 'DEACTIVATE_URBAN_SERVICE';
 export const DEACTIVATE_RURAL_SERVICE = 'DEACTIVATE_RURAL_SERVICE';
+
+export const currentPosition = (location) => dispatch => {
+  
+  dispatch({
+    type: GET_CURRENT_POSITION,
+    latitude: location.lat,
+    longitude: location.lng,
+  });
+};
 
 export const getPosition = (location) => async dispatch => {
   const response = await fetch(

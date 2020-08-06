@@ -44,12 +44,11 @@ const styles = StyleSheet.create({
 
 const OfferForm = (props) => {
   const [strikes, setStrikes] = useState(1);
-  const offers = props.offers;
-
+  
   const inputChangeHandler = (e) => {
     console.log(e);
   };
-
+  
   return (
     <View style={styles.offerContainer}>
       <View style={styles.inputContainer}>
@@ -106,7 +105,7 @@ const OfferForm = (props) => {
           colorTwo={'white'}
           fontColor={primaryColor}
           paddingVertical={20}
-          onPress={props.navigate}
+          onPress={() => props.changeToOfferFormHandler(null)}
         />       
       </LinearGradient>
     </View>
