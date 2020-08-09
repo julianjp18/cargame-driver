@@ -76,7 +76,6 @@ const DriverOffersScreen = (props) => {
             {offers.map((offer) => (
               <ShowOffer
                 key={offer.offerId}
-                offerId={offer.offerId}
                 offer={offer}
                 getcollectionTimeSlot={getcollectionTimeSlot}
                 changeToOfferFormHandler={changeToOfferFormHandler}

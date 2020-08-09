@@ -1,4 +1,5 @@
 import {
+  GET_POSITION,
   GET_CURRENT_POSITION,
   GET_CURRENT_RURAL_SERVICE,
   CHANGE_FIELD_SELECTED,
@@ -19,11 +20,22 @@ const initialState = {
   ruralServiceDestinyAddress: null,
   ruralServiceDestinyCoords: null,
   currentPosition: null,
+  getPositionPicked: {
+    address: "Por favor selecciona un punto dentro de una ciudad",
+    latitude: null,
+    longitude: null,
+    status: "ZERO_RESULTS",
+  },
   typeFieldSelected: null,
 };
 
 export default (state = initialState, action) => {
     switch (action.type) {
+      case GET_POSITION:
+        return {
+          ...state,
+          getPositionPicked: action.getPositionPicked,
+        };
       case GET_CURRENT_RURAL_SERVICE:
         return {
           ...state,

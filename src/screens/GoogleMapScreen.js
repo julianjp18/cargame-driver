@@ -28,11 +28,20 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     width: '100%',
+    paddingTop: '2%',
   },
   col: {
       width: '33%',
       alignItems: 'center',
       justifyContent: 'center',
+  },
+  hideCol: {
+    width: '0%',
+  },
+  oneCol: {
+    width: '60%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   saveButtonText: {
     paddingVertical: '10%',
@@ -54,10 +63,17 @@ const GoogleMapScreen = props => {
   const [selectedLocation, setSelectedLocation] = useState();
   const typeFieldSelected = useSelector(state => state.places.typeFieldSelected);
   const currentPosition = useSelector(state => state.places.currentPosition);
+  let latitude = 4.60971;
+  let longitude = -74.08175;
+  if (currentPosition) {
+    latitude = currentPosition.lat;
+    longitude = currentPosition.lng;
+  }
+
   const [region, setRegion] =
     useState({
-      latitude: currentPosition.lat,
-      longitude: currentPosition.lng,
+      latitude,
+      longitude,
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA,
     });
@@ -85,12 +101,14 @@ const GoogleMapScreen = props => {
     const savedLocation = await dispatch(
       placesActions.getPosition(location));
     
+    
     setSelectedLocation({
       latitude: location.lat,
       longitude: location.lng,
       address: savedLocation.address,
+      status: savedLocation.status,
     });
-
+    console.log(selectedLocation);
     setRegion({
       ...region,
       latitude: location.lat,
@@ -121,17 +139,17 @@ const GoogleMapScreen = props => {
               onPress={() => props.navigation.navigate('Dashboard')}
               />
           </View>
-          <View style={styles.col}>
+          <View style={selectedLocation.status === 'OK' ? styles.col : styles.oneCol}>
             {!selectedLocation ? (
               <ActivityIndicator size="large" color={primaryColor} />
             ) : (
               <Text>
-                {selectedLocation ? selectedLocation.address : 'No location chosen yet!'}
+                {selectedLocation.status ? selectedLocation.address : 'No localización por el momento'}
               </Text>
             )}
           </View>
-          <View style={styles.col}>
-            {selectedLocation &&
+          <View style={selectedLocation.status === 'OK' ? styles.col : styles.hideCol}>
+            {selectedLocation.status === 'OK' &&
               <Text style={styles.saveButtonText} onPress={acceptLocationHandler}>Aceptar</Text>}
           </View>
         </View>

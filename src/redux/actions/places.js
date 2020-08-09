@@ -25,8 +25,8 @@ export const getPosition = (location) => async dispatch => {
   const response = await fetch(
     `https://maps.googleapis.com/maps/api/geocode/json?latlng=${
     location.lat
-    },${location.lng}&key=${ENV.googleApiKey}`)
-
+    },${location.lng}&result_type=locality&key=${ENV.googleApiKey}`)
+  
   if (!response.ok) {
     throw new Error('¡UPS! Error al conseguir la dirección');
   }
@@ -36,21 +36,27 @@ export const getPosition = (location) => async dispatch => {
   if (!responseData.results) {
     return;
   }
+  let getPositionPicked;
+  if(responseData.status === 'ZERO_RESULTS') {
+    getPositionPicked = {
+      status: responseData.status,
+      address: 'Por favor selecciona un punto dentro de una ciudad'
+    };
+  } else {
+    getPositionPicked = {
+      lat: location.lat,
+      lng: location.lng,
+      address: responseData.results[0].formatted_address,
+      status: responseData.status,
+    };
+  }
 
   dispatch({
     type: GET_POSITION,
-    getPositionPicked: {
-      lat: location.lat,
-      lng: location.lng,
-      address: responseData.results[0].formatted_address
-    }
+    getPositionPicked,
   });
 
-  return {
-    lat: location.lat,
-    lng: location.lng,
-    address: responseData.results[0].formatted_address
-  };
+  return getPositionPicked;
 };
 
 export const savePosition = (location, typeFieldSelected) => dispatch => {
