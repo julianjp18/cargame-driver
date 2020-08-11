@@ -1,10 +1,12 @@
-import React, { useState, useCallback, useReducer } from 'react';
-import { Text, StyleSheet, View } from 'react-native';
+import React, { useState, useCallback, useReducer, useEffect } from 'react';
+import { Text, StyleSheet, View, Alert, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { primaryColor, accentColor } from '../../../constants/Colors';
 import TextInput from '../../../components/UI/Input';
 import Button from '../../../components/UI/Button';
 import { useDispatch } from 'react-redux';
+
+import * as offerActions from '../../../redux/actions/offers';
 
 const styles = StyleSheet.create({
   inputContainer: {
@@ -74,6 +76,12 @@ const OfferForm = (props) => {
   const [error, setError] = useState();
   const dispatch = useDispatch();
   
+  useEffect(() => {
+    if (error) {
+        Alert.alert('¡Oh no, un error ha ocurrido!', error, [{ text: 'Está bien'}]);
+    }
+}, [error]);
+
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity ) => {
       dispatchFormState({
@@ -96,8 +104,6 @@ const OfferForm = (props) => {
     formIsValid: false
   });
 
-  console.log(props.offerForm);
-
   const isMultiple = (x) => {
     const y = 5000;
     return x % y == 0;
@@ -105,16 +111,19 @@ const OfferForm = (props) => {
 
   const offerHandler = async () => {
     const value = formState.inputValues.value;
-    console.log(value, isMultiple(value));
-    if(value) {
-      const action = offerActions.realizeOffer(props.offerForm);
+    if(value && isMultiple(value)) {
+      const action = offerActions.realizeOffer(props.offerForm, value, props.userId);
       const controller = new AbortController();
       setError(null);
       setIsLoading(true);
       try {
-          await dispatch(action);
+          const responseAction = dispatch(action);
+          const { response } = await responseAction.then((res) => res);
+          console.log(response);
           controller.abort();
-          props.changeToOfferFormHandler(props.offerForm);
+          if (response.status === 'OK') {
+            props.changeToOfferFormHandler(props.offerForm);
+          }
       } catch (err) {
           setError(err.message);
       }
@@ -168,13 +177,17 @@ const OfferForm = (props) => {
           <Text style={styles.strikesText}>{`Intento: ${strikes}`}</Text>
         </View>
         <View style={styles.buttonContainer}>
-          <Button
-            title="Ofertar"
-            style={styles.offerButton}
-            paddingVertical={20}
-            fontColor='white'
-            onPress={offerHandler}
-          />
+          {isLoading ? (
+            <ActivityIndicator size='large' color={primaryColor} />
+          ) : (
+            <Button
+              title="Ofertar"
+              style={styles.offerButton}
+              paddingVertical={20}
+              fontColor='white'
+              onPress={offerHandler}
+            />
+          )}
         </View>
         <Button
           title="Volver"
