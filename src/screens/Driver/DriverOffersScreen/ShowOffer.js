@@ -89,7 +89,7 @@ const ShowOffer = (props) => {
         <Button
           title="Ofertar"
           paddingVertical={20}
-          onPress={() => props.changeToOfferFormHandler(props.offerId) }
+          onPress={() => props.changeToOfferFormHandler(offer.offerId) }
         />
       </View>
     </View>

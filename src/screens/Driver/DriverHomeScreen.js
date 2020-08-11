@@ -1,10 +1,13 @@
-import React, { useState, useCallback } from 'react';
-import { Text, StyleSheet, View } from 'react-native';
+import React, { useState } from 'react';
+import { Text, StyleSheet, View, Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { ScrollView } from 'react-native-gesture-handler';
 import { ListItem } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
+
 import { textSecondaryColor, darkGrey, primaryColor } from '../../constants/Colors';
 import { categoristList, URBAN_SERVICE, RURAL_SERVICE } from '../../constants/Utils';
 
@@ -106,6 +109,10 @@ const styles = StyleSheet.create({
 });
 
 const DriverHomeScreen = props => {
+  const userAuth = useSelector(state => state.auth);
+  if (!userAuth) {
+    props.navigation.navigate('Auth');
+  }
   const [typeTruckService, setTypeTruckService] = useState(RURAL_SERVICE);
   const places = useSelector(state => state.places);
   const [activateTypeService, setActivateTypeService] =
@@ -120,13 +127,38 @@ const DriverHomeScreen = props => {
 
   const dispatch = useDispatch();
 
-  const userAuth = useSelector(state => state.auth);
-  if (!userAuth) {
-    props.navigation.navigate('Auth');
-  }
+  const verifyPermissions = async () => {
+    const result = await Permissions.askAsync(Permissions.LOCATION);
+    if (result.status !== 'granted') {
+        Alert.alert(
+            'Permisos insuficientes',
+            'Necesita los permisos de geolocalización para poder obtener localización en tiempo real.',
+            [{ text: 'Está bien' }]
+        );
+        return false;
+    }
+    return true;
+  };
+
+  const getCurrentLocation = async () => {
+    const hasPermissions = await verifyPermissions();
+    if (!hasPermissions) return;
+
+    try {
+        const location = await Location.getCurrentPositionAsync({ timeout: 4000 });
+
+        dispatch(placesActions.currentPosition({
+          lat: location.coords.latitude,
+          lng: location.coords.longitude,
+        }));
+    } catch (err) {
+        Alert.alert('No se puede obtener la localización', 'Por favor intentar nuevamente.', [{ text: 'Esta bien' }]);
+    }
+  };
 
   useEffect(() => {
     places.urbanServiceActivateAddress && setTypeTruckService(URBAN_SERVICE);
+    getCurrentLocation();
   }, []);
 
   const typeServiceId = userAuth.typeServiceSelected;
@@ -255,7 +287,6 @@ const DriverHomeScreen = props => {
               </View>
               {typeTruckService == RURAL_SERVICE && (
                 <View>
-                  {console.log(places)}
                   <LocationPicker
                     navigation={props.navigation}
                     id="destiny"

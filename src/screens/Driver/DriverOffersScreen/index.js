@@ -59,12 +59,14 @@ const getcollectionTimeSlot = (collectionTimeSlotItem) =>
 const DriverOffersScreen = (props) => {
   const [offerForm, setofferForm] = useState();
   const offers = useSelector(state => state.activeOffers.offers);
+  const userAuth = useSelector(state => state.auth);
+  if (!userAuth) {
+    props.navigation.navigate('Auth');
+  }
 
   const changeToOfferFormHandler = (offerId) => {
     setofferForm(offerId);
   };
-
-  const navigateToOffers = props.navigation.navigate('Offers');
 
   return (
     <View style={styles.supportContainer}>
@@ -78,7 +80,6 @@ const DriverOffersScreen = (props) => {
             {offers.map((offer) => (
               <ShowOffer
                 key={offer.offerId}
-                offerId={offer.offerId}
                 offer={offer}
                 getcollectionTimeSlot={getcollectionTimeSlot}
                 changeToOfferFormHandler={changeToOfferFormHandler}
@@ -86,7 +87,12 @@ const DriverOffersScreen = (props) => {
             ))} 
           </Swiper>
         : (
-          <OfferForm offers navigate={navigateToOffers} />
+          <OfferForm
+            offerForm={offerForm}
+            navigation={props.navigation}
+            userId={userAuth.userId}
+            changeToOfferFormHandler={changeToOfferFormHandler}
+          />
         )}
     </View>
   );
