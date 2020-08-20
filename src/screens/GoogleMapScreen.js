@@ -60,7 +60,6 @@ const GoogleMapScreen = props => {
   if (!userAuth) {
     props.navigation.navigate('Auth');
   }
-  const [selectedLocation, setSelectedLocation] = useState();
   const typeFieldSelected = useSelector(state => state.places.typeFieldSelected);
   const currentPosition = useSelector(state => state.places.currentPosition);
   let latitude = 4.60971;
@@ -69,7 +68,15 @@ const GoogleMapScreen = props => {
     latitude = currentPosition.lat;
     longitude = currentPosition.lng;
   }
-
+  
+  const [selectedLocation, setSelectedLocation] = useState(
+    {
+      latitude,
+      longitude,
+      address: '',
+      status: 'WAITING',
+    }
+  );
   const [region, setRegion] =
     useState({
       latitude,
@@ -108,7 +115,6 @@ const GoogleMapScreen = props => {
       address: savedLocation.address,
       status: savedLocation.status,
     });
-    console.log(selectedLocation);
     setRegion({
       ...region,
       latitude: location.lat,
