@@ -109,30 +109,26 @@ const OfferForm = (props) => {
     return x % y == 0;
   }
 
-  const offerHandler = async () => {
+  const offerHandler = () => {
     const value = formState.inputValues.value;
     if(value && isMultiple(value)) {
-      const action = offerActions.realizeOffer(props.offerForm, value, props.userId);
+      const action = offerActions.realizeOffer(props.offerForm, value, props.userId, props.index);
       const controller = new AbortController();
       setError(null);
       setIsLoading(true);
       try {
-          const responseAction = dispatch(action);
-          const { response } = await responseAction.then((res) => res);
-          console.log(response);
-          controller.abort();
-          if (response.status === 'OK') {
-            props.changeToOfferFormHandler(props.offerForm);
-          }
+        dispatch(action);
+        props.changeToOfferFormHandler();
+        controller.abort();
       } catch (err) {
           setError(err.message);
       }
       setIsLoading(false);
       controller.abort();
+      
     } else {
       setError('¡UPS! por favor ingresa un valor correcto.');
     }
-    
   };
 
   return (

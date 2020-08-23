@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Swiper from 'react-native-swiper';
 import { primaryColor, yellowColor } from '../../../constants/Colors';
 import { collectionTimeSlot } from '../../../constants/Utils';
+
+import * as offersAction from '../../../redux/actions/offers';
 
 import DriverHeader from '../../../components/DriverHeader';
 import ShowOffer from './ShowOffer';
@@ -58,14 +60,19 @@ const getcollectionTimeSlot = (collectionTimeSlotItem) =>
 
 const DriverOffersScreen = (props) => {
   const [offerForm, setofferForm] = useState();
-  const offers = useSelector(state => state.activeOffers.offers);
+  let offerState = useSelector(state => state.activeOffers);
+  let offers = offerState.offers;
+
+  const [indexSwiper, setIndex] = useState(offerState.index);
   const userAuth = useSelector(state => state.auth);
   if (!userAuth) {
+    dispatch(authActions.logout());
     props.navigation.navigate('Auth');
   }
 
-  const changeToOfferFormHandler = (offerId) => {
+  const changeToOfferFormHandler = (offerId = null, index = indexSwiper) => {
     setofferForm(offerId);
+    setIndex(index);
   };
 
   return (
@@ -76,18 +83,25 @@ const DriverOffersScreen = (props) => {
         leftIcon="refresh"
       />
       {!offerForm
-        ? <Swiper style={styles.swiperContainer} showsButtons showsPagination={false}>
-            {offers.map((offer) => (
+        ? <Swiper
+            style={styles.swiperContainer}
+            showsButtons
+            showsPagination={false}
+            index={indexSwiper}
+          >
+            {offers.map((offer, index) => (
               <ShowOffer
-                key={offer.offerId}
+                index={index}
+                key={index}
                 offer={offer}
                 getcollectionTimeSlot={getcollectionTimeSlot}
                 changeToOfferFormHandler={changeToOfferFormHandler}
               />
-            ))} 
+            ))}
           </Swiper>
         : (
           <OfferForm
+            index={indexSwiper}
             offerForm={offerForm}
             navigation={props.navigation}
             userId={userAuth.userId}

@@ -40,7 +40,7 @@ const Button = props => {
             lineHeight: 18
           }
         }
-        onPress={props.onPress}
+        onPress={!props.disabled && props.onPress}
       >
         {props.title.toUpperCase()}
       </Text>

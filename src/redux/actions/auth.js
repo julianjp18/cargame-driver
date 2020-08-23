@@ -112,5 +112,6 @@ export const setTypeService = (service) => {
 };
 
 export const logout = () => {
+    AsyncStorage.clear();
     return { type: LOGOUT };
 };

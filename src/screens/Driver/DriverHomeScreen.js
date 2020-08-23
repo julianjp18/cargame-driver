@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, View, Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
@@ -17,7 +17,7 @@ import LocationPicker from '../../components/UI/LocationPicker';
 
 import * as offersAction from '../../redux/actions/offers';
 import * as placesActions from '../../redux/actions/places';
-import { useEffect } from 'react';
+import * as authActions from '../../redux/actions/auth';
 
 const styles = StyleSheet.create({
   homeContainer: {
@@ -109,8 +109,10 @@ const styles = StyleSheet.create({
 });
 
 const DriverHomeScreen = props => {
+  const dispatch = useDispatch();
   const userAuth = useSelector(state => state.auth);
   if (!userAuth) {
+    dispatch(authActions.logout());
     props.navigation.navigate('Auth');
   }
   const [typeTruckService, setTypeTruckService] = useState(RURAL_SERVICE);
@@ -124,8 +126,6 @@ const DriverHomeScreen = props => {
       : new Date()
     );
   const [show, setShow] = useState(false);
-
-  const dispatch = useDispatch();
 
   const verifyPermissions = async () => {
     const result = await Permissions.askAsync(Permissions.LOCATION);

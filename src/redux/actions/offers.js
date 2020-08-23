@@ -5,14 +5,31 @@ export const REALIZE_OFFER = 'REALIZE_OFFER';
 
 export const showActiveOffers = () => dispatch => {
   const data = firestoreDB
-  .collection("OffersNotificationCenter")
-  .get();
+  .collection("OffersNotificationCenter");
 
   const offersData = [];
-  data.then((allOffers) => {
+  data.onSnapshot((allOffers) => {
       allOffers.forEach(offer => {
-          if (offer.data().status === "active") {
-              offersData.push({...offer.data(), offerId: offer.id });
+          if (offer.data().status === 'ACTIVE') {
+              if (!offer.data().offerValue || offer.data().offerValue === '') {
+                offersData.push({
+                  ...offer.data(),
+                  offerId: offer.id,
+                  response: {
+                    message: 'Nadie ha ofertado',
+                    status: 'INFO',
+                  }
+                });
+              } else {
+                offersData.push({
+                  ...offer.data(),
+                  offerId: offer.id,
+                  response: {
+                    message: 'Han realizado una oferta por',
+                    status: 'OFFERED',
+                  }
+                });
+              }
           }
       });
   });
@@ -21,40 +38,120 @@ export const showActiveOffers = () => dispatch => {
       type: SHOW_ACTIVE_OFFERS,
       offers: offersData
   });
+
+  return offersData;
 };
 
-export const realizeOffer = (offerId, newOfferValue, userId) => async dispatch => {
+export const getOfferValueById = async (offerId) => {
   const data = firestoreDB
     .collection('OffersNotificationCenter')
     .doc(offerId)
     .get();
+
   const { offerValue } = await data.then(doc => doc.data());
 
-  let finalValue = offerValue ? offerValue : newOfferValue;
+  return offerValue;
+};
 
-  finalValue = parseInt(finalValue) > parseInt(newOfferValue)
-    ? newOfferValue
-    : finalValue; 
-
+const changeOfferState = async (offerId) => {
   const updateData = firestoreDB.collection('OffersNotificationCenter').doc(offerId).update({
-    driverId: userId,
-    offerValue: finalValue,
+    status: 'IN_PROGRESS',
   });
 
-  const responseUpdateData = updateData.then(() => true).catch(() => false);
+  return await updateData.then(() => true).catch(() => false);
+};
+
+const addHistoryOffer = async (offerId, driverId, newOfferValue) => {
+  const data = firestoreDB
+    .collection('HistoryOffersNotificationCenter')
+    .doc(`${offerId}_${driverId}`)
+    .get();
+
+  const doc = await data.then(doc => doc.exists).catch(() => false);
+
+  if (doc) {
+    const updateData = firestoreDB.collection('HistoryOffersNotificationCenter').doc(`${offerId}_${driverId}`).update({
+      offerValue: newOfferValue,
+      timesOffered: 2,
+      dateOffered: Date.now(),
+      status: 'CONTRACTED',
+    });
+
+    return await updateData.then(() => true).catch(() => false);
+  } else {
+    firestoreDB
+      .collection('HistoryOffersNotificationCenter')
+      .doc(`${offerId}_${driverId}`)
+      .set({
+        driverId,
+        offerId,
+        offerValue: newOfferValue,
+        timesOffered: 1,
+        dateOffered: Date.now(),
+        status: 'OFFERED',
+      });
+    
+    return true;
+  }
+};
+
+export const realizeOffer = (offerId, newOfferValue, offerDriverId, index) => async dispatch => {
+  const data = firestoreDB
+    .collection('OffersNotificationCenter')
+    .doc(offerId)
+    .get();
+  const { offerValue, status, driverId } = await data.then(doc => doc.data());
+
+  let response = '';
+  let finalValue = offerValue !== ''
+      ? offerValue
+      : newOfferValue;
+
+  if (status === 'ACTIVE') {
+
+    offerValue !== '' && changeOfferState(offerId);
+
+    finalValue = parseInt(finalValue) > parseInt(newOfferValue)
+      ? newOfferValue
+      : finalValue; 
+
+    const updateData = firestoreDB.collection('OffersNotificationCenter').doc(offerId).update({
+      driverId: offerDriverId,
+      offerValue: finalValue,
+      dateOffered: Date.now(),
+    });
+
+    const responseUpdateData = updateData.then(() => true).catch(() => false);
+
+    response = {
+      message: responseUpdateData
+        ? 'Usted ha ofertado satisfactoriamente por'
+        : 'No se pudo actualizar la oferta, por favor inténtelo nuevamente',
+      status: responseUpdateData ? 'OK' : 'CANCEL',
+    };
+
+  } else if (status === 'IN_PROGRESS') {
+
+    if (userId === offerDriverId) {
+      response = {
+        message: 'Se le ha asignado la oferta',
+        status: 'OK',
+      };
+    } else {
+      response = {
+        message: 'Se le ha asignado la oferta a alguien más',
+        status: 'REJECTED',
+      };
+    }
+  }
+
+  finalValue !== '' && addHistoryOffer(offerId, offerDriverId, newOfferValue);
 
   dispatch({
     type: REALIZE_OFFER,
     offerId,
     offerValue: finalValue,
+    index,
+    response,
   });
-
-  return {
-    response: {
-      text: responseUpdateData
-        ? '¡Usted acaba de ofertar satisfactoriamente!'
-        : 'No se pudo actualizar la oferta, por favor inténtelo nuevamente',
-      status: responseUpdateData ? 'OK' : 'CANCEL',
-    },
-  };
 };

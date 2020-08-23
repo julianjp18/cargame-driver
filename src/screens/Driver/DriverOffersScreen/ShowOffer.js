@@ -1,16 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { primaryColor, yellowColor } from '../../../constants/Colors';
+import { primaryColor, yellowColor, successColor, cancelColor, offeredColor } from '../../../constants/Colors';
 import Button from '../../../components/UI/Button';
+import { currencyFormat } from '../../../constants/Utils';
+
+import * as offersActions from '../../../redux/actions/offers';
+import { useDispatch } from 'react-redux';
 
 const styles = StyleSheet.create({
   supportContainer: {
     height: '100%',
   },
+  buttonRefreshOffer: {
+    display: 'none'
+  },
   showMessageContainer: {
     backgroundColor: yellowColor,
     padding: '10%',
+  },
+  showOfferedMessage: {
+    backgroundColor: offeredColor,
+  },
+  showConfirmMessage: {
+    backgroundColor: successColor,
+    paddingHorizontal: '6%',
+    padding: '10%',
+  },
+  showCancelMessage: {
+    backgroundColor: cancelColor,
   },
   showMessageText: {
     color: primaryColor,
@@ -48,16 +66,57 @@ const styles = StyleSheet.create({
 });
 
 const ShowOffer = (props) => {
+  const dispatch = useDispatch();
   const offer = props.offer;
+  const [offerValue, setofferValue] = useState(props.offer.offerValue);
+  const [lastOfferValue, setLastOfferValue] = useState(props.offer.offerValue);
+  const [changeOfferInfoColor, setChangeOfferInfoColor] = useState(false);
+
+  const refreshOffer = async () => {
+    const changeOfferValue = await offersActions.getOfferValueById(props.offer.offerId);
+    if(parseInt(changeOfferValue) !== parseInt(lastOfferValue)) {
+      setofferValue(changeOfferValue);
+      setLastOfferValue(changeOfferValue);
+      setChangeOfferInfoColor(true);
+
+      setTimeout(() => {
+        setChangeOfferInfoColor(false);
+      }, 5000);
+    }
+    setTimeout(refreshOffer, 10000);
+  };
+
+  refreshOffer();
+
   return (
     <View
       testId={`${offer.userId}-${offer.destinationCity}`}
       style={styles.offerContainer}
     >
-      <View style={styles.showMessageContainer}>
-        <Text style={styles.showMessageText}>Nadie ha ofertado</Text>
+      <View
+        style={[
+          styles.showMessageContainer,
+          offer.response.status === 'OFFERED' && styles.showOfferedMessage,
+          offer.response.status === 'OK' && styles.showConfirmMessage,
+          changeOfferInfoColor && styles.showCancelMessage,
+          offer.response.status === 'CANCEL' && styles.showCancelMessage,
+          offer.response.status === 'REJECTED' && styles.showCancelMessage,
+        ]}
+      >
+        <Text style={styles.showMessageText}>
+          {` ${offer.response.message} ${
+            offer.response.status === 'OFFERED'
+            || offer.response.status === 'OK'
+              ? currencyFormat(offerValue, 0)
+              : ''
+            }`}
+        </Text>
       </View>
-      <View style={styles.showInfoContainer}>
+      <View
+        style={[
+          styles.showInfoContainer,
+        ]}
+      >
         <ScrollView>
           <View style={styles.showInfoContent}>
             <Text style={styles.title}>Ciudad de Origen:</Text>
@@ -85,11 +144,17 @@ const ShowOffer = (props) => {
           </View>
         </ScrollView>
       </View>
-      <View style={styles.buttonContainer}>
+      <View
+        style={[
+          styles.buttonContainer,
+          offer.response.status === 'REJECTED' && styles.disableButtonContainer,
+        ]}
+      >
         <Button
           title="Ofertar"
           paddingVertical={20}
-          onPress={() => props.changeToOfferFormHandler(offer.offerId) }
+          disabled={offer.response.status === 'REJECTED'}
+          onPress={() => props.changeToOfferFormHandler(offer.offerId, props.index) }
         />
       </View>
     </View>
