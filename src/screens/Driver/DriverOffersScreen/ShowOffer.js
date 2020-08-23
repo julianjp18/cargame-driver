@@ -75,7 +75,7 @@ const ShowOffer = (props) => {
   const refreshOffer = async () => {
     const changeOfferValue = await offersActions.getOfferValueById(props.offer.offerId);
     if(parseInt(changeOfferValue) !== parseInt(lastOfferValue)) {
-      changeOfferValue && setofferValue(changeOfferValue);
+      setofferValue(changeOfferValue);
       setLastOfferValue(changeOfferValue);
       setChangeOfferInfoColor(true);
 
@@ -100,6 +100,7 @@ const ShowOffer = (props) => {
           offer.response.status === 'OK' && styles.showConfirmMessage,
           changeOfferInfoColor && styles.showCancelMessage,
           offer.response.status === 'CANCEL' && styles.showCancelMessage,
+          offer.response.status === 'REJECTED' && styles.showCancelMessage,
         ]}
       >
         <Text style={styles.showMessageText}>
@@ -143,10 +144,16 @@ const ShowOffer = (props) => {
           </View>
         </ScrollView>
       </View>
-      <View style={styles.buttonContainer}>
+      <View
+        style={[
+          styles.buttonContainer,
+          offer.response.status === 'REJECTED' && styles.disableButtonContainer,
+        ]}
+      >
         <Button
           title="Ofertar"
           paddingVertical={20}
+          disabled={offer.response.status === 'REJECTED'}
           onPress={() => props.changeToOfferFormHandler(offer.offerId, props.index) }
         />
       </View>
