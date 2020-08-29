@@ -157,6 +157,7 @@ const DriverHomeScreen = props => {
   };
 
   useEffect(() => {
+    dispatch(offersAction.showActiveOffers());
     places.urbanServiceActivateAddress && setTypeTruckService(URBAN_SERVICE);
     getCurrentLocation();
   }, []);
@@ -164,8 +165,6 @@ const DriverHomeScreen = props => {
   const typeServiceId = userAuth.typeServiceSelected;
   const categorySelected = categoristList.find(
     category => category.id === typeServiceId);
-
-  userAuth && dispatch(offersAction.showActiveOffers());
 
   const changeTypeTruckService = (changeType) => {
     if (!activateTypeService) setTypeTruckService(changeType);

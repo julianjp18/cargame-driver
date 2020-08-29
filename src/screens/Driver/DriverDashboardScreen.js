@@ -10,6 +10,7 @@ import { setTypeService } from '../../redux/actions/auth';
 
 import * as userActions from '../../redux/actions/users';
 import * as driverNotificationsAction from '../../redux/actions/notifications';
+import * as travelsActions from '../../redux/actions/travels';
 
 const selectedCategoryItem = (navigation, dispatch, categoryId, routeName) => {
     dispatch(setTypeService(categoryId));
@@ -23,14 +24,13 @@ const DriverDashboardScreen = props => {
 
     useEffect(() => {
         dispatch(userActions.showUser(userAuth.userId));
-    }, []);
+        dispatch(driverNotificationsAction.showDriverNotifications());
+        dispatch(travelsActions.getTripsInProgressByDriverId(userAuth.userId));
+    }, [userAuth]);
 
     if (!userAuth) {
         props.navigation.navigate('Auth');
     }
-
-    const user = useSelector(state => state.user);
-    !user && dispatch(driverNotificationsAction.showDriverNotifications());
 
     return (
         <View style={styles.servicesContainer}>

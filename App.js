@@ -14,6 +14,7 @@ import userReducer from './src/redux/reducers/user';
 import offerReducer from './src/redux/reducers/offer';
 import placeReducer from './src/redux/reducers/place';
 import notificationReducer from './src/redux/reducers/notification';
+import travelReducer from './src/redux/reducers/travel';
 import { shortBackgroundImageUrl } from './src/constants/Utils';
 
 enableScreens();
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
   notifications: notificationReducer,
   activeOffers: offerReducer,
   places: placeReducer,
+  travels: travelReducer,
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
