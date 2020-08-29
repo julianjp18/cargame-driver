@@ -53,6 +53,37 @@ export const getOfferValueById = async (offerId) => {
   return offerValue;
 };
 
+export const getOfferById = async (offerId) => {
+  const dataOffer = firestoreDB
+  .collection('OffersNotificationCenter')
+  .doc(offerId)
+  .get();
+
+  const {
+    currentAddress,
+    currentCity,
+    description,
+    destinationAddress,
+    destinationCity,
+    pickupDate
+  } = await dataOffer.then(doc => doc.data());
+
+  console.log(currentAddress,
+    currentCity,
+    description,
+    destinationAddress,
+    destinationCity,
+    pickupDate);
+  return {
+    currentAddress,
+    currentCity,
+    description,
+    destinationAddress,
+    destinationCity,
+    pickupDate
+  }
+};
+
 const changeOfferState = async (offerId) => {
   const updateData = firestoreDB.collection('OffersNotificationCenter').doc(offerId).update({
     status: 'IN_PROGRESS',
@@ -79,10 +110,12 @@ const addHistoryOffer = async (offerId, driverId, newOfferValue) => {
 
     return await updateData.then(() => true).catch(() => false);
   } else {
+    const getOfferData = getOfferById(offerId);
     firestoreDB
       .collection('HistoryOffersNotificationCenter')
       .doc(`${offerId}_${driverId}`)
       .set({
+        ...getOfferData,
         driverId,
         offerId,
         offerValue: newOfferValue,
