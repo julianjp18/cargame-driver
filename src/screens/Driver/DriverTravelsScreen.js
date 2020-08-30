@@ -1,21 +1,28 @@
 import React, { useState } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { ListItem } from 'react-native-elements';
 import { textSecondaryColor, darkGrey, primaryColor } from '../../constants/Colors';
 import DriverHeader from '../../components/DriverHeader';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-
 import { AntDesign } from '@expo/vector-icons';
+
+import * as authActions from '../../redux/actions/auth';
 
 const IN_PROGRESS_TRAVELS = 1;
 const FINISHED_TRAVELS = 0;
 
 const DriverTravelsScreen = props => {
+  const dispatch = useDispatch();
   const [typeTravelService, setTypeTravelService] = useState(IN_PROGRESS_TRAVELS);
-
   const tripsInProgress = useSelector(state => state.travels.tripsInProgress);
   const tripsMade = useSelector(state => state.travels.tripsMade);
+
+  const user = useSelector(state => state.user);
+  if (!user || !useSelector(state => state.auth)) {
+    dispatch(authActions.logout());
+    props.navigation.navigate('Auth');
+  }
 
   const changeTypeTravelService = (changeType) => {
     setTypeTravelService(changeType);
@@ -40,7 +47,7 @@ const DriverTravelsScreen = props => {
             onPress={() => changeTypeTravelService(IN_PROGRESS_TRAVELS)}
           >
             Viajes en progreso
-                    </Text>
+          </Text>
         </View>
         <View style={styles.col2}>
           <Text

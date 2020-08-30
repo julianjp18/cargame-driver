@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { StyleSheet, View, Text } from 'react-native';
+import { useSelector } from 'react-redux';
 import Swiper from 'react-native-swiper';
 import { primaryColor, yellowColor } from '../../../constants/Colors';
 import { collectionTimeSlot } from '../../../constants/Utils';
-
-import * as offersAction from '../../../redux/actions/offers';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import DriverHeader from '../../../components/DriverHeader';
 import ShowOffer from './ShowOffer';
@@ -51,7 +50,16 @@ const styles = StyleSheet.create({
     position: 'relative',
     bottom: '3%',
     marginHorizontal: '10%',
-  }
+  },
+  notFoundContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '20%'
+  },
+  notFoundText: {
+
+  },
 });
 
 const getcollectionTimeSlot = (collectionTimeSlotItem) =>
@@ -65,6 +73,7 @@ const DriverOffersScreen = (props) => {
 
   const [indexSwiper, setIndex] = useState(offerState.index);
   const userAuth = useSelector(state => state.auth);
+
   if (!userAuth) {
     dispatch(authActions.logout());
     props.navigation.navigate('Auth');
@@ -89,7 +98,14 @@ const DriverOffersScreen = (props) => {
             showsPagination={false}
             index={indexSwiper}
           >
-            {offers.map((offer, index) => (
+            {offers.length === 0 ? (
+              <View style={styles.notFoundContainer}>
+                <MaterialCommunityIcons name="delete-empty-outline" size={90} color={primaryColor} />
+                <Text style={styles.notFoundText}>
+                  No existen ofertas activas por el momento
+                </Text>
+              </View>
+            ) : offers.map((offer, index) => (
               <ShowOffer
                 index={index}
                 key={index}
