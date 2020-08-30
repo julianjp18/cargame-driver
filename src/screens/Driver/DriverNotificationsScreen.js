@@ -1,11 +1,13 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { ListItem } from 'react-native-elements';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { textSecondaryColor, darkGrey, primaryColor } from '../../constants/Colors';
 import DriverHeader from '../../components/DriverHeader';
 import { AntDesign } from '@expo/vector-icons';
+
+import * as authActions from '../../redux/actions/auth';
 
 const styles = StyleSheet.create({
   servicesContainer: {
@@ -61,9 +63,14 @@ const styles = StyleSheet.create({
 });
 
 const DriverNotificationsScreen = props => {
+  const dispatch = useDispatch();
   const notifications = useSelector(state => state.notifications.driverNotifications);
   const user = useSelector(state => state.user);
-  
+  if(!user || !useSelector(state => state.auth)) {
+    dispatch(authActions.logout());
+    props.navigation.navigate('Auth');
+  }
+
   return (
     <View style={styles.servicesContainer}>
       <DriverHeader

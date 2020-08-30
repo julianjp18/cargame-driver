@@ -111,10 +111,10 @@ const styles = StyleSheet.create({
 const DriverHomeScreen = props => {
   const dispatch = useDispatch();
   const userAuth = useSelector(state => state.auth);
-  if (!userAuth) {
+  if(!useSelector(state => state.user) || !userAuth) {
     dispatch(authActions.logout());
     props.navigation.navigate('Auth');
-  }
+}
   const [typeTruckService, setTypeTruckService] = useState(RURAL_SERVICE);
   const places = useSelector(state => state.places);
   const [activateTypeService, setActivateTypeService] =
