@@ -18,6 +18,7 @@ import LocationPicker from '../../components/UI/LocationPicker';
 import * as offersAction from '../../redux/actions/offers';
 import * as placesActions from '../../redux/actions/places';
 import * as authActions from '../../redux/actions/auth';
+import { getUserInfo } from '../../utils/helpers';
 
 const styles = StyleSheet.create({
   homeContainer: {
@@ -111,10 +112,14 @@ const styles = StyleSheet.create({
 const DriverHomeScreen = props => {
   const dispatch = useDispatch();
   const userAuth = useSelector(state => state.auth);
-  if(!useSelector(state => state.user) || !userAuth) {
-    dispatch(authActions.logout());
-    props.navigation.navigate('Auth');
-}
+  getUserInfo().then((data) => {
+    const userInfo = JSON.parse(data);
+    if (!userInfo.token) {
+      dispatch(authActions.logout());
+      props.navigation.navigate('Index');
+    }
+  });
+
   const [typeTruckService, setTypeTruckService] = useState(RURAL_SERVICE);
   const places = useSelector(state => state.places);
   const [activateTypeService, setActivateTypeService] =

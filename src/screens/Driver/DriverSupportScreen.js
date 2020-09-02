@@ -8,14 +8,18 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { primaryColor, accentColor, textAccentColor } from '../../constants/Colors';
 
 import * as authActions from '../../redux/actions/auth';
+import { getUserInfo } from '../../utils/helpers';
 
 const DriverSupportScreen = props => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.user);
-  if (!user || !useSelector(state => state.auth)) {
-    dispatch(authActions.logout());
-    props.navigation.navigate('Auth');
-  }
+  getUserInfo().then((data) => {
+    const userInfo = JSON.parse(data);
+    if (!userInfo.token) {
+      dispatch(authActions.logout());
+      props.navigation.navigate('Index');
+    }
+  });
 
   return (
     <View style={styles.supportContainer}>

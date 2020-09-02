@@ -22,11 +22,17 @@ import StartupScreen from '../screens/StartupScreen';
 import DriverOffersScreen from '../screens/Driver/DriverOffersScreen';
 import GoogleMapScreen from '../screens/GoogleMapScreen';
 import OfferForm from '../screens/Driver/DriverOffersScreen/OfferForm';
+import TravelSelectedScreen from '../screens/Driver/DriverTravelsScreen/TravelSelectedScreen';
 
 const profileNavigator = createSwitchNavigator({
     Profile: DriverProfileScreen,
     EditPhoneNumber: EditPhoneNumberScreen,
 });
+
+const TravelsNavigator = createSwitchNavigator({
+    Travels: DriverTravelsScreen,
+    TravelSelected: TravelSelectedScreen,
+})
 
 const OffersNavigator = createSwitchNavigator({
     Offers: DriverOffersScreen,
@@ -63,7 +69,7 @@ const DriverTabNavigator = createBottomTabNavigator({
         }
     },
     Travels: {
-        screen: DriverTravelsScreen,
+        screen: TravelsNavigator,
         navigationOptions: {
             tabBarLabel: 'Viajes',
             tabBarIcon: (tabInfo) => {
