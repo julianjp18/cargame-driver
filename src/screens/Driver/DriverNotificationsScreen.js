@@ -8,6 +8,7 @@ import DriverHeader from '../../components/DriverHeader';
 import { AntDesign } from '@expo/vector-icons';
 
 import * as authActions from '../../redux/actions/auth';
+import { getUserInfo } from '../../utils/helpers';
 
 const styles = StyleSheet.create({
   servicesContainer: {
@@ -66,10 +67,13 @@ const DriverNotificationsScreen = props => {
   const dispatch = useDispatch();
   const notifications = useSelector(state => state.notifications.driverNotifications);
   const user = useSelector(state => state.user);
-  if(!user || !useSelector(state => state.auth)) {
-    dispatch(authActions.logout());
-    props.navigation.navigate('Auth');
-  }
+  getUserInfo().then((data) => {
+    const userInfo = JSON.parse(data);
+    if (!userInfo.token) {
+      dispatch(authActions.logout());
+      props.navigation.navigate('Index');
+    }
+  });
 
   return (
     <View style={styles.servicesContainer}>

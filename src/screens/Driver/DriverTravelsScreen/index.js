@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { ListItem } from 'react-native-elements';
-import { textSecondaryColor, darkGrey, primaryColor } from '../../constants/Colors';
-import DriverHeader from '../../components/DriverHeader';
+import { textSecondaryColor, darkGrey, primaryColor } from '../../../constants/Colors';
+import DriverHeader from '../../../components/DriverHeader';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
 
-import * as authActions from '../../redux/actions/auth';
+import * as authActions from '../../../redux/actions/auth';
+import * as travelActions from '../../../redux/actions/travels';
 
 const IN_PROGRESS_TRAVELS = 1;
 const FINISHED_TRAVELS = 0;
@@ -26,6 +27,11 @@ const DriverTravelsScreen = props => {
 
   const changeTypeTravelService = (changeType) => {
     setTypeTravelService(changeType);
+  };
+
+  const viewTravel = (tripInProgress) => {
+    dispatch(travelActions.saveTripSelected(tripInProgress));
+    props.navigation.navigate('TravelSelected');
   };
 
   return (
@@ -89,6 +95,7 @@ const DriverTravelsScreen = props => {
                       </View>
                     )}
                     titleStyle={styles.titleListItem}
+                    onPress={() => viewTravel(tripInProgress)}
                   />
                 </TouchableOpacity>
               )) : (
