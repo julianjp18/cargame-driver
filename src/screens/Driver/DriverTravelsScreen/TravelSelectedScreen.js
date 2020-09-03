@@ -4,10 +4,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import DriverHeader from '../../../components/DriverHeader';
 import { AntDesign, FontAwesome } from '@expo/vector-icons'; 
 import { primaryColor, accentColor } from '../../../constants/Colors';
+import Timeline from 'react-native-timeline-flatlist';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import * as authActions from '../../../redux/actions/auth';
 import { getUserInfo } from '../../../utils/helpers';
-import { LinearGradient } from 'expo-linear-gradient';
+
 
 const styles = StyleSheet.create({
   travelSelectedContainer: {
@@ -50,11 +52,38 @@ const styles = StyleSheet.create({
     fontFamily: 'Ruda',
     fontWeight: '900'
   },
+  pickUpDateText: {
+    color: '#424B5A',
+    fontFamily: 'Quicksand',
+    fontSize: 20,
+    fontWeight: '700',
+    lineHeight: 25,
+  },
+  timeLineContainer: {
+    marginTop: '1%',
+    marginLeft: '10%'
+  },
+  timeStyleText: {
+    fontFamily: 'Quicksand',
+    fontSize: 14,
+    fontWeight: '700',
+    lineHeight: 18,
+    color: primaryColor,
+    textAlign: 'center',
+    paddingTop: '15%',
+  },
+  titleStyleText: {
+    fontFamily: 'Quicksand',
+    fontSize: 14,
+    fontWeight: '700',
+    lineHeight: 18,
+    color: primaryColor,
+    textAlign: 'justify'
+  }
 });
 
 const TravelSelectedScreen = props => {
   const dispatch = useDispatch();
-
   const user = useSelector(state => state.user);
 
   getUserInfo().then((data) => {
@@ -65,6 +94,14 @@ const TravelSelectedScreen = props => {
       props.navigation.navigate('Index');
     }
   });
+
+  const data = [
+    {time: '09:00', title: 'Event 1'},
+    {time: '10:45', title: 'Event 2'},
+    {time: '12:00', title: 'Event 3'},
+    {time: '14:00', title: 'Event 4'},
+    {time: '16:30', title: 'Event 5'}
+  ];
 
   return (
     <View style={styles.travelSelectedContainer}>
@@ -108,6 +145,56 @@ const TravelSelectedScreen = props => {
               </View>
           </View>
       </LinearGradient>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Datos de quien recibe</Text>
+      </View>
+      <LinearGradient
+        start={{ x: -1, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        colors={[
+            props.colorOne ? props.colorOne : primaryColor,
+            props.colorTwo ? props.colorTwo : accentColor
+        ]}
+      >
+        <View style={styles.row}>
+          <View style={styles.col1}>
+              <View style={styles.row}>
+                <View>
+                  <AntDesign name="user" size={24} color="white" />
+                </View>
+                <View>
+                  <Text style={styles.infoUserText}>{user && user.name}</Text>
+                </View>
+              </View>
+              <View style={styles.row}>
+                <View>
+                  <AntDesign name="phone" size={24} color="white" />
+                </View>
+                <View>
+                  <Text style={styles.infoUserText}>{user && user.phone}</Text>
+                </View>
+              </View>
+          </View>
+          <View style={styles.col2}>
+            <FontAwesome name="user-circle-o" size={34} color="white" />
+          </View>
+      </View>
+      </LinearGradient>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Fecha de entrega</Text>
+        <Text style={styles.pickUpDateText}>12/09/20</Text>
+      </View>
+      <Timeline
+        data={data}
+        circleSize={20}
+        circleColor={primaryColor}
+        lineColor={accentColor}
+        innerCircle={'dot'}
+        style={styles.timeLineContainer}
+        timeStyle={styles.timeStyleText}
+        titleStyle={styles.titleStyleText}
+        timeContainerStyle={{ paddingTop: '15%'}}
+      />
     </View>
   );
 };
