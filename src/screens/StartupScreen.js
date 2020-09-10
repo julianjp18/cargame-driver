@@ -15,23 +15,23 @@ const StartupScreen = props => {
 
     useEffect(() => {
         const tryLogin = async () => {
-            const userData = await AsyncStorage.getItem('userData');
+            const userData = await AsyncStorage.getItem('driverData');
             if (!userData) {
                 props.navigation.navigate('Index');
                 return;
             }
 
             const transformedUserData = JSON.parse(userData);
-            const {token, userId, expiredDate, email } = transformedUserData;
+            const {token, driverId, expiredDate, email } = transformedUserData;
             const expirationDate = new Date(expiredDate);
 
-            if (expirationDate <= new Date() || !token || !userId) {
+            if (expirationDate <= new Date() || !token || !driverId) {
                 props.navigation.navigate('Index');
                 return;
             }
 
             props.navigation.navigate('ServicesList');
-            dispatch(authActions.authenticate(userId, token, email))
+            dispatch(authActions.authenticate(driverId, token, email))
         }
 
         tryLogin();

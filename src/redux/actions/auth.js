@@ -11,7 +11,7 @@ const API_URL = 'https://identitytoolkit.googleapis.com/v1/accounts:';
 export const authenticate = (localId, token, email) => {
     return {
         type: AUTHENTICATE,
-        userId: localId,
+        driverId: localId,
         token,
         email,
     };
@@ -92,12 +92,12 @@ export const signin = (email, password) => {
     };
 };
 
-const saveDataToStorage = (token, userId, expirationDate, email) => {
+const saveDataToStorage = (token, driverId, expirationDate, email) => {
     AsyncStorage.setItem(
-        'userData',
+        'driverData',
         JSON.stringify({
             token: token,
-            userId,
+            driverId,
             expirationDate: expirationDate.toISOString(),
             email,
         }))

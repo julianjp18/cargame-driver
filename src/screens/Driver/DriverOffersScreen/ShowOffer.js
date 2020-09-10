@@ -90,7 +90,7 @@ const ShowOffer = (props) => {
 
   return (
     <View
-      testId={`${offer.userId}-${offer.destinationCity}`}
+      testId={`${offer.driverId}-${offer.destinationCity}`}
       style={styles.offerContainer}
     >
       <View

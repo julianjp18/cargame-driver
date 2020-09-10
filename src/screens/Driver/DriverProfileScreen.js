@@ -10,7 +10,7 @@ import { shortBrandOrangeGreyUrl } from '../../constants/Utils';
 import ImgPicker from '../../components/UI/ImagePicker';
 import * as MediaLibrary from 'expo-media-library';
 
-import * as userActions from '../../redux/actions/users';
+import * as driverActions from '../../redux/actions/drivers';
 import * as authActions from '../../redux/actions/auth';
 import { getUserInfo } from '../../utils/helpers';
 
@@ -33,7 +33,7 @@ const LogOutListItem = props => (
 );
 
 const DriverProfileScreen = props => {
-  const user = useSelector(state => state.user);
+  const driver = useSelector(state => state.driver);
   const userEmail = useSelector(state => state.auth.email);
   const [error, setError] = useState();
   const dispatch = useDispatch();
@@ -59,7 +59,7 @@ const DriverProfileScreen = props => {
         const controller = new AbortController();
         setError(null);
         try {
-          await dispatch(userActions.changeProfilePicture(asset.uri, user.userId));
+          await dispatch(driverActions.changeProfilePicture(asset.uri, driver.driverId));
           const savedImage = await MediaLibrary.saveToLibraryAsync(imagePath);
           controller.abort();
         } catch (err) {
@@ -79,12 +79,12 @@ const DriverProfileScreen = props => {
         subtitle="Explora tu perfil aquí"
         leftIcon="user-o"
       />
-      {user ? (
+      {driver ? (
         <ScrollView>
           <View style={styles.infoContainer}>
             <View style={styles.nameListContainer}>
               <Text style={styles.nameListText}>
-                {user.name}
+                {driver.name}
               </Text>
             </View>
             <View style={styles.row}>
@@ -102,7 +102,7 @@ const DriverProfileScreen = props => {
               containerStyle={styles.listContainer}
               title='Cédula de ciudadanía'
               titleStyle={styles.titleListItem}
-              subtitle={user.numberId}
+              subtitle={driver.numberId}
               leftAvatar={
                 <AntDesign name="idcard" size={24} color={primaryColor} />
               }
@@ -126,7 +126,7 @@ const DriverProfileScreen = props => {
                     onPress={() => props.navigation.navigate('EditPhoneNumber')}
                   />
                 }
-                subtitle={user.phone}
+                subtitle={driver.phone}
                 subtitleStyle={styles.subtitleListItem}
                 bottomDivider
               />
@@ -151,7 +151,7 @@ const DriverProfileScreen = props => {
               leftAvatar={
                 <FontAwesome name="pencil" size={24} color={primaryColor} />
               }
-              subtitle={user.referidNumber ? user.referidNumber : 'No tiene código de referido'}
+              subtitle={driver.referidNumber ? driver.referidNumber : 'No tiene código de referido'}
               subtitleStyle={styles.subtitleListItem}
               bottomDivider
             />

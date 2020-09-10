@@ -9,7 +9,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const ImgPicker = props => {
     const userProfilePicture = useSelector(
-        state => state.user.profilePicture ? state.user.profilePicture : ''
+        state => state.driver.profilePicture ? state.driver.profilePicture : ''
     );
     const [pickedImage, setPickedImage] = useState(userProfilePicture ? userProfilePicture : '');
     const verifyPermissions = async () => {

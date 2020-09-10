@@ -19,8 +19,8 @@ const DriverTravelsScreen = props => {
   const tripsInProgress = useSelector(state => state.travels.tripsInProgress);
   const tripsMade = useSelector(state => state.travels.tripsMade);
 
-  const user = useSelector(state => state.user);
-  if (!user || !useSelector(state => state.auth)) {
+  const driver = useSelector(state => state.driver);
+  if (!driver || !useSelector(state => state.auth)) {
     dispatch(authActions.logout());
     props.navigation.navigate('Auth');
   }

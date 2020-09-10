@@ -7,7 +7,7 @@ import {
 
 const initialState = {
     token: null,
-    userId: null,
+    driverId: null,
     isSignUp: false,
     email: null,
     typeServiceSelected: null,
@@ -24,7 +24,7 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 token: action.token,
-                userId: action.userId,
+                driverId: action.driverId,
                 email: action.email,
             };
         case CHANGE_TYPE_SERVICE_SELECTED:
