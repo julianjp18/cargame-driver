@@ -7,7 +7,7 @@ import { KeyboardAwareView } from 'react-native-keyboard-aware-view';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '../../components/UI/Button';
 import TextInput from '../../components/UI/Input';
-import * as userActions from '../../redux/actions/users';
+import * as driverActions from '../../redux/actions/drivers';
 
 import { FontAwesome } from '@expo/vector-icons';
 import { shortBrandOrangeGreyUrl } from '../../constants/Utils';
@@ -42,7 +42,7 @@ const RegisterScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
   const dispatch = useDispatch();
-  const userId = useSelector(state => state.auth.userId);
+  const driverId = useSelector(state => state.auth.driverId);
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
@@ -59,8 +59,8 @@ const RegisterScreen = props => {
   });
 
   const registerHandler = async () => {
-    const action = userActions.createUser({
-      userId,
+    const action = driverActions.createDriver({
+      driverId,
       name: formState.inputValues.name,
       numberId: formState.inputValues.numberId,
       phone: formState.inputValues.phone,

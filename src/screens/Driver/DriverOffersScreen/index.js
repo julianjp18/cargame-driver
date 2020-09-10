@@ -120,7 +120,7 @@ const DriverOffersScreen = (props) => {
             index={indexSwiper}
             offerForm={offerForm}
             navigation={props.navigation}
-            userId={userAuth.userId}
+            driverId={userAuth.driverId}
             changeToOfferFormHandler={changeToOfferFormHandler}
           />
         )}

@@ -1,14 +1,14 @@
 import { firestoreDB } from '../../constants/Firebase';
-export const CREATE_USER = 'CREATE_USER';
-export const SHOW_USER = 'SHOW_USER';
+export const CREATE_DRIVER = 'CREATE_DRIVER';
+export const SHOW_DRIVER = 'SHOW_DRIVER';
 export const CHANGE_PHONE_NUMBER = 'CHANGE_PHONE_NUMBER';
 export const CHANGE_PROFILE_PICTURE = 'CHANGE_PROFILE_PICTURE';
 
-export const createUser = ({ userId, name, numberId, phone, referidNumber = '' }) => {
+export const createDriver = ({ driverId, name, numberId, phone, referidNumber = '' }) => {
     return async dispatch => {
         firestoreDB
             .collection('Drivers')
-            .doc(userId)
+            .doc(driverId)
             .set({
                 name,
                 numberId,
@@ -18,8 +18,8 @@ export const createUser = ({ userId, name, numberId, phone, referidNumber = '' }
             });
 
         dispatch({
-            type: CREATE_USER,
-            userId,
+            type: CREATE_DRIVER,
+            driverId,
             id: name,
             name,
             numberId,
@@ -30,16 +30,16 @@ export const createUser = ({ userId, name, numberId, phone, referidNumber = '' }
     };
 };
 
-export const showUser = (userId) => async dispatch => {
-    if(userId) {
+export const showDriver = (driverId) => async dispatch => {
+    if(driverId) {
         const data = await firestoreDB
             .collection('Drivers')
-            .doc(userId)
+            .doc(driverId)
             .get().then((doc) => doc.data());
 
         dispatch({
-            type: SHOW_USER,
-            userId,
+            type: SHOW_DRIVER,
+            driverId,
             id: data.numberId,
             name: data.name,
             numberId: data.numberId,
@@ -50,28 +50,28 @@ export const showUser = (userId) => async dispatch => {
     }
 };
 
-export const changePhoneNumber = (phoneNumber, userId) => async dispatch => {
+export const changePhoneNumber = (phoneNumber, driverId) => async dispatch => {
     const data = await firestoreDB
         .collection('Drivers')
-        .doc(userId)
+        .doc(driverId)
         .get().then((doc) => doc.data());
 
     const newData = {
         ...data,
         phone: phoneNumber,
     }
-    const updateData = await firestoreDB.collection('Drivers').doc(userId).set(newData);
+    const updateData = await firestoreDB.collection('Drivers').doc(driverId).set(newData);
     dispatch({
         type: CHANGE_PHONE_NUMBER,
-        userId,
+        driverId,
         phone: phoneNumber,
     });
 };
 
-export const changeProfilePicture = (profilePicture, userId) => async dispatch => {
+export const changeProfilePicture = (profilePicture, driverId) => async dispatch => {
     const data = await firestoreDB
         .collection('Drivers')
-        .doc(userId)
+        .doc(driverId)
         .get().then((doc) => doc.data());
 
     const newData = {
@@ -79,10 +79,10 @@ export const changeProfilePicture = (profilePicture, userId) => async dispatch =
         profilePicture,
     }
    
-    const updateData = await firestoreDB.collection('Drivers').doc(userId).set(newData);
+    const updateData = await firestoreDB.collection('Drivers').doc(driverId).set(newData);
     dispatch({
         type: CHANGE_PROFILE_PICTURE,
-        userId,
+        driverId,
         profilePicture,
     });
 };

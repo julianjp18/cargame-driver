@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import DriverHeader from '../../../components/DriverHeader';
@@ -8,6 +8,7 @@ import Timeline from 'react-native-timeline-flatlist';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import * as authActions from '../../../redux/actions/auth';
+import * as travelActions from '../../../redux/actions/travels';
 import { getUserInfo } from '../../../utils/helpers';
 
 
@@ -83,8 +84,14 @@ const styles = StyleSheet.create({
 });
 
 const TravelSelectedScreen = props => {
+  const [user, setUser] = useState();
   const dispatch = useDispatch();
-  const user = useSelector(state => state.user);
+  const driver = useSelector(state => state.driver);
+  const userId = useSelector(state => state.travels.tripSelected.userId);
+
+  useEffect(() => {
+    travelActions.getUserById(userId).then((data) => setUser(data));
+  }, [userId]);
 
   getUserInfo().then((data) => {
     const userInfo = JSON.parse(data);
@@ -109,6 +116,9 @@ const TravelSelectedScreen = props => {
         title="Mis viajes"
         subtitle="Explora tus viajes"
         leftIcon="flag"
+        isButtonBack
+        reDirect="Travels"
+        navigation={props.navigation}
       />
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Datos del cliente</Text>
@@ -128,7 +138,7 @@ const TravelSelectedScreen = props => {
                       <AntDesign name="user" size={24} color="white" />
                     </View>
                     <View>
-                      <Text style={styles.infoUserText}>{user && user.name}</Text>
+                      <Text style={styles.infoUserText}>{driver && driver.name}</Text>
                     </View>
                   </View>
                   <View style={styles.row}>
@@ -136,7 +146,7 @@ const TravelSelectedScreen = props => {
                       <AntDesign name="phone" size={24} color="white" />
                     </View>
                     <View>
-                      <Text style={styles.infoUserText}>{user && user.phone}</Text>
+                      <Text style={styles.infoUserText}>{driver && driver.phone}</Text>
                     </View>
                   </View>
               </View>

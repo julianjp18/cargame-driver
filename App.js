@@ -10,7 +10,7 @@ import ReduxThunk from 'redux-thunk';
 import * as Font from 'expo-font';
 import DashboardNavigator from './src/navigation/DashboardNavigator';
 import authReducer from './src/redux/reducers/auth';
-import userReducer from './src/redux/reducers/user';
+import driverReducer from './src/redux/reducers/driver';
 import offerReducer from './src/redux/reducers/offer';
 import placeReducer from './src/redux/reducers/place';
 import notificationReducer from './src/redux/reducers/notification';
@@ -28,7 +28,7 @@ const fecthFonts = () => {
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  user: userReducer,
+  driver: driverReducer,
   notifications: notificationReducer,
   activeOffers: offerReducer,
   places: placeReducer,

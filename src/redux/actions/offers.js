@@ -165,7 +165,7 @@ export const realizeOffer = (offerId, newOfferValue, offerDriverId, index) => as
 
   } else if (status === 'IN_PROGRESS') {
 
-    if (userId === offerDriverId) {
+    if (driverId === offerDriverId) {
       response = {
         message: 'Se le ha asignado la oferta',
         status: 'OK',

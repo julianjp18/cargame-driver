@@ -112,7 +112,7 @@ const OfferForm = (props) => {
   const offerHandler = () => {
     const value = formState.inputValues.value;
     if(value && isMultiple(value)) {
-      const action = offerActions.realizeOffer(props.offerForm, value, props.userId, props.index);
+      const action = offerActions.realizeOffer(props.offerForm, value, props.driverId, props.index);
       const controller = new AbortController();
       setError(null);
       setIsLoading(true);

@@ -4,11 +4,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { primaryColor } from '../../../constants/Colors';
 import DriverHeader from '../../../components/DriverHeader';
 import { AntDesign } from '@expo/vector-icons';
-import * as userActions from '../../../redux/actions/users';
 import TextInput from '../../../components/UI/Input';
 import Button from '../../../components/UI/Button';
 import { KeyboardAwareView } from 'react-native-keyboard-aware-view';
 import { ScrollView } from 'react-native-gesture-handler';
+
+import * as driverActions from '../../../redux/actions/drivers';
 
 const FORM_NUMBER_PHONE_UPDATE = 'FORM_NUMBER_PHONE_UPDATE';
 
@@ -39,9 +40,9 @@ const EditPhoneNumberScreen = props => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
     const dispatch = useDispatch();
-    const username = useSelector(state => state.user.name);
-    const userPhone = useSelector(state => state.user.phone);
-    const userId = useSelector(state => state.auth.userId);
+    const username = useSelector(state => state.driver.name);
+    const driverPhone = useSelector(state => state.driver.phone);
+    const driverId = useSelector(state => state.auth.driverId);
 
     useEffect(() => {
         if (error) {
@@ -75,9 +76,9 @@ const EditPhoneNumberScreen = props => {
         let action;
         let passwordError = false;
         const phoneNumber = formState.inputValues.phoneNumber;
-        action = userActions.changePhoneNumber(
+        action = driverActions.changePhoneNumber(
             phoneNumber,
-            userId
+            driverId
         );
         if (!passwordError) {
             const controller = new AbortController();
@@ -127,7 +128,7 @@ const EditPhoneNumberScreen = props => {
                                 autoCapitalize="none"
                                 errorText="¡UPS! Por favor ingresa un número de celular correcto."
                                 onInputChange={inputChangeHandler}
-                                initialValue={userPhone}
+                                initialValue={driverPhone}
                             />
                         </View>
                         {isLoading ? (

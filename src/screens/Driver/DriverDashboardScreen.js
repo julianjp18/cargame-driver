@@ -8,7 +8,7 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import WelcomeHeader from '../../components/WelcomeHeader';
 import { setTypeService } from '../../redux/actions/auth';
 
-import * as userActions from '../../redux/actions/users';
+import * as driverActions from '../../redux/actions/drivers';
 import * as driverNotificationsAction from '../../redux/actions/notifications';
 import * as travelsActions from '../../redux/actions/travels';
 import * as authActions from '../../redux/actions/auth';
@@ -78,9 +78,9 @@ const DriverDashboardScreen = props => {
   });
   
   useEffect(() => {
-    dispatch(userActions.showUser(userAuth.userId));
+    dispatch(driverActions.showDriver(userAuth.driverId));
     dispatch(driverNotificationsAction.showDriverNotifications());
-    dispatch(travelsActions.getTripsInProgressByDriverId(userAuth.userId));
+    dispatch(travelsActions.getTripsInProgressByDriverId(userAuth.driverId));
   }, [userAuth]);
 
   return (

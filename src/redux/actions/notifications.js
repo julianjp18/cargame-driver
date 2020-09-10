@@ -11,8 +11,8 @@ export const showDriverNotifications = () => dispatch => {
     data.then((allNotifications) => {
         allNotifications.forEach(notification => {
             if (
-                notification.data().userId === "0" ||
-                notification.data().userId === user.userId
+                notification.data().driverId === "0" ||
+                notification.data().driverId === driver.driverId
             ) {
                 notificationsData.push(notification.data());
             }
