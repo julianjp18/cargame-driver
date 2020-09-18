@@ -40,10 +40,8 @@ const EditPhoneNumberScreen = props => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
     const dispatch = useDispatch();
-    const username = useSelector(state => state.driver.name);
-    const driverPhone = useSelector(state => state.driver.phone);
-    const driverId = useSelector(state => state.auth.driverId);
-
+    const { username, phone, driverId } = useSelector(state => state.driver.name);
+    
     useEffect(() => {
         if (error) {
             Alert.alert('¡Oh no, un error ha ocurrido!', error, [{ text: 'Está bien'}]);
@@ -128,7 +126,7 @@ const EditPhoneNumberScreen = props => {
                                 autoCapitalize="none"
                                 errorText="¡UPS! Por favor ingresa un número de celular correcto."
                                 onInputChange={inputChangeHandler}
-                                initialValue={driverPhone}
+                                initialValue={phone}
                             />
                         </View>
                         {isLoading ? (

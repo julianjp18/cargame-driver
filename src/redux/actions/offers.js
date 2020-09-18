@@ -68,12 +68,6 @@ export const getOfferById = async (offerId) => {
     pickupDate
   } = await dataOffer.then(doc => doc.data());
 
-  console.log(currentAddress,
-    currentCity,
-    description,
-    destinationAddress,
-    destinationCity,
-    pickupDate);
   return {
     currentAddress,
     currentCity,
@@ -187,4 +181,13 @@ export const realizeOffer = (offerId, newOfferValue, offerDriverId, index) => as
     index,
     response,
   });
+};
+
+export const finalizeOfferState = async (offerId) => {
+  const updateData = firestoreDB.collection('OffersNotificationCenter').doc(offerId).update({
+    status: 'DONE',
+  });
+  const result = [];
+  await updateData.then(() => result.push(true)).catch(() => result.push(false));
+  return result[0];
 };

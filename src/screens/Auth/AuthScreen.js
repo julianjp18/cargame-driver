@@ -44,7 +44,7 @@ const formReducer = (state, action) => {
 
 const AuthScreen = props => {
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState();
+    const [error, setError] = useState('');
     const [isSignUp, setIsSignUp] = useState(useSelector(state => state.auth.isSignUp));
     const dispatch = useDispatch();
     const userToken = useSelector(state => state.auth.token);
@@ -105,7 +105,7 @@ const AuthScreen = props => {
         }
         if (!passwordError) {
             const controller = new AbortController();
-            setError(null);
+            setError('');
             setIsLoading(true);
             try {
                 await dispatch(action);

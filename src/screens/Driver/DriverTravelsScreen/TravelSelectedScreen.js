@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, useStore } from 'react-redux';
 import DriverHeader from '../../../components/DriverHeader';
 import { AntDesign, FontAwesome } from '@expo/vector-icons'; 
 import { primaryColor, accentColor } from '../../../constants/Colors';
-import Timeline from 'react-native-timeline-flatlist';
+//import Timeline from 'react-native-timeline-flatlist';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import * as authActions from '../../../redux/actions/auth';
-import * as travelActions from '../../../redux/actions/travels';
 import { getUserInfo } from '../../../utils/helpers';
+import Button from '../../../components/UI/Button';
 
+import * as authActions from '../../../redux/actions/auth';
+import * as travelsActions from '../../../redux/actions/travels';
+import * as offersActions from '../../../redux/actions/offers';
 
 const styles = StyleSheet.create({
   travelSelectedContainer: {
@@ -80,18 +82,25 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     color: primaryColor,
     textAlign: 'justify'
-  }
+  },
+  finalizeBtnContainer: {
+    marginHorizontal: '12%',
+    marginVertical: '5%'
+  },
+  supportBtnContainer: {
+    marginHorizontal: '12%',
+  },
 });
 
 const TravelSelectedScreen = props => {
+  const driverUser = useSelector(state => state.driver);
   const [user, setUser] = useState();
   const dispatch = useDispatch();
-  const driver = useSelector(state => state.driver);
-  const userId = useSelector(state => state.travels.tripSelected.userId);
-
+  const { userId, pickupDate, offerId, status, driverId } = useSelector(state => state.travels.tripSelected);
+  
   useEffect(() => {
-    travelActions.getUserById(userId).then((data) => setUser(data));
-  }, [userId]);
+    travelsActions.getUserById(userId).then((data) => setUser(data));
+  }, []);
 
   getUserInfo().then((data) => {
     const userInfo = JSON.parse(data);
@@ -102,13 +111,14 @@ const TravelSelectedScreen = props => {
     }
   });
 
-  const data = [
-    {time: '09:00', title: 'Event 1'},
-    {time: '10:45', title: 'Event 2'},
-    {time: '12:00', title: 'Event 3'},
-    {time: '14:00', title: 'Event 4'},
-    {time: '16:30', title: 'Event 5'}
-  ];
+  const endTravel = () => {
+    console.log(offersActions.finalizeOfferState(offerId));
+    offersActions.finalizeOfferState(offerId).then(() => {
+      dispatch(travelsActions.getTripsInProgressByDriverId(driverId));
+      dispatch(travelsActions.getTripsMadeByDriverId(driverId));
+      props.navigation.navigate('Travels');
+    });
+  };
 
   return (
     <View style={styles.travelSelectedContainer}>
@@ -138,7 +148,7 @@ const TravelSelectedScreen = props => {
                       <AntDesign name="user" size={24} color="white" />
                     </View>
                     <View>
-                      <Text style={styles.infoUserText}>{driver && driver.name}</Text>
+                      <Text style={styles.infoUserText}>{driverUser && driverUser.name}</Text>
                     </View>
                   </View>
                   <View style={styles.row}>
@@ -146,7 +156,7 @@ const TravelSelectedScreen = props => {
                       <AntDesign name="phone" size={24} color="white" />
                     </View>
                     <View>
-                      <Text style={styles.infoUserText}>{driver && driver.phone}</Text>
+                      <Text style={styles.infoUserText}>{driverUser && driverUser.phone}</Text>
                     </View>
                   </View>
               </View>
@@ -192,8 +202,9 @@ const TravelSelectedScreen = props => {
       </LinearGradient>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Fecha de entrega</Text>
-        <Text style={styles.pickUpDateText}>12/09/20</Text>
+        <Text style={styles.pickUpDateText}>{pickupDate}</Text>
       </View>
+      {/*}
       <Timeline
         data={data}
         circleSize={20}
@@ -204,7 +215,24 @@ const TravelSelectedScreen = props => {
         timeStyle={styles.timeStyleText}
         titleStyle={styles.titleStyleText}
         timeContainerStyle={{ paddingTop: '15%'}}
-      />
+      />*/}
+      {status !== 'DONE' && (
+        <View  style={styles.finalizeBtnContainer}>
+          <Button
+            title={'He entregado la carga'}
+            onPress={endTravel}
+          />
+        </View>
+      )}
+      <View style={styles.supportBtnContainer}>
+        <Button
+          title={`Contactar a soporte`}
+          colorOne={'white'}
+          colorTwo={'white'}
+          fontColor={primaryColor}
+          onPress={() => props.navigation.navigate('Services')}
+        />
+      </View>
     </View>
   );
 };

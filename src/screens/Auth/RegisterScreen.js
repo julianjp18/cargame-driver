@@ -39,9 +39,9 @@ const formReducer = (state, action) => {
 };
 
 const RegisterScreen = props => {
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
-  const dispatch = useDispatch();
   const driverId = useSelector(state => state.auth.driverId);
 
   const [formState, dispatchFormState] = useReducer(formReducer, {

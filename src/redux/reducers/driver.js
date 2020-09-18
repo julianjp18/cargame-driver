@@ -5,7 +5,15 @@ import {
   CHANGE_PROFILE_PICTURE,
 } from '../actions/drivers';
 
-const initialState = null
+const initialState = {
+  id: null,
+  name: null,
+  numberId: null,
+  phone: null,
+  referidNumber: null,
+  driverId: null,
+  profilePicture: null,
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
