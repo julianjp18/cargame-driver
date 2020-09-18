@@ -112,7 +112,6 @@ const TravelSelectedScreen = props => {
   });
 
   const endTravel = () => {
-    console.log(offersActions.finalizeOfferState(offerId));
     offersActions.finalizeOfferState(offerId).then(() => {
       dispatch(travelsActions.getTripsInProgressByDriverId(driverId));
       dispatch(travelsActions.getTripsMadeByDriverId(driverId));
