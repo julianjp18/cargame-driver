@@ -86,9 +86,9 @@ export const signin = (email, password) => {
         }
 
         const resData = await response.json();
-        dispatch(authenticate(resData.localId, resData.idToken, email));
         const expirationDate = new Date(new Date().getTime() + parseInt(resData.expiresIn) * 1000);
-        saveDataToStorage(resData.idToken, resData.localId, expirationDate);
+        saveDataToStorage(resData.idToken, resData.localId, expirationDate, email);
+        dispatch(authenticate(resData.localId, resData.idToken, email));
     };
 };
 
@@ -96,7 +96,7 @@ const saveDataToStorage = (token, driverId, expirationDate, email) => {
     AsyncStorage.setItem(
         'driverData',
         JSON.stringify({
-            token: token,
+            token,
             driverId,
             expirationDate: expirationDate.toISOString(),
             email,

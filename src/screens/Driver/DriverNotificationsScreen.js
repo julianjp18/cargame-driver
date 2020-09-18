@@ -64,9 +64,10 @@ const styles = StyleSheet.create({
 });
 
 const DriverNotificationsScreen = props => {
+  const driverUser = useSelector(state => state.driver);
   const dispatch = useDispatch();
   const notifications = useSelector(state => state.notifications.driverNotifications);
-  const driver = useSelector(state => state.driver);
+
   getUserInfo().then((data) => {
     const userInfo = JSON.parse(data);
     if (!userInfo.token) {
@@ -82,7 +83,7 @@ const DriverNotificationsScreen = props => {
         subtitle="Explora tus notificaciones"
         leftIcon="bell-o"
       />
-      {driver && (
+      {driverUser && (
         <ScrollView>
           <View style={styles.infoContainer}>
             {notifications.map((notification) => (

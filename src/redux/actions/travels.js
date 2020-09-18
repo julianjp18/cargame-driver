@@ -16,7 +16,7 @@ export const getTripsInProgressByDriverId = (driverId) => dispatch => {
         trip.data().driverId === driverId &&
         trip.data().status === "IN_PROGRESS"
       ) {
-        trips.push(trip.data());
+        trips.push({...trip.data(), offerId: trip.id});
       }
     });
   });
@@ -27,17 +27,19 @@ export const getTripsInProgressByDriverId = (driverId) => dispatch => {
   });
 };
 
-export const getTripsMadeByDriverId = async (driverId) => dispatch => {
-  const data = firestoreDB
-  .collection('HistoryOffersNotificationCenter')
+export const getTripsMadeByDriverId = (driverId) => dispatch => {
+
+  const offersDoneData = firestoreDB
+  .collection('OffersNotificationCenter')
   .get();
 
   const trips = [];
-  data.then((tripsMade) => {
+  offersDoneData.then((tripsMade) => {
+    
     tripsMade.forEach(trip => {
         if (
-          trip.data().driverId === driverId ||
-          trip.data().status === "CONTRACTED"
+          trip.data().driverId === driverId &&
+          trip.data().status === "DONE"
         ) {
           trips.push(trip.data());
         }

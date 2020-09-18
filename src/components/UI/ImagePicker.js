@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
-import { primaryColor, darkGrey } from '../../constants/Colors';
+import { primaryColor } from '../../constants/Colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const ImgPicker = props => {

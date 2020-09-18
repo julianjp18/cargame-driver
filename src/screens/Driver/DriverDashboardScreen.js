@@ -10,7 +10,6 @@ import { setTypeService } from '../../redux/actions/auth';
 
 import * as driverActions from '../../redux/actions/drivers';
 import * as driverNotificationsAction from '../../redux/actions/notifications';
-import * as travelsActions from '../../redux/actions/travels';
 import * as authActions from '../../redux/actions/auth';
 import { getUserInfo } from '../../utils/helpers';
 
@@ -79,8 +78,7 @@ const DriverDashboardScreen = props => {
   
   useEffect(() => {
     dispatch(driverActions.showDriver(userAuth.driverId));
-    dispatch(driverNotificationsAction.showDriverNotifications());
-    dispatch(travelsActions.getTripsInProgressByDriverId(userAuth.driverId));
+    dispatch(driverNotificationsAction.showDriverNotifications(userAuth.driverId));
   }, [userAuth]);
 
   return (

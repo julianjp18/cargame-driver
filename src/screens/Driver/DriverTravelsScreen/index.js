@@ -9,6 +9,7 @@ import { AntDesign } from '@expo/vector-icons';
 
 import * as authActions from '../../../redux/actions/auth';
 import * as travelActions from '../../../redux/actions/travels';
+import { getUserInfo } from '../../../utils/helpers';
 
 const IN_PROGRESS_TRAVELS = 1;
 const FINISHED_TRAVELS = 0;
@@ -19,18 +20,20 @@ const DriverTravelsScreen = props => {
   const tripsInProgress = useSelector(state => state.travels.tripsInProgress);
   const tripsMade = useSelector(state => state.travels.tripsMade);
 
-  const driver = useSelector(state => state.driver);
-  if (!driver || !useSelector(state => state.auth)) {
-    dispatch(authActions.logout());
-    props.navigation.navigate('Auth');
-  }
+  getUserInfo().then((data) => {
+    const userInfo = JSON.parse(data);
+    if (!userInfo.token) {
+      dispatch(authActions.logout());
+      props.navigation.navigate('Index');
+    }
+  });
 
   const changeTypeTravelService = (changeType) => {
     setTypeTravelService(changeType);
   };
 
-  const viewTravel = (tripInProgress) => {
-    dispatch(travelActions.saveTripSelected(tripInProgress));
+  const viewTravel = (trip) => {
+    dispatch(travelActions.saveTripSelected(trip));
     props.navigation.navigate('TravelSelected');
   };
 
@@ -73,7 +76,7 @@ const DriverTravelsScreen = props => {
         {typeTravelService == IN_PROGRESS_TRAVELS ? (
           <ScrollView>
             <View style={styles.infoContainer}>
-              {tripsInProgress ? tripsInProgress.map((tripInProgress) => (
+              {tripsInProgress.length > 0 ? tripsInProgress.map((tripInProgress) => (
                 <TouchableOpacity key={`${tripInProgress.offerValue}-${tripInProgress.pickupDate}`}>
                   <ListItem
                     containerStyle={styles.listContainer}
@@ -111,7 +114,7 @@ const DriverTravelsScreen = props => {
         ) : (
             <ScrollView>
               <View style={styles.infoContainer}>
-                {tripsMade ? tripsMade.map((tripMade) => (
+                {tripsMade.length > 0 ? tripsMade.map((tripMade) => (
                   <TouchableOpacity key={`${tripMade.offerValue}-${tripMade.pickupDate}`}>
                     <ListItem
                       containerStyle={styles.listContainer}
@@ -133,6 +136,7 @@ const DriverTravelsScreen = props => {
                         </View>
                       )}
                       titleStyle={styles.titleListItem}
+                      onPress={() => viewTravel(tripMade)}
                     />
                   </TouchableOpacity>
                 )) : (

@@ -33,7 +33,7 @@ const LogOutListItem = props => (
 );
 
 const DriverProfileScreen = props => {
-  const driver = useSelector(state => state.driver);
+  const driverUser = useSelector(state => state.driver);
   const userEmail = useSelector(state => state.auth.email);
   const [error, setError] = useState();
   const dispatch = useDispatch();
@@ -59,7 +59,7 @@ const DriverProfileScreen = props => {
         const controller = new AbortController();
         setError(null);
         try {
-          await dispatch(driverActions.changeProfilePicture(asset.uri, driver.driverId));
+          await dispatch(driverActions.changeProfilePicture(asset.uri, driverUser.driverId));
           const savedImage = await MediaLibrary.saveToLibraryAsync(imagePath);
           controller.abort();
         } catch (err) {
@@ -79,12 +79,12 @@ const DriverProfileScreen = props => {
         subtitle="Explora tu perfil aquí"
         leftIcon="user-o"
       />
-      {driver ? (
+      {driverUser ? (
         <ScrollView>
           <View style={styles.infoContainer}>
             <View style={styles.nameListContainer}>
               <Text style={styles.nameListText}>
-                {driver.name}
+                {driverUser.name}
               </Text>
             </View>
             <View style={styles.row}>
@@ -102,7 +102,7 @@ const DriverProfileScreen = props => {
               containerStyle={styles.listContainer}
               title='Cédula de ciudadanía'
               titleStyle={styles.titleListItem}
-              subtitle={driver.numberId}
+              subtitle={driverUser.numberId}
               leftAvatar={
                 <AntDesign name="idcard" size={24} color={primaryColor} />
               }
@@ -126,7 +126,7 @@ const DriverProfileScreen = props => {
                     onPress={() => props.navigation.navigate('EditPhoneNumber')}
                   />
                 }
-                subtitle={driver.phone}
+                subtitle={driverUser.phone}
                 subtitleStyle={styles.subtitleListItem}
                 bottomDivider
               />
@@ -151,7 +151,7 @@ const DriverProfileScreen = props => {
               leftAvatar={
                 <FontAwesome name="pencil" size={24} color={primaryColor} />
               }
-              subtitle={driver.referidNumber ? driver.referidNumber : 'No tiene código de referido'}
+              subtitle={driverUser.referidNumber ? driverUser.referidNumber : 'No tiene código de referido'}
               subtitleStyle={styles.subtitleListItem}
               bottomDivider
             />

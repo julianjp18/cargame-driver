@@ -12,7 +12,7 @@ import { getUserInfo } from '../../utils/helpers';
 
 const DriverSupportScreen = props => {
   const dispatch = useDispatch();
-  const driver = useSelector(state => state.driver);
+
   getUserInfo().then((data) => {
     const userInfo = JSON.parse(data);
     if (!userInfo.token) {

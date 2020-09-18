@@ -18,6 +18,7 @@ import LocationPicker from '../../components/UI/LocationPicker';
 import * as offersAction from '../../redux/actions/offers';
 import * as placesActions from '../../redux/actions/places';
 import * as authActions from '../../redux/actions/auth';
+import * as travelsActions from '../../redux/actions/travels';
 import { getUserInfo } from '../../utils/helpers';
 
 const styles = StyleSheet.create({
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 15,
   },
-  activateTypeService:{
+  activateTypeService: {
     color: darkGrey
   }
 });
@@ -119,6 +120,11 @@ const DriverHomeScreen = props => {
       props.navigation.navigate('Index');
     }
   });
+
+  useEffect(() => {
+    dispatch(travelsActions.getTripsInProgressByDriverId(userAuth.driverId));
+    dispatch(travelsActions.getTripsMadeByDriverId(userAuth.driverId));
+  }, []);
 
   const [typeTruckService, setTypeTruckService] = useState(RURAL_SERVICE);
   const places = useSelector(state => state.places);
