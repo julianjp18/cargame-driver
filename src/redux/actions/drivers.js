@@ -5,7 +5,7 @@ export const CHANGE_PHONE_NUMBER = 'CHANGE_PHONE_NUMBER';
 export const CHANGE_PROFILE_PICTURE = 'CHANGE_PROFILE_PICTURE';
 
 export const createDriver = ({ driverId, name, numberId, phone, referidNumber = '' }) => {
-    return async dispatch => {
+    return dispatch => {
         firestoreDB
             .collection('Drivers')
             .doc(driverId)
@@ -15,6 +15,15 @@ export const createDriver = ({ driverId, name, numberId, phone, referidNumber = 
                 phone,
                 referidNumber,
                 profilePicture: null,
+                isActive: true,
+                strikes: 0,
+                address: '',
+                city: '',
+                drivenLicense: '',
+                email: '',
+                expireLicense: '',
+                expiresPropertyCard: '',
+                propertyCard: '',
             });
 
         dispatch({

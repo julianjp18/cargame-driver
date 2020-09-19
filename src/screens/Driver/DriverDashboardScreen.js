@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Text, StyleSheet, View, YellowBox } from 'react-native';
+import { Text, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ListItem } from 'react-native-elements';
 import { textSecondaryColor, darkGrey } from '../../constants/Colors';
@@ -13,9 +13,9 @@ import * as driverNotificationsAction from '../../redux/actions/notifications';
 import * as authActions from '../../redux/actions/auth';
 import { getUserInfo } from '../../utils/helpers';
 
-const selectedCategoryItem = (navigation, dispatch, categoryId, routeName) => {
+const selectedCategoryItem = (navigation, dispatch, categoryId) => {
   dispatch(setTypeService(categoryId));
-  navigation.navigate({ routeName });
+  navigation.navigate('HomeDriver');
 };
 
 const styles = StyleSheet.create({
@@ -63,7 +63,6 @@ const styles = StyleSheet.create({
 });
 
 const DriverDashboardScreen = props => {
-  YellowBox.ignoreWarnings(['Setting a timer']);
   const dispatch = useDispatch();
   const userAuth = useSelector(state => state.auth);
 
@@ -99,9 +98,7 @@ const DriverDashboardScreen = props => {
                     props.navigation,
                     dispatch,
                     category.id,
-                    category.routeName
                   )}
-                disabled={category.id !== 'truck'}
               >
                 <ListItem
                   key={i}
@@ -117,7 +114,6 @@ const DriverDashboardScreen = props => {
                   subtitle={category.subtitle}
                   subtitleStyle={styles.subtitleListItem}
                   bottomDivider
-                  disabled={category.id !== 'truck'}
                   disabledStyle={styles.disabledListContainer}
                 />
               </TouchableOpacity>

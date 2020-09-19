@@ -34,7 +34,7 @@ const TextInput = props => {
   const { onInputChange, id } = props;
 
   useEffect(() => {
-    if (inputState.touched) {
+    if (inputState.touched && props.onInputChange) {
       onInputChange(id, inputState.value, inputState.isValid);
     }
   }, [inputState, onInputChange, id]);
@@ -76,6 +76,7 @@ const TextInput = props => {
         value={inputState.value}
         onChangeText={textChangeHandler}
         onBlur={lostFocusHandler}
+        autoCapitalize={props.autoCapitalize}
         errorMessage={!inputState.isValid && inputState.touched ? props.errorText : ''}
       />
     </View>

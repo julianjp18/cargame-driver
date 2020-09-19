@@ -4,6 +4,7 @@ import {
   StyleSheet,
   View,
   Image,
+  YellowBox,
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 
@@ -24,6 +25,11 @@ const onClickRegister = (dispatch, props) => {
 };
 
 const HomeScreen = props => {
+  YellowBox.ignoreWarnings([
+    'Setting a timer',
+    "Can't perform a React state update on an unmounted component",
+    "Cannot update during an existing state transition (such as within `render`).",
+  ]);
   const dispatch = useDispatch();
   return (
     <View style={styles.mainContainer}>

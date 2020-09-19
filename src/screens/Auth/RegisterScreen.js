@@ -42,8 +42,8 @@ const RegisterScreen = props => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
-  const driverId = useSelector(state => state.auth.driverId);
-
+  const { driverId } = useSelector(state => state.auth);
+  
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       name: '',
@@ -58,18 +58,18 @@ const RegisterScreen = props => {
     formIsValid: false
   });
 
-  const registerHandler = async () => {
+  const registerHandler = () => {
     const action = driverActions.createDriver({
-      driverId,
+      driverId: driverId,
       name: formState.inputValues.name,
       numberId: formState.inputValues.numberId,
       phone: formState.inputValues.phone,
-      referidNumber: formState.inputValues.referidNumber
+      referidNumber: formState.inputValues.referidNumber ? formState.inputValues.referidNumber : ''
     });
     setError(null);
     setIsLoading(true);
     try {
-      await dispatch(action);
+      dispatch(action);
       props.navigation.navigate('ServicesList');
     } catch (err) {
       setError(err.message);
@@ -161,7 +161,6 @@ const RegisterScreen = props => {
                 maxLength={6}
                 autoCapitalize="none"
                 errorText="¡UPS! Por favor ingresa un número de referido correcto."
-                onInputChange={inputChangeHandler}
                 leftIcon={
                   <FontAwesome name="pencil" size={20} color={primaryColor} />
                 }

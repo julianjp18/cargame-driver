@@ -166,6 +166,7 @@ const DriverProfileScreen = props => {
               subtitleStyle={styles.subtitleListItem}
               bottomDivider
             />
+            {/* 
             <TouchableOpacity>
               <ListItem
                 containerStyle={styles.listContainer}
@@ -181,6 +182,7 @@ const DriverProfileScreen = props => {
                 bottomDivider
               />
             </TouchableOpacity>
+            */}
             <LogOutListItem
               dispatch={dispatch}
               navigate={props.navigation.navigate}
