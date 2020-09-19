@@ -79,7 +79,7 @@ const AuthScreen = props => {
       formIsValid: false
     });
 
-    const authHandler = async () => {
+    const authHandler = () => {
         let action;
         let nextPage = '';
         let passwordError = false;
@@ -91,7 +91,7 @@ const AuthScreen = props => {
                   email,
                   password
                 );
-    
+
                 nextPage = 'Member';
             } else {
                 passwordError = true;
@@ -108,7 +108,7 @@ const AuthScreen = props => {
             setError('');
             setIsLoading(true);
             try {
-                await dispatch(action);
+                dispatch(action);
                 controller.abort();
                 props.navigation.navigate(nextPage);
             } catch (err) {
