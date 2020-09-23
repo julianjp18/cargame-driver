@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Alert, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Alert, StyleSheet } from 'react-native';
 import { useDispatch } from 'react-redux';
 
 import MapPreview from './MapPreview';
-import { primaryColor } from '../../constants/Colors';
 import TextInput from './Input';
 
 import * as placesActions from '../../redux/actions/places';
 
 const LocationPicker = props => {
-    const [isFetching, setIsFetching] = useState(false);
     const [pickedLocation, setPickedLocation] = useState();
     const dispatch = useDispatch();
     const mapPickedLocation = props.navigation.navigate('pickedLocation');

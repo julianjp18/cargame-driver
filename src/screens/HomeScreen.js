@@ -16,6 +16,7 @@ import {
 } from '../constants/Utils';
 import { textPrimaryColor, primaryColor } from '../constants/Colors';
 import { setIsSignUp } from '../redux/actions/auth';
+import { normalizeLength } from '../styles/layout';
 
 const reDirectToAuth = (navigation) => navigation.navigate('Auth');
 
@@ -23,6 +24,67 @@ const onClickRegister = (dispatch, props) => {
   dispatch(setIsSignUp());
   reDirectToAuth(props.navigation);
 };
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    minHeight: normalizeLength(300),
+    marginTop: normalizeLength(200),
+  },
+  logoContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: normalizeLength(20)
+  },
+  logo: {
+    height: normalizeLength(215),
+    width: normalizeLength(188)
+  },
+  infoContainer: {
+    paddingHorizontal: normalizeLength(20),
+    minWidth: normalizeLength(300),
+    minHeight: normalizeLength(50)
+  },
+  title: {
+    marginHorizontal: normalizeLength(50),
+    paddingTop: normalizeLength(0),
+    color: textPrimaryColor,
+    fontFamily: primaryFont,
+    fontSize: normalizeLength(23),
+    textAlign: 'center',
+  },
+  subtitle: {
+    marginHorizontal: normalizeLength(10),
+    marginTop: normalizeLength(10),
+    marginBottom: normalizeLength(30),
+    color: textPrimaryColor,
+    fontFamily: primaryFont,
+    fontSize: normalizeLength(17),
+    textAlign: 'center',
+  },
+  buttonsContainer: {
+    marginTop: normalizeLength(4)
+  },
+  buttons: {
+    color: textPrimaryColor,
+    fontSize: normalizeLength(13),
+    fontWeight: "700",
+    textAlign: 'center'
+  },
+  signIn: {
+    color: primaryColor
+  },
+  btnMoreInfo: {
+    marginTop: normalizeLength(15),
+  },
+  btnsContainer: {
+    paddingTop: normalizeLength(2)
+  },
+  mainCarga: {
+    margin: 0,
+    paddingHorizontal: 0,
+    marginLeft: normalizeLength(-50),
+  }
+});
 
 const HomeScreen = props => {
   YellowBox.ignoreWarnings([
@@ -82,69 +144,5 @@ const HomeScreen = props => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  mainContainer: {
-    height: '100%',
-  },
-  logoContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: '15%'
-  },
-  logo: {
-    height: 215,
-    width: 188
-  },
-  infoContainer: {
-    paddingLeft: '5%',
-    paddingRight: '5%',
-    width: '100%',
-    height: '45%'
-  },
-  title: {
-    marginHorizontal: '20%',
-    paddingTop: 0,
-    color: textPrimaryColor,
-    fontFamily: primaryFont,
-    fontSize: 25,
-    lineHeight: 30,
-    textAlign: 'center',
-  },
-  subtitle: {
-    marginHorizontal: '10%',
-    marginTop: '5%',
-    marginBottom: '10%',
-    color: textPrimaryColor,
-    fontFamily: primaryFont,
-    fontSize: 18,
-    lineHeight: 22,
-    textAlign: 'center',
-  },
-  buttonsContainer: {
-    marginTop: '2%'
-  },
-  buttons: {
-    color: textPrimaryColor,
-    fontSize: 14,
-    fontWeight: "700",
-    lineHeight: 20,
-    textAlign: 'center'
-  },
-  signIn: {
-    color: primaryColor
-  },
-  btnMoreInfo: {
-    marginTop: '5%',
-  },
-  btnsContainer: {
-    paddingTop: '1%'
-  },
-  mainCarga: {
-    margin: 0,
-    paddingHorizontal: 0,
-    marginLeft: '-15%',
-  }
-});
 
 export default HomeScreen;
