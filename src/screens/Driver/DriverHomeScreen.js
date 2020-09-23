@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Text, StyleSheet, View, Alert } from 'react-native';
+import { Text, StyleSheet, View, Alert, YellowBox } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { ScrollView } from 'react-native-gesture-handler';
-import { ListItem } from 'react-native-elements';
+import { ListItem, Avatar } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
@@ -112,6 +112,11 @@ const styles = StyleSheet.create({
 
 const DriverHomeScreen = props => {
   const dispatch = useDispatch();
+  YellowBox.ignoreWarnings([
+    'Setting a timer',
+    "Can't perform a React state update on an unmounted component",
+    "Cannot update during an existing state transition (such as within `render`).",
+  ]);
   const userAuth = useSelector(state => state.auth);
   getUserInfo().then((data) => {
     const userInfo = JSON.parse(data);
@@ -146,24 +151,32 @@ const DriverHomeScreen = props => {
             'Necesita los permisos de geolocalización para poder obtener localización en tiempo real.',
             [{ text: 'Está bien' }]
         );
-        return false;
+        return verifyPermissions();
     }
     return true;
   };
+
+  const validLocationTurnOn = () => {
+    if (!Location.hasServicesEnabledAsync()) {
+      Alert.alert('No se puede obtener la localización', 'Por favor enciende la localización.', [{ text: 'Esta bien' }]);
+      return validLocationTurnOn();
+    }
+    return true;
+  }
 
   const getCurrentLocation = async () => {
     const hasPermissions = await verifyPermissions();
     if (!hasPermissions) return;
 
     try {
-        const location = await Location.getCurrentPositionAsync({ timeout: 4000 });
-
+        const location = await Location.getLastKnownPositionAsync();
+        console.log(location);
         dispatch(placesActions.currentPosition({
           lat: location.coords.latitude,
           lng: location.coords.longitude,
         }));
     } catch (err) {
-        Alert.alert('No se puede obtener la localización', 'Por favor intentar nuevamente.', [{ text: 'Esta bien' }]);
+      validLocationTurnOn();
     }
   };
 
@@ -233,20 +246,14 @@ const DriverHomeScreen = props => {
         </View>
         <View>
           <ScrollView>
-            <ListItem
-              containerStyle={styles.listContainer}
-              title={categorySelected.name}
-              titleStyle={styles.titleListItem}
-              leftAvatar={{
-                source: categorySelected.avatar_url,
-                containerStyle: styles.avatarContainer,
-                avatarStyle: styles.avatar,
-                rounded: false,
-              }}
-              subtitleStyle={styles.subtitleListItem}
-              subtitle={categorySelected.subtitle}
-              bottomDivider
-            />
+            <ListItem containerStyle={styles.listContainer} bottomDivider>
+              <Avatar containerStyle={styles.avatarContainer} source={categorySelected.avatar_url} />
+              <ListItem.Content>
+                <ListItem.Title style={styles.titleListItem}>{categorySelected.name}</ListItem.Title>
+                <ListItem.Subtitle style={styles.subtitleListItem}>{categorySelected.subtitle}</ListItem.Subtitle>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
             <View style={styles.row}>
               <View style={styles.col1}>
                 <Text

@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useReducer, useCallback } from 'react';
 import {
   StyleSheet, View, Text,
-  ActivityIndicator, Alert, Image, ScrollView,
+  ActivityIndicator, Alert, Image, KeyboardAvoidingView
 } from 'react-native';
-import { KeyboardAwareView } from 'react-native-keyboard-aware-view';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '../../components/UI/Button';
 import TextInput from '../../components/UI/Input';
@@ -12,6 +11,7 @@ import * as driverActions from '../../redux/actions/drivers';
 import { FontAwesome } from '@expo/vector-icons';
 import { shortBrandOrangeGreyUrl } from '../../constants/Utils';
 import { primaryColor, textPrimaryColor } from '../../constants/Colors';
+import { normalizeLength } from '../../styles/layout';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
@@ -96,129 +96,131 @@ const RegisterScreen = props => {
   }, [error]);
 
   return (
-    <View style={styles.mainContainer}>
-      <View style={styles.logoContainer}>
-        <Image
-          style={styles.logo}
-          source={shortBrandOrangeGreyUrl}
-        />
+    <KeyboardAvoidingView
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <View style={styles.mainContainer}>
+        <View style={styles.logoContainer}>
+          <Image
+            style={styles.logo}
+            source={shortBrandOrangeGreyUrl}
+          />
+        </View>
+        <Text style={styles.registerInfoText}>¡Te ayudamos a conectar directamente con los clientes!</Text>
+        <View style={styles.authContainer}>
+              <View style={styles.scrollViewContainer}>
+                
+                  <TextInput
+                    id="name"
+                    label="Nombres y apellidos (*)"
+                    keyboardType="default"
+                    minLength={5}
+                    required
+                    autoCapitalize="words"
+                    errorText="¡UPS! Por favor ingresa tu nombre y apellido correctamente."
+                    onInputChange={inputChangeHandler}
+                    initialValue=""
+                    leftIcon={
+                      <FontAwesome name="user" size={20} color={primaryColor} />
+                    }
+                  />
+                  <Text style={styles.referidNumberInfo}>Más tarde deberás verificar tu cédula desde tu perfil</Text>
+                  <TextInput
+                    id="numberId"
+                    label="Cédula de ciudadania (*)"
+                    keyboardType="numeric"
+                    required
+                    minLength={4}
+                    maxLength={10}
+                    autoCapitalize="none"
+                    errorText="¡UPS! Por favor ingresa un número de identificación correcto."
+                    onInputChange={inputChangeHandler}
+                    initialValue=""
+                    leftIcon={
+                      <FontAwesome name="id-card-o" size={20} color={primaryColor} />
+                    }
+                  />
+                  <TextInput
+                    id="phone"
+                    label="Celular (*)"
+                    keyboardType="numeric"
+                    required
+                    minLength={10}
+                    maxLength={10}
+                    autoCapitalize="none"
+                    errorText="¡UPS! Por favor ingresa un número de celular correcto."
+                    onInputChange={inputChangeHandler}
+                    initialValue=""
+                    leftIcon={
+                      <FontAwesome name="phone" size={20} color={primaryColor} />
+                    }
+                  />
+                  <TextInput
+                    id="referidNumber"
+                    label="Número de referido"
+                    keyboardType="numeric"
+                    minLength={6}
+                    maxLength={6}
+                    autoCapitalize="none"
+                    errorText="¡UPS! Por favor ingresa un número de referido correcto."
+                    leftIcon={
+                      <FontAwesome name="pencil" size={20} color={primaryColor} />
+                    }
+                    initialValue=""
+                  />
+                
+              </View>
+              <View style={styles.btnActionContainer}>
+              {isLoading
+                ? <ActivityIndicator size='large' color={primaryColor} />
+                : <Button
+                  title="Finalizar registro"
+                  onPress={registerHandler}
+                />
+              }
+            </View>
+        </View>
       </View>
-      <Text style={styles.registerInfoText}>¡Te ayudamos a conectar directamente con los clientes!</Text>
-      <View style={styles.authContainer}>
-        <KeyboardAwareView animated={true}>
-          <View style={styles.scrollViewContainer}>
-            <ScrollView>
-              <TextInput
-                id="name"
-                label="Nombres y apellidos (*)"
-                keyboardType="default"
-                minLength={5}
-                required
-                autoCapitalize="words"
-                errorText="¡UPS! Por favor ingresa tu nombre y apellido correctamente."
-                onInputChange={inputChangeHandler}
-                initialValue=""
-                leftIcon={
-                  <FontAwesome name="user" size={20} color={primaryColor} />
-                }
-              />
-              <Text style={styles.referidNumberInfo}>Más tarde deberás verificar tu cédula desde tu perfil</Text>
-              <TextInput
-                id="numberId"
-                label="Cédula de ciudadania (*)"
-                keyboardType="numeric"
-                required
-                minLength={4}
-                maxLength={10}
-                autoCapitalize="none"
-                errorText="¡UPS! Por favor ingresa un número de identificación correcto."
-                onInputChange={inputChangeHandler}
-                initialValue=""
-                leftIcon={
-                  <FontAwesome name="id-card-o" size={20} color={primaryColor} />
-                }
-              />
-              <TextInput
-                id="phone"
-                label="Celular (*)"
-                keyboardType="numeric"
-                required
-                minLength={10}
-                maxLength={10}
-                autoCapitalize="none"
-                errorText="¡UPS! Por favor ingresa un número de celular correcto."
-                onInputChange={inputChangeHandler}
-                initialValue=""
-                leftIcon={
-                  <FontAwesome name="phone" size={20} color={primaryColor} />
-                }
-              />
-              <TextInput
-                id="referidNumber"
-                label="Número de referido"
-                keyboardType="numeric"
-                minLength={6}
-                maxLength={6}
-                autoCapitalize="none"
-                errorText="¡UPS! Por favor ingresa un número de referido correcto."
-                leftIcon={
-                  <FontAwesome name="pencil" size={20} color={primaryColor} />
-                }
-                initialValue=""
-              />
-            </ScrollView>
-          </View>
-          <View style={styles.btnActionContainer}>
-            {isLoading
-              ? <ActivityIndicator size='large' color={primaryColor} />
-              : <Button
-                title="Finalizar registro"
-                onPress={registerHandler}
-              />
-            }
-          </View>
-        </KeyboardAwareView>
-      </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   mainContainer: {
-    height: '100%',
+    minHeight: normalizeLength(300),
+    flex: 1,
+    marginTop: normalizeLength(40)
   },
   logoContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '15%'
   },
   logo: {
-    width: 150,
-    height: 150,
+    width: normalizeLength(150),
+    height: normalizeLength(150),
   },
   authContainer: {
-    paddingLeft: '5%',
-    paddingRight: '5%',
-    width: '100%',
-    height: '90%'
+    paddingHorizontal: normalizeLength(20),
+    minWidth: normalizeLength(380),
+    minHeight: normalizeLength(450)
   },
   registerInfoText: {
-    paddingBottom: '8%',
-    paddingHorizontal: '10%',
+    paddingBottom: normalizeLength(25),
+    paddingHorizontal: normalizeLength(20),
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: normalizeLength(18),
     color: textPrimaryColor
   },
   referidNumberInfo: {
-    paddingTop: '1%',
+    paddingTop: normalizeLength(2),
     textAlign: "center",
-    fontSize: 12,
+    fontSize: normalizeLength(12),
     color: textPrimaryColor
   },
   btnActionContainer: {
-    marginTop: '2%'
+    marginTop: normalizeLength(4)
   },
-
 });
 
 export default RegisterScreen;

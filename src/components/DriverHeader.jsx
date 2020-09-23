@@ -3,6 +3,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { primaryColor, accentColor, textAccentColor } from '../constants/Colors';
 import { FontAwesome } from '@expo/vector-icons';
 import { View, Text, StyleSheet } from 'react-native';
+import { normalizeLength } from '../styles/layout';
 
 const DriverHeader = props => (
   <LinearGradient
@@ -43,49 +44,44 @@ const DriverHeader = props => (
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
-    height: '15%',
-    maxHeight: '15%',
-    width: '100%',
+    height: normalizeLength(110),
+    minWidth: normalizeLength(300),
   },
   col1: {
-    width: '20%',
-    height: '100%',
+    minWidth: normalizeLength(80),
+    minHeight: normalizeLength(110),
     alignItems: 'flex-end',
-    paddingTop: '11%',
-    paddingRight: '2%'
+    paddingTop: normalizeLength(40),
+    paddingRight: normalizeLength(8)
   },
   col1Icon: {
     opacity: 0.32,
   },
   titleHeader: {
-    marginTop: '18%',
+    marginTop: normalizeLength(40),
     fontFamily: 'Quicksand',
-    fontSize: 20,
+    fontSize: normalizeLength(20),
     fontWeight: '700',
-    color: textAccentColor,
-    lineHeight: 24
+    color: textAccentColor
   },
   subtitleHeader: {
     fontFamily: 'Ruda',
-    fontSize: 14,
+    fontSize: normalizeLength(13),
     fontWeight: '500',
-    color: textAccentColor,
-    lineHeight: 20
+    color: textAccentColor
   },
   col2: {
-    width: '70%',
-    height: '100%',
-    maxHeight: '100%',
-    minHeight: '100%'
+    minWidth: normalizeLength(200),
+    minHeight: normalizeLength(400),
   },
   col3: {
-    width: '10%',
-    height: '100%',
+    minWidth: normalizeLength(20),
+    minHeight: normalizeLength(400),
     alignItems: 'flex-end',
-    paddingTop: '15%',
+    paddingTop: normalizeLength(15),
   },
   col3Icon: {
-    marginRight: '20%'
+    marginRight: normalizeLength(20)
   }
 });
 

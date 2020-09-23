@@ -40,7 +40,7 @@ const EditPhoneNumberScreen = props => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
     const dispatch = useDispatch();
-    const { username, phone, driverId } = useSelector(state => state.driver.name);
+    const { name, phone, driverId } = useSelector(state => state.driver);
     
     useEffect(() => {
         if (error) {
@@ -102,7 +102,7 @@ const EditPhoneNumberScreen = props => {
     return (
         <View style={styles.servicesContainer}>
             <DriverHeader
-                title={username}
+                title={name}
                 subtitle="Edita tu número de teléfono"
                 leftIcon="user-o"
             />

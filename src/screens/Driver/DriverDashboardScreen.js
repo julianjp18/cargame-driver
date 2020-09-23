@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { Text, StyleSheet, View } from 'react-native';
+import { Text, StyleSheet, View, YellowBox } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { ListItem } from 'react-native-elements';
+import { ListItem, Avatar } from 'react-native-elements';
 import { textSecondaryColor, darkGrey } from '../../constants/Colors';
 import { categoristList } from '../../constants/Utils';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -12,6 +12,7 @@ import * as driverActions from '../../redux/actions/drivers';
 import * as driverNotificationsAction from '../../redux/actions/notifications';
 import * as authActions from '../../redux/actions/auth';
 import { getUserInfo } from '../../utils/helpers';
+import { normalizeLength } from '../../styles/layout';
 
 const selectedCategoryItem = (navigation, dispatch, categoryId) => {
   dispatch(setTypeService(categoryId));
@@ -20,50 +21,50 @@ const selectedCategoryItem = (navigation, dispatch, categoryId) => {
 
 const styles = StyleSheet.create({
   servicesContainer: {
+    flex: 1,
     backgroundColor: 'transparent',
-    height: '100%'
+    minHeight: normalizeLength(300)
   },
   title: {
-    paddingTop: '4%',
+    paddingTop: normalizeLength(8),
     color: textSecondaryColor,
     fontFamily: 'Quicksand',
-    fontSize: 18,
+    fontSize: normalizeLength(17),
     fontWeight: '700',
-    lineHeight: 22,
     textAlign: 'center',
   },
   titleListItem: {
     color: darkGrey,
     fontFamily: 'Ruda',
-    fontSize: 20,
+    fontSize: normalizeLength(20),
     fontWeight: '500',
   },
   subtitleListItem: {
     color: darkGrey,
     fontFamily: 'Ruda',
-    fontSize: 12,
-    fontWeight: '400',
-    lineHeight: 20
+    fontSize: normalizeLength(12),
+    fontWeight: '400'
   },
   listContainer: {
     backgroundColor: 'transparent',
-    paddingBottom: '10%'
+    paddingBottom: '2%'
   },
   disabledListContainer: {
     backgroundColor: '#f3f3f3'
   },
   avatarContainer: {
-    height: '100%',
-    width: '22%'
-  },
-  avatar: {
-    width: '100%',
-    height: '100%'
+    height: normalizeLength(70),
+    width: normalizeLength(80)
   }
 });
 
 const DriverDashboardScreen = props => {
   const dispatch = useDispatch();
+  YellowBox.ignoreWarnings([
+    'Setting a timer',
+    "Can't perform a React state update on an unmounted component",
+    "Cannot update during an existing state transition (such as within `render`).",
+  ]);
   const userAuth = useSelector(state => state.auth);
 
   getUserInfo().then((data) => {
@@ -100,22 +101,14 @@ const DriverDashboardScreen = props => {
                     category.id,
                   )}
               >
-                <ListItem
-                  key={i}
-                  containerStyle={styles.listContainer}
-                  title={category.name}
-                  titleStyle={styles.titleListItem}
-                  leftAvatar={{
-                    source: category.avatar_url,
-                    containerStyle: styles.avatarContainer,
-                    avatarStyle: styles.avatar,
-                    rounded: false,
-                  }}
-                  subtitle={category.subtitle}
-                  subtitleStyle={styles.subtitleListItem}
-                  bottomDivider
-                  disabledStyle={styles.disabledListContainer}
-                />
+                <ListItem containerStyle={styles.listContainer} key={i} bottomDivider>
+                  <Avatar containerStyle={styles.avatarContainer} source={category.avatar_url} />
+                  <ListItem.Content>
+                    <ListItem.Title style={styles.titleListItem}>{category.name}</ListItem.Title>
+                    <ListItem.Subtitle style={styles.subtitleListItem}>{category.subtitle}</ListItem.Subtitle>
+                  </ListItem.Content>
+                  <ListItem.Chevron />
+                </ListItem>
               </TouchableOpacity>
             ))
           }

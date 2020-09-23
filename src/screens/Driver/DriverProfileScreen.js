@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, View, Image } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { ListItem } from 'react-native-elements';
+import { Icon, ListItem } from 'react-native-elements';
 import { textSecondaryColor, darkGrey, primaryColor } from '../../constants/Colors';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import DriverHeader from '../../components/DriverHeader';
@@ -98,91 +98,70 @@ const DriverProfileScreen = props => {
                 />
               </View>
             </View>
-            <ListItem
-              containerStyle={styles.listContainer}
-              title='Cédula de ciudadanía'
-              titleStyle={styles.titleListItem}
-              subtitle={driverUser.numberId}
-              leftAvatar={
-                <AntDesign name="idcard" size={24} color={primaryColor} />
-              }
-              subtitleStyle={styles.subtitleListItem}
-              bottomDivider
-              topDivider
-            />
-            <TouchableOpacity>
-              <ListItem
-                containerStyle={styles.listContainer}
-                title='Número de telefono'
-                titleStyle={styles.titleListItem}
-                leftAvatar={
-                  <AntDesign name="phone" size={24} color={primaryColor} />
-                }
-                rightAvatar={
-                  <AntDesign
-                    name="right"
-                    size={24}
-                    color={darkGrey}
-                    onPress={() => props.navigation.navigate('EditPhoneNumber')}
-                  />
-                }
-                subtitle={driverUser.phone}
-                subtitleStyle={styles.subtitleListItem}
-                bottomDivider
+            <ListItem containerStyle={styles.listContainer} topDivider bottomDivider>
+              <Icon
+                name='idcard'
+                type='antdesign'
+                color={primaryColor}
               />
-            </TouchableOpacity>
+              <ListItem.Content>
+                <ListItem.Title style={styles.titleListItem}>Cédula de ciudadanía</ListItem.Title>
+                <ListItem.Subtitle style={styles.subtitleListItem}>{driverUser.numberId}</ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
             <TouchableOpacity>
-              <ListItem
-                containerStyle={styles.listContainer}
-                title='Correo electrónico'
-                titleStyle={styles.titleListItem}
-                leftAvatar={
-                  <AntDesign name="mail" size={24} color={primaryColor} />
-                }
-                subtitle={userEmail}
-                subtitleStyle={styles.subtitleListItem}
-                bottomDivider
-              />
+              <ListItem onPress={() => props.navigation.navigate('EditPhoneNumber')} containerStyle={styles.listContainer} bottomDivider>
+                <Icon
+                  name='phone'
+                  type='antdesign'
+                  color={primaryColor}
+                />
+                <ListItem.Content>
+                  <ListItem.Title style={styles.titleListItem}>Celular</ListItem.Title>
+                  <ListItem.Subtitle style={styles.subtitleListItem}>{driverUser.phone}</ListItem.Subtitle>
+                </ListItem.Content>
+                <Icon
+                  name='angle-right'
+                  type='font-awesome'
+                  color={primaryColor}
+                />
+              </ListItem>
             </TouchableOpacity>
-            <ListItem
-              containerStyle={styles.listContainer}
-              title='Referido por'
-              titleStyle={styles.titleListItem}
-              leftAvatar={
-                <FontAwesome name="pencil" size={24} color={primaryColor} />
-              }
-              subtitle={driverUser.referidNumber ? driverUser.referidNumber : 'No tiene código de referido'}
-              subtitleStyle={styles.subtitleListItem}
-              bottomDivider
-            />
-            <ListItem
-              containerStyle={styles.listContainer}
-              title='País'
-              titleStyle={styles.titleListItem}
-              leftAvatar={
-                <AntDesign name="earth" size={24} color={primaryColor} />
-              }
-              subtitle='Colombia'
-              subtitleStyle={styles.subtitleListItem}
-              bottomDivider
-            />
-            {/* 
-            <TouchableOpacity>
-              <ListItem
-                containerStyle={styles.listContainer}
-                title='Mi billetera'
-                titleStyle={styles.titleListItem}
-                leftAvatar={
-                  <AntDesign name="wallet" size={24} color={primaryColor} />
-                }
-                rightAvatar={
-                  <AntDesign name="right" size={24} color={darkGrey} />
-                }
-                subtitleStyle={styles.subtitleListItem}
-                bottomDivider
+            <ListItem containerStyle={styles.listContainer} bottomDivider>
+              <Icon
+                name='mail'
+                type='antdesign'
+                color={primaryColor}
               />
-            </TouchableOpacity>
-            */}
+              <ListItem.Content>
+                <ListItem.Title style={styles.titleListItem}>Correo electrónico</ListItem.Title>
+                <ListItem.Subtitle style={styles.subtitleListItem}>{userEmail}</ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
+            <ListItem containerStyle={styles.listContainer} bottomDivider>
+              <Icon
+                name='pencil'
+                type='font-awesome'
+                color={primaryColor}
+              />
+              <ListItem.Content>
+                <ListItem.Title style={styles.titleListItem}>Referido por</ListItem.Title>
+                <ListItem.Subtitle style={styles.subtitleListItem}>
+                  {driverUser.referidNumber ? driverUser.referidNumber : 'No tiene código de referido'}
+                </ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
+            <ListItem containerStyle={styles.listContainer} bottomDivider>
+              <Icon
+                name='earth'
+                type='antdesign'
+                color={primaryColor}
+              />
+              <ListItem.Content>
+                <ListItem.Title style={styles.titleListItem}>País</ListItem.Title>
+                <ListItem.Subtitle style={styles.subtitleListItem}>Colombia</ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
             <LogOutListItem
               dispatch={dispatch}
               navigate={props.navigation.navigate}

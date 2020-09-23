@@ -19,43 +19,6 @@ export const authenticate = (localId, idToken, email) => {
   };
 };
 
-const signUp = (email, password) => {
-  return async dispatch => {
-    const response = await fetch(API_URL + 'signUp?key=' + API_KEY,
-      {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json'
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          returnSecureToken: true
-        })
-      }
-    );
-
-    const resData = await response.json();
-
-    if (!response.ok) {
-      const errorId = resData.error.message;
-      let message = '¡UPS! Algo ocurrió.';
-      if (errorId === 'EMAIL_EXISTS') {
-        message = 'El correo electrónico se encuentra en uso. Intentalo nuevamente.'
-      } else if (errorId === 'OPERATION_NOT_ALLOWED') {
-        message = 'Usuario y/o contraseña incorrecta. Intentelo nuevamente.'
-      } else if (errorId === 'TOO_MANY_ATTEMPTS_TRY_LATER') {
-        message = 'Se ha decidido bloquear la actividad de este dispositivo. Intenta más tarde.';
-      }
-      throw new Error(message);
-    }
-
-    dispatch(authenticate(resData.localId, resData.idToken, email));
-    const expirationDate = new Date(new Date().getTime() + parseInt(resData.expiresIn) * 1000);
-    saveDataToStorage(resData.idToken, resData.localId, expirationDate, email);
-  };
-};
-
 export const signup = (email, password) => async dispatch => {
   await firebaseAuth
     .createUserWithEmailAndPassword(email, password)
@@ -81,44 +44,6 @@ export const signup = (email, password) => async dispatch => {
 
       throw new Error(errorMessage);
     });
-};
-
-const signIn = (email, password) => {
-
-  return async dispatch => {
-    const response = await fetch(
-      API_URL + 'signInWithPassword?key=' + API_KEY,
-      {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json'
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          returnSecureToken: true
-        })
-      }
-    );
-
-    if (!response.ok) {
-
-      const errorResData = await response.json();
-      const errorId = errorResData.error.message;
-      let message = '¡UPS! Algo ocurrió. Por favor intentalo nuevamente.';
-      if (errorId === 'EMAIL_NOT_FOUND') {
-        message = 'No reconocemos este correo electrónico. Intentalo nuevamente.'
-      } else if (errorId === 'INVALID_PASSWORD') {
-        message = 'Usuario y/o contraseña incorrecta. Intentelo nuevamente.'
-      }
-      throw new Error(message);
-    }
-
-    const resData = await response.json();
-    const expirationDate = new Date(new Date().getTime() + parseInt(resData.expiresIn) * 1000);
-    saveDataToStorage(resData.idToken, resData.localId, expirationDate, email);
-    dispatch(authenticate(resData.localId, resData.idToken, email));
-  };
 };
 
 export const signin = (email, password) => async dispatch => {
