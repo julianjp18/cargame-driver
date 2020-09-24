@@ -170,7 +170,6 @@ const DriverHomeScreen = props => {
 
     try {
         const location = await Location.getLastKnownPositionAsync();
-        console.log(location);
         dispatch(placesActions.currentPosition({
           lat: location.coords.latitude,
           lng: location.coords.longitude,

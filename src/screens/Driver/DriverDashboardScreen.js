@@ -10,8 +10,6 @@ import { setTypeService } from '../../redux/actions/auth';
 
 import * as driverActions from '../../redux/actions/drivers';
 import * as driverNotificationsAction from '../../redux/actions/notifications';
-import * as authActions from '../../redux/actions/auth';
-import { getUserInfo } from '../../utils/helpers';
 import { normalizeLength } from '../../styles/layout';
 
 const selectedCategoryItem = (navigation, dispatch, categoryId) => {
@@ -26,7 +24,7 @@ const styles = StyleSheet.create({
     minHeight: normalizeLength(300)
   },
   title: {
-    paddingTop: normalizeLength(8),
+    paddingTop: normalizeLength(15),
     color: textSecondaryColor,
     fontFamily: 'Quicksand',
     fontSize: normalizeLength(17),
@@ -47,7 +45,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     backgroundColor: 'transparent',
-    paddingBottom: '2%'
+    paddingBottom: normalizeLength(4)
   },
   disabledListContainer: {
     backgroundColor: '#f3f3f3'
@@ -66,15 +64,6 @@ const DriverDashboardScreen = props => {
     "Cannot update during an existing state transition (such as within `render`).",
   ]);
   const userAuth = useSelector(state => state.auth);
-
-  getUserInfo().then((data) => {
-    const userInfo = JSON.parse(data);
-
-    if (!userInfo.token) {
-      dispatch(authActions.logout());
-      props.navigation.navigate('Index');
-    }
-  });
   
   useEffect(() => {
     dispatch(driverActions.showDriver(userAuth.driverId));

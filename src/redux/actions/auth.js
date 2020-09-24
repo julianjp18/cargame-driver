@@ -1,14 +1,10 @@
 import { firebaseAuth } from '../../constants/Firebase';
 import { AsyncStorage } from 'react-native';
-import ENV from '../../../env';
 
 export const AUTHENTICATE = 'AUTHENTICATE';
 export const LOGOUT = 'LOGOUT';
 export const IS_SIGNUP = 'IS_SIGNUP';
 export const CHANGE_TYPE_SERVICE_SELECTED = 'CHANGE_TYPE_SERVICE_SELECTED';
-
-const API_KEY = ENV.firebaseApiKey;
-const API_URL = 'https://identitytoolkit.googleapis.com/v1/accounts:';
 
 export const authenticate = (localId, idToken, email) => {
   return {
