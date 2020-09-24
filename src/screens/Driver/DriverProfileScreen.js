@@ -13,22 +13,27 @@ import * as MediaLibrary from 'expo-media-library';
 import * as driverActions from '../../redux/actions/drivers';
 import * as authActions from '../../redux/actions/auth';
 import { getUserInfo } from '../../utils/helpers';
+import { normalizeLength } from '../../styles/layout';
 
 const LogOutListItem = props => (
   <TouchableOpacity>
     <ListItem
-      containerStyle={styles.listContainer}
-      title='Cerrar sesión'
-      titleStyle={styles.titleListItem}
-      leftAvatar={
-        <AntDesign name="logout" size={24} color={primaryColor} />
-      }
-      subtitleStyle={styles.subtitleListItem}
       onPress={() => {
         props.dispatch(authActions.logout());
         props.navigate('Auth');
       }}
-    />
+      containerStyle={styles.listContainer}
+      topDivider
+    >
+      <Icon
+        name='logout'
+        type='antdesign'
+        color={primaryColor}
+      />
+      <ListItem.Content>
+        <ListItem.Title style={styles.titleListItem}>Cerrar sesión</ListItem.Title>
+      </ListItem.Content>
+    </ListItem>
   </TouchableOpacity>
 );
 
@@ -177,64 +182,53 @@ const DriverProfileScreen = props => {
 const styles = StyleSheet.create({
   servicesContainer: {
     backgroundColor: 'transparent',
-    height: '100%'
+    minHeight: normalizeLength(300)
   },
   nameListContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: '5%',
+    paddingTop: normalizeLength(20),
   },
   nameListText: {
     color: primaryColor,
     fontFamily: 'Quicksand',
-    fontSize: 20,
-    fontWeight: '700',
-    lineHeight: 24
-  },
-  title: {
-    paddingTop: '1%',
-    color: textSecondaryColor,
-    fontFamily: 'Quicksand',
-    fontSize: 18,
-    fontWeight: '700',
-    lineHeight: 22,
-    textAlign: 'center',
+    fontSize: normalizeLength(20),
+    fontWeight: '700'
   },
   row: {
     flexDirection: 'row',
-    width: '100%',
-    marginTop: '2%'
+    minWidth: normalizeLength(300),
+    marginTop: normalizeLength(4)
   },
   col1: {
-    width: '50%',
+    minWidth: normalizeLength(180),
     alignItems: 'center',
     justifyContent: 'center'
   },
   col2: {
-    width: '50%',
+    minWidth: normalizeLength(200),
     alignItems: 'center',
     justifyContent: 'center'
   },
   mainCarga: {
-    width: '60%',
-    height: 100,
+    width: normalizeLength(120),
+    height: normalizeLength(120),
   },
   titleListItem: {
     color: primaryColor,
     fontFamily: 'Quicksand',
-    fontSize: 14,
-    fontWeight: '700',
-    lineHeight: 24
+    fontSize: normalizeLength(14),
+    fontWeight: '700'
   },
   subtitleListItem: {
     color: darkGrey,
     fontFamily: 'Quicksand',
-    fontSize: 14,
+    fontSize: normalizeLength(13),
     lineHeight: 24
   },
   listContainer: {
     backgroundColor: 'transparent',
-    paddingBottom: '2%'
+    paddingBottom: normalizeLength(6)
   }
 });
 
