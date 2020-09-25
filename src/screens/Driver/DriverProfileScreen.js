@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, View, Image } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { Icon, ListItem } from 'react-native-elements';
-import { textSecondaryColor, darkGrey, primaryColor } from '../../constants/Colors';
+import { darkGrey, primaryColor } from '../../constants/Colors';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import DriverHeader from '../../components/DriverHeader';
-import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import { shortBrandOrangeGreyUrl } from '../../constants/Utils';
 import ImgPicker from '../../components/UI/ImagePicker';
 import * as MediaLibrary from 'expo-media-library';
@@ -181,6 +180,7 @@ const DriverProfileScreen = props => {
 
 const styles = StyleSheet.create({
   servicesContainer: {
+    flex: 1,
     backgroundColor: 'transparent',
     minHeight: normalizeLength(300)
   },
@@ -188,11 +188,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: normalizeLength(20),
+    paddingBottom: normalizeLength(20)
   },
   nameListText: {
     color: primaryColor,
     fontFamily: 'Quicksand',
-    fontSize: normalizeLength(20),
+    fontSize: normalizeLength(25),
     fontWeight: '700'
   },
   row: {

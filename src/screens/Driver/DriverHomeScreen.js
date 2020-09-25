@@ -20,68 +20,67 @@ import * as placesActions from '../../redux/actions/places';
 import * as authActions from '../../redux/actions/auth';
 import * as travelsActions from '../../redux/actions/travels';
 import { getUserInfo } from '../../utils/helpers';
+import { normalizeLength } from '../../styles/layout';
 
 const styles = StyleSheet.create({
   homeContainer: {
+    flex: 1,
     backgroundColor: 'transparent',
-    height: '100%',
+    minHeight: normalizeLength(300)
   },
   title: {
-    paddingTop: '4%',
-    paddingLeft: '15%',
+    paddingTop: normalizeLength(10),
     color: textSecondaryColor,
     fontFamily: 'Quicksand',
-    fontSize: 18,
+    fontSize: normalizeLength(18),
     fontWeight: '700',
-    lineHeight: 22,
-    textAlign: 'left',
+    textAlign: 'center',
   },
   titleListItem: {
     color: darkGrey,
     fontFamily: 'Ruda',
-    fontSize: 20,
+    fontSize: normalizeLength(20),
     fontWeight: '500',
   },
   subtitleListItem: {
     color: darkGrey,
     fontFamily: 'Ruda',
-    fontSize: 12,
-    fontWeight: '400',
-    lineHeight: 20,
+    fontSize: normalizeLength(12),
+    fontWeight: '400'
   },
   listContainer: {
     backgroundColor: 'transparent',
-    paddingBottom: '10%',
+    paddingBottom: normalizeLength(10),
   },
   avatarContainer: {
-    height: '100%',
-    width: '22%',
+    minHeight: normalizeLength(70),
+    minWidth: normalizeLength(70),
   },
   avatar: {
-    width: '100%',
-    height: '100%',
+    width: normalizeLength(70),
+    height: normalizeLength(70),
   },
   row: {
     flexDirection: 'row',
-    width: '100%',
-    marginTop: '2%',
+    minWidth: normalizeLength(300),
+    marginTop: normalizeLength(5),
   },
   col1: {
-    width: '50%',
+    minWidth: normalizeLength(200),
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   col2: {
-    width: '50%',
+    minWidth: normalizeLength(200),
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   serviceTitle: {
     color: darkGrey,
     fontFamily: 'Quicksand',
-    fontSize: 15,
+    fontSize: normalizeLength(14),
     fontWeight: '500',
-    paddingBottom: '2%',
+    paddingBottom: normalizeLength(2),
   },
   serviceTitleSelected: {
     color: primaryColor,
@@ -90,7 +89,7 @@ const styles = StyleSheet.create({
     borderBottomColor: primaryColor,
   },
   infoContainer: {
-    padding: '5%',
+    padding: normalizeLength(20),
   },
   dateTravelTitle: {
     color: primaryColor,
@@ -98,12 +97,14 @@ const styles = StyleSheet.create({
   },
   dateTravelContent: {
     textAlign: 'center',
-    paddingVertical: '3%',
-    marginTop: '1%',
-    marginBottom: '15%',
+    paddingVertical: normalizeLength(10),
+    marginTop: normalizeLength(1),
+    marginBottom: normalizeLength(15),
     borderColor: primaryColor,
-    borderWidth: 1,
-    borderRadius: 15,
+    borderWidth: normalizeLength(1),
+    borderRadius: normalizeLength(15),
+    fontWeight: '700',
+    fontSize: normalizeLength(15)
   },
   activateTypeService: {
     color: darkGrey

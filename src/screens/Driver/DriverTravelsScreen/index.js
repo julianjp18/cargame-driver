@@ -10,6 +10,7 @@ import { AntDesign } from '@expo/vector-icons';
 import * as authActions from '../../../redux/actions/auth';
 import * as travelActions from '../../../redux/actions/travels';
 import { getUserInfo } from '../../../utils/helpers';
+import { normalizeLength } from '../../../styles/layout';
 
 const IN_PROGRESS_TRAVELS = 1;
 const FINISHED_TRAVELS = 0;
@@ -79,27 +80,29 @@ const DriverTravelsScreen = props => {
               {tripsInProgress.length > 0 ? tripsInProgress.map((tripInProgress) => (
                 <TouchableOpacity key={`${tripInProgress.offerValue}-${tripInProgress.pickupDate}`}>
                   <ListItem
+                    onPress={() => viewTravel(tripInProgress)}
                     containerStyle={styles.listContainer}
                     bottomDivider
-                    leftIcon={
-                      <AntDesign name="bells" size={24} color={primaryColor} />
-                    }
-                    rightIcon={
-                      <AntDesign name="right" size={24} color={primaryColor} />
-                    }
-                    title={(
-                      <View>
-                        <Text>
-                          Destino: {tripInProgress.destinationCity}
-                        </Text>
-                        <Text>
-                          Fecha de recogida: {tripInProgress.pickupDate}
-                        </Text>
-                      </View>
-                    )}
-                    titleStyle={styles.titleListItem}
-                    onPress={() => viewTravel(tripInProgress)}
-                  />
+                  >
+                    <Icon
+                      name='bells'
+                      type='antdesign'
+                      color={primaryColor}
+                    />
+                    <ListItem.Content>
+                      <ListItem.Title style={styles.titleListItem}>
+                        <View>
+                          <Text>
+                            Destino: {tripInProgress.destinationCity}
+                          </Text>
+                          <Text>
+                            Fecha de recogida: {tripInProgress.pickupDate}
+                          </Text>
+                        </View>
+                      </ListItem.Title>
+                    </ListItem.Content>
+                    <ListItem.Chevron />
+                  </ListItem>
                 </TouchableOpacity>
               )) : (
                 <View style={styles.notFoundContainer}>
@@ -117,27 +120,29 @@ const DriverTravelsScreen = props => {
                 {tripsMade.length > 0 ? tripsMade.map((tripMade) => (
                   <TouchableOpacity key={`${tripMade.offerValue}-${tripMade.pickupDate}`}>
                     <ListItem
+                      onPress={() => viewTravel(tripMade)}
                       containerStyle={styles.listContainer}
                       bottomDivider
-                      leftIcon={
-                        <AntDesign name="bells" size={24} color={primaryColor} />
-                      }
-                      rightIcon={
-                        <AntDesign name="right" size={24} color={primaryColor} />
-                      }
-                      title={(
-                        <View>
-                          <Text>
-                            Destino: {tripMade.destinationCity}
-                          </Text>
-                          <Text>
-                            Fecha de recogida: {tripMade.pickupDate}
-                          </Text>
-                        </View>
-                      )}
-                      titleStyle={styles.titleListItem}
-                      onPress={() => viewTravel(tripMade)}
-                    />
+                    >
+                      <Icon
+                        name='bells'
+                        type='antdesign'
+                        color={primaryColor}
+                      />
+                      <ListItem.Content>
+                        <ListItem.Title style={styles.titleListItem}>
+                          <View>
+                            <Text>
+                              Destino: {tripMade.destinationCity}
+                            </Text>
+                            <Text>
+                              Fecha de recogida: {tripMade.pickupDate}
+                            </Text>
+                          </View>
+                        </ListItem.Title>
+                      </ListItem.Content>
+                      <ListItem.Chevron />
+                    </ListItem>
                   </TouchableOpacity>
                 )) : (
                   <View style={styles.notFoundContainer}>
@@ -163,22 +168,20 @@ const styles = StyleSheet.create({
   nameListContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: '5%'
+    paddingVertical: normalizeLength(15)
   },
   nameListText: {
     color: darkGrey,
     fontFamily: 'Quicksand',
-    fontSize: 20,
-    fontWeight: '700',
-    lineHeight: 24
+    fontSize: normalizeLength(20),
+    fontWeight: '700'
   },
   title: {
-    paddingTop: '2%',
+    paddingTop: normalizeLength(6),
     color: textSecondaryColor,
     fontFamily: 'Quicksand',
-    fontSize: 18,
+    fontSize: normalizeLength(18),
     fontWeight: '700',
-    lineHeight: 22,
     textAlign: 'center',
   },
   row: {
@@ -198,7 +201,7 @@ const styles = StyleSheet.create({
   },
   serviceTitle: {
     width: '100%',
-    paddingVertical: '5%',
+    paddingVertical: normalizeLength(5),
     textAlign: 'center',
     color: primaryColor,
     fontWeight: 'bold'
@@ -210,11 +213,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: '20%',
-    paddingBottom: '10%'
-  },
-  notFoundText: {
-
+    marginTop: normalizeLength(20),
+    paddingBottom: normalizeLength(10)
   },
 });
 

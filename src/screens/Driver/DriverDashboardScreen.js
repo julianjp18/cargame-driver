@@ -47,9 +47,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     paddingBottom: normalizeLength(4)
   },
-  disabledListContainer: {
-    backgroundColor: '#f3f3f3'
-  },
   avatarContainer: {
     height: normalizeLength(70),
     width: normalizeLength(80)

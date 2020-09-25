@@ -9,6 +9,7 @@ import { primaryColor, accentColor, textAccentColor } from '../../constants/Colo
 
 import * as authActions from '../../redux/actions/auth';
 import { getUserInfo } from '../../utils/helpers';
+import { normalizeLength } from '../../styles/layout';
 
 const DriverSupportScreen = props => {
   const dispatch = useDispatch();
@@ -90,34 +91,38 @@ const DriverSupportScreen = props => {
 
 const styles = StyleSheet.create({
   supportContainer: {
-    height: '100%'
+    flex: 1,
+    backgroundColor: 'transparent',
+    minHeight: normalizeLength(300)
   },
   logoContainer: {
-    justifyContent: 'flex-end',
+    flex: 1,
     alignItems: 'flex-end',
-    padding: 0
+    minHeight: normalizeLength(150),
+    minWidth: normalizeLength(150),
+    paddingTop: normalizeLength(40)
   },
   logo: {
-    height: 150,
-    width: 150,
-    marginTop: '10%'
+    height: normalizeLength(150),
+    width: normalizeLength(150),
   },
   mainCargaContainer: {
+    flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
-    height: '40%',
-    paddingTop: '15%',
-    marginBottom: '8%'
+    minHeight: normalizeLength(300)
   },
   mainCarga: {
-    marginRight: '2%',
-    width: '100%',
-    position: 'absolute',
-    top: '-20%'
+    marginRight: normalizeLength(2),
+    minWidth: normalizeLength(400),
+    height: normalizeLength(400),
+    position: 'relative',
+    top: normalizeLength(50),
+    left: normalizeLength(75)
   },
   linearGradientContainer: {
-    paddingTop: '5%',
-    paddingBottom: '5%'
+    paddingTop: normalizeLength(15),
+    paddingBottom: normalizeLength(10)
   },
   row1: {
     flexDirection: 'row',
@@ -135,29 +140,30 @@ const styles = StyleSheet.create({
   },
   row1Col2: {
     width: '70%',
-    paddingRight: '2%'
+    paddingRight: normalizeLength(10)
   },
   infoText: {
-    paddingTop: '5%',
+    paddingTop: normalizeLength(5),
     color: textAccentColor,
     fontFamily: 'Ruda',
-    fontSize: 20,
-    lineHeight: 30
+    fontSize: normalizeLength(18)
   },
   extraInfo: {
-    paddingHorizontal: '5%',
-    paddingTop: '1%'
+    paddingHorizontal: normalizeLength(5),
+    paddingTop: normalizeLength(15)
   },
   extraInfoText: {
     color: textAccentColor,
     fontFamily: 'Quicksand',
-    fontSize: 18,
-    lineHeight: 19,
+    fontSize: normalizeLength(15),
+    lineHeight: normalizeLength(15),
+    paddingHorizontal: normalizeLength(20)
   },
   row2: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: '5%'
+    paddingTop: normalizeLength(5),
+    paddingBottom: normalizeLength(10)
   },
 });
 
