@@ -8,58 +8,29 @@ import DriverHeader from '../../components/DriverHeader';
 
 import * as authActions from '../../redux/actions/auth';
 import { getUserInfo } from '../../utils/helpers';
+import { normalizeLength } from '../../styles/layout';
 
 const styles = StyleSheet.create({
   servicesContainer: {
+    flex: 1,
     backgroundColor: 'transparent',
-    height: '100%'
-  },
-  nameListContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: '5%'
-  },
-  nameListText: {
-    color: darkGrey,
-    fontFamily: 'Quicksand',
-    fontSize: 20,
-    fontWeight: '700',
-    lineHeight: 24
-  },
-  title: {
-    paddingTop: '2%',
-    color: textSecondaryColor,
-    fontFamily: 'Quicksand',
-    fontSize: 18,
-    fontWeight: '700',
-    lineHeight: 22,
-    textAlign: 'center',
+    minHeight: normalizeLength(300)
   },
   titleListItem: {
     color: darkGrey,
     fontFamily: 'Quicksand',
     fontWeight: '600',
-    fontSize: 14,
-    lineHeight: 24
+    fontSize: normalizeLength(14)
   },
   subtitleListItem: {
     color: darkGrey,
     fontFamily: 'Quicksand',
-    fontSize: 14,
-    lineHeight: 24
+    fontSize: normalizeLength(14)
   },
   listContainer: {
     backgroundColor: 'transparent',
-    paddingBottom: '4%'
-  },
-  mainCargaContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  mainCarga: {
-    width: '30%',
-    height: 100,
-  },
+    paddingBottom: normalizeLength(4)
+  }
 });
 
 const DriverNotificationsScreen = props => {
