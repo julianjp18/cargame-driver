@@ -32,7 +32,7 @@ const profileNavigator = createSwitchNavigator({
 const TravelsNavigator = createSwitchNavigator({
   Travels: DriverTravelsScreen,
   TravelSelected: TravelSelectedScreen,
-})
+});
 
 const OffersNavigator = createSwitchNavigator({
   Offers: DriverOffersScreen,

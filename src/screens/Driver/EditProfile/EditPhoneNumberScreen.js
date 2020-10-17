@@ -97,7 +97,7 @@ const EditPhoneNumberScreen = props => {
         
     };
 
-    const goToProfile = () => props.navigation.navigate('Profile');;
+    const goToProfile = () => props.navigation.navigate('Profile');
 
     return (
         <View style={styles.servicesContainer}>
@@ -144,7 +144,7 @@ const EditPhoneNumberScreen = props => {
                                         title={'Volver'}
                                         colorOne={'white'}
                                         colorTwo={'white'}
-                                        fontColor={'#1D59A2'}
+                                        fontColor={primaryColor}
                                         onPress={goToProfile}
                                     />
                                 </View>

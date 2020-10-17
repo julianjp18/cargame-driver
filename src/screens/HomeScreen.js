@@ -121,7 +121,7 @@ const HomeScreen = props => {
               title="Conoce más"
               colorOne={'white'}
               colorTwo={'white'}
-              fontColor={'#1D59A2'}
+              fontColor={primaryColor}
             />
           </View>
         </View>

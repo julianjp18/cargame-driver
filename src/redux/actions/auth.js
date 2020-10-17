@@ -73,7 +73,7 @@ const saveDataToStorage = (idToken, uid, expirationDate, email) => {
     JSON.stringify({
       token: idToken,
       driverId: uid,
-      expirationDate: expirationDate,
+      expirationDate,
       email,
     }))
 };

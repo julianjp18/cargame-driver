@@ -118,7 +118,7 @@ const OfferForm = (props) => {
       setIsLoading(true);
       try {
         dispatch(action);
-        props.changeToOfferFormHandler();
+        props.changeToOfferFormHandler(props.offerForm, props.index, props.successOffer);
         controller.abort();
       } catch (err) {
           setError(err.message);
