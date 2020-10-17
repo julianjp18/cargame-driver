@@ -172,7 +172,7 @@ const DriverProfileScreen = props => {
             />
           </View>
         </ScrollView>
-      ) : (<LogOutListItem dispatch={dispatch} />)}
+      ) : (<LogOutListItem dispatch={dispatch} navigate={props.navigation.navigate} />)}
 
     </View>
   );

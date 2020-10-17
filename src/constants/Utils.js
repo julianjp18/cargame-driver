@@ -57,6 +57,10 @@ export const collectionTimeSlot = [
         value: 'Mañana (7:00am - 12:00pm)'
     },
     {
+        label: 'evening',
+        value: 'Tarde (12:01pm - 6:59pm)'
+    },
+    {
         label: 'night',
         value: 'Noche (7:00pm - 10:00pm)'
     }

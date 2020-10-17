@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet, View, Image } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { shortBrandOrangeGreyUrl, shortMainCargaUrl } from '../../constants/Utils';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';

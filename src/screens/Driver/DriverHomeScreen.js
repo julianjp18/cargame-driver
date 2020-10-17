@@ -15,7 +15,7 @@ import WelcomeHeader from '../../components/WelcomeHeader';
 import Button from '../../components/UI/Button';
 import LocationPicker from '../../components/UI/LocationPicker';
 
-import * as offersAction from '../../redux/actions/offers';
+import * as offersActions from '../../redux/actions/offers';
 import * as placesActions from '../../redux/actions/places';
 import * as authActions from '../../redux/actions/auth';
 import * as travelsActions from '../../redux/actions/travels';
@@ -181,7 +181,7 @@ const DriverHomeScreen = props => {
   };
 
   useEffect(() => {
-    dispatch(offersAction.showActiveOffers());
+    dispatch(offersActions.showActiveOffers());
     places.urbanServiceActivateAddress && setTypeTruckService(URBAN_SERVICE);
     getCurrentLocation();
   }, []);

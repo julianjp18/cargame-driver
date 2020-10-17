@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { primaryColor, yellowColor, successColor, cancelColor, offeredColor } from '../../../constants/Colors';
@@ -6,7 +6,7 @@ import Button from '../../../components/UI/Button';
 import { currencyFormat } from '../../../constants/Utils';
 
 import * as offersActions from '../../../redux/actions/offers';
-import { useDispatch } from 'react-redux';
+import moment from 'moment';
 
 const styles = StyleSheet.create({
   supportContainer: {
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
 });
 
 const ShowOffer = (props) => {
-  const dispatch = useDispatch();
+  moment.locale('es');
   const offer = props.offer;
   const [offerValue, setofferValue] = useState(props.offer.offerValue);
   const [lastOfferValue, setLastOfferValue] = useState(props.offer.offerValue);
@@ -74,16 +74,14 @@ const ShowOffer = (props) => {
 
   const refreshOffer = async () => {
     const changeOfferValue = await offersActions.getOfferValueById(props.offer.offerId);
-    if(parseInt(changeOfferValue) !== parseInt(lastOfferValue)) {
-      setofferValue(changeOfferValue);
-      setLastOfferValue(changeOfferValue);
-      setChangeOfferInfoColor(true);
-
-      setTimeout(() => {
-        setChangeOfferInfoColor(false);
-      }, 5000);
+    if (changeOfferValue) {
+      if(parseInt(changeOfferValue) !== parseInt(lastOfferValue)) {
+        setofferValue(changeOfferValue);
+        setLastOfferValue(changeOfferValue);
+        setChangeOfferInfoColor(true);
+      }
+      setTimeout(refreshOffer, 20000);
     }
-    setTimeout(refreshOffer, 10000);
   };
 
   refreshOffer();
@@ -101,6 +99,7 @@ const ShowOffer = (props) => {
           changeOfferInfoColor && styles.showCancelMessage,
           offer.response.status === 'CANCEL' && styles.showCancelMessage,
           offer.response.status === 'REJECTED' && styles.showCancelMessage,
+          offer.response.status === 'INFO' && styles.showMessageContainer,
         ]}
       >
         <Text style={styles.showMessageText}>
@@ -128,12 +127,12 @@ const ShowOffer = (props) => {
           </View>
           <View style={styles.showInfoContent}>
             <Text style={styles.title}>Fecha de recogida:</Text>
-            <Text style={styles.subtitle}>{offer.pickupDate}</Text>
+            <Text style={styles.subtitle}>{moment(offer.pickUpDate, 'DD/MM/YYYY').format("ll")}</Text>
           </View>
           <View style={styles.showInfoContent}>
             <Text style={styles.title}>Franja horaria de recogida:</Text>
             <Text style={styles.subtitle}>
-              {props.getcollectionTimeSlot(offer.collectionTimeSlot)}
+              {props.getcollectionTimeSlot(offer.timeZone)}
             </Text>
           </View>
           <View style={styles.showInfoContent}>
@@ -154,7 +153,7 @@ const ShowOffer = (props) => {
           title="Ofertar"
           paddingVertical={20}
           disabled={offer.response.status === 'REJECTED'}
-          onPress={() => props.changeToOfferFormHandler(offer.offerId, props.index) }
+          onPress={() => props.changeToOfferFormHandler(offer.offerId, props.index, props.changeToForm) }
         />
       </View>
     </View>

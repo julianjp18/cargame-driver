@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { ListItem, Icon  } from 'react-native-elements';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { textSecondaryColor, darkGrey, primaryColor } from '../../constants/Colors';
+import { darkGrey, primaryColor } from '../../constants/Colors';
 import DriverHeader from '../../components/DriverHeader';
 
 import * as authActions from '../../redux/actions/auth';

@@ -10,6 +10,8 @@ import DriverHeader from '../../../components/DriverHeader';
 import ShowOffer from './ShowOffer';
 import OfferForm from './OfferForm';
 
+import * as offersActions from '../../../redux/actions/offers';
+
 const styles = StyleSheet.create({
   supportContainer: {
     height: '100%',
@@ -62,14 +64,19 @@ const styles = StyleSheet.create({
   },
 });
 
+const CHANGE_TO_FORM = "CHANGE_TO_FORM";
+const SUCCESS_OFFER = "SUCCESS_OFFER";
+
 const getcollectionTimeSlot = (collectionTimeSlotItem) =>
   collectionTimeSlot.map((collectionTime) =>
     collectionTime.label === collectionTimeSlotItem ? collectionTime.value : '');
 
 const DriverOffersScreen = (props) => {
   const [offerForm, setofferForm] = useState();
+  const [changeView, setChangeView] = useState(false);
+  
   let offerState = useSelector(state => state.activeOffers);
-  let offers = offerState.offers;
+  const [offers, setOffers] = useState(offerState.offers);
 
   const [indexSwiper, setIndex] = useState(offerState.index);
   const userAuth = useSelector(state => state.auth);
@@ -79,9 +86,21 @@ const DriverOffersScreen = (props) => {
     props.navigation.navigate('Auth');
   }
 
-  const changeToOfferFormHandler = (offerId = null, index = indexSwiper) => {
-    setofferForm(offerId);
-    setIndex(index);
+  const changeToOfferFormHandler = (offerId = null, index = indexSwiper, action) => {
+    if (offerId !== null) {
+      setofferForm(offerId);
+      setIndex(index);
+    }
+    if (action === CHANGE_TO_FORM) {
+      setChangeView(true);
+    } else 
+      setChangeView(false);
+  };
+
+  const refreshOffers = async () => {
+    const changeOffers = await offersActions.showActiveOffersAsync();
+    setOffers(changeOffers);
+    setTimeout(refreshOffer, 20000);
   };
 
   return (
@@ -91,7 +110,7 @@ const DriverOffersScreen = (props) => {
         subtitle="Explora las ofertas en tu zona"
         leftIcon="refresh"
       />
-      {!offerForm
+      {!changeView
         ? <Swiper
             style={styles.swiperContainer}
             showsButtons
@@ -110,6 +129,7 @@ const DriverOffersScreen = (props) => {
                 index={index}
                 key={index}
                 offer={offer}
+                changeToForm={CHANGE_TO_FORM}
                 getcollectionTimeSlot={getcollectionTimeSlot}
                 changeToOfferFormHandler={changeToOfferFormHandler}
               />
@@ -121,6 +141,7 @@ const DriverOffersScreen = (props) => {
             offerForm={offerForm}
             navigation={props.navigation}
             driverId={userAuth.driverId}
+            successOffer={SUCCESS_OFFER}
             changeToOfferFormHandler={changeToOfferFormHandler}
           />
         )}
