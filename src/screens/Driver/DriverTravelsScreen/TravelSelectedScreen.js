@@ -96,7 +96,7 @@ const TravelSelectedScreen = props => {
   const driverUser = useSelector(state => state.driver);
   const [user, setUser] = useState();
   const dispatch = useDispatch();
-  const { userId, pickupDate, offerId, status, driverId } = useSelector(state => state.travels.tripSelected);
+  const { userId, pickUpDate, offerId, status, driverId } = useSelector(state => state.travels.tripSelected);
   
   useEffect(() => {
     travelsActions.getUserById(userId).then((data) => setUser(data));
@@ -201,7 +201,7 @@ const TravelSelectedScreen = props => {
       </LinearGradient>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Fecha de entrega</Text>
-        <Text style={styles.pickUpDateText}>{pickupDate}</Text>
+        <Text style={styles.pickUpDateText}>{pickUpDate}</Text>
       </View>
       {/*}
       <Timeline
