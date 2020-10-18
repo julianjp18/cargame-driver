@@ -78,7 +78,7 @@ const DriverTravelsScreen = props => {
           <ScrollView>
             <View style={styles.infoContainer}>
               {tripsInProgress.length > 0 ? tripsInProgress.map((tripInProgress) => (
-                <TouchableOpacity key={`${tripInProgress.offerValue}-${tripInProgress.pickupDate}`}>
+                <TouchableOpacity key={`${tripInProgress.offerValue}-${tripInProgress.pickUpDate}`}>
                   <ListItem
                     onPress={() => viewTravel(tripInProgress)}
                     containerStyle={styles.listContainer}
@@ -96,7 +96,7 @@ const DriverTravelsScreen = props => {
                             Destino: {tripInProgress.destinationCity}
                           </Text>
                           <Text>
-                            Fecha de recogida: {tripInProgress.pickupDate}
+                            Fecha de recogida: {tripInProgress.pickUpDate}
                           </Text>
                         </View>
                       </ListItem.Title>
@@ -118,7 +118,7 @@ const DriverTravelsScreen = props => {
             <ScrollView>
               <View style={styles.infoContainer}>
                 {tripsMade.length > 0 ? tripsMade.map((tripMade) => (
-                  <TouchableOpacity key={`${tripMade.offerValue}-${tripMade.pickupDate}`}>
+                  <TouchableOpacity key={`${tripMade.offerValue}-${tripMade.pickUpDate}`}>
                     <ListItem
                       onPress={() => viewTravel(tripMade)}
                       containerStyle={styles.listContainer}
@@ -136,7 +136,7 @@ const DriverTravelsScreen = props => {
                               Destino: {tripMade.destinationCity}
                             </Text>
                             <Text>
-                              Fecha de recogida: {tripMade.pickupDate}
+                              Fecha de recogida: {tripMade.pickUpDate}
                             </Text>
                           </View>
                         </ListItem.Title>

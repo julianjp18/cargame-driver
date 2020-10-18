@@ -3,7 +3,8 @@ import { Text, StyleSheet, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { primaryColor, yellowColor, successColor, cancelColor, offeredColor } from '../../../constants/Colors';
 import Button from '../../../components/UI/Button';
-import { currencyFormat } from '../../../constants/Utils';
+import { offerMessages } from '../../../constants/Utils';
+import { currencyFormat } from '../../../utils/helpers';
 
 import * as offersActions from '../../../redux/actions/offers';
 import moment from 'moment';
@@ -68,16 +69,24 @@ const styles = StyleSheet.create({
 const ShowOffer = (props) => {
   moment.locale('es');
   const offer = props.offer;
-  const [offerValue, setofferValue] = useState(props.offer.offerValue);
-  const [lastOfferValue, setLastOfferValue] = useState(props.offer.offerValue);
+  const [offerValue, setofferValue] = useState(offer.offerValue);
+  const [lastOfferValue, setLastOfferValue] = useState(offer.offerValue);
+  const [response, setResponse] = useState(offer.response);
   const [changeOfferInfoColor, setChangeOfferInfoColor] = useState(false);
 
   const refreshOffer = async () => {
-    const changeOfferValue = await offersActions.getOfferValueById(props.offer.offerId);
+    const changeOfferValue = await offersActions.getOfferValueById(offer.offerId);
     if (changeOfferValue) {
       if(parseInt(changeOfferValue) !== parseInt(lastOfferValue)) {
         setofferValue(changeOfferValue);
         setLastOfferValue(changeOfferValue);
+        const { status } = await offersActions.getOfferById(offer.offerId);
+        if (status) {
+          setResponse({
+            status,
+            message: offerMessages[status]
+          });
+        }
         setChangeOfferInfoColor(true);
       }
       setTimeout(refreshOffer, 20000);
@@ -94,28 +103,24 @@ const ShowOffer = (props) => {
       <View
         style={[
           styles.showMessageContainer,
-          offer.response.status === 'OFFERED' && styles.showOfferedMessage,
-          offer.response.status === 'OK' && styles.showConfirmMessage,
+          ['CONTRACTED', 'OFFERED', 'IN_PROGRESS'].includes(response.status)
+            && styles.showOfferedMessage,
+          response.status === 'OK' && styles.showConfirmMessage,
           changeOfferInfoColor && styles.showCancelMessage,
-          offer.response.status === 'CANCEL' && styles.showCancelMessage,
-          offer.response.status === 'REJECTED' && styles.showCancelMessage,
-          offer.response.status === 'INFO' && styles.showMessageContainer,
+          response.status === 'CANCEL' && styles.showCancelMessage,
+          response.status === 'REJECTED' && styles.showCancelMessage,
+          response.status === 'INFO' && styles.showMessageContainer,
         ]}
       >
         <Text style={styles.showMessageText}>
-          {` ${offer.response.message} ${
-            offer.response.status === 'OFFERED'
-            || offer.response.status === 'OK'
+          {` ${response.message} ${
+            ['CONTRACTED', 'OK', 'OFFERED', 'IN_PROGRESS'].includes(response.status)
               ? currencyFormat(offerValue, 0)
               : ''
             }`}
         </Text>
       </View>
-      <View
-        style={[
-          styles.showInfoContainer,
-        ]}
-      >
+      <View style={ styles.showInfoContainer}>
         <ScrollView>
           <View style={styles.showInfoContent}>
             <Text style={styles.title}>Ciudad de Origen:</Text>
@@ -146,13 +151,13 @@ const ShowOffer = (props) => {
       <View
         style={[
           styles.buttonContainer,
-          offer.response.status === 'REJECTED' && styles.disableButtonContainer,
+          response.status === 'REJECTED' && styles.disableButtonContainer,
         ]}
       >
         <Button
           title="Ofertar"
           paddingVertical={20}
-          disabled={offer.response.status === 'REJECTED'}
+          disabled={response.status === 'REJECTED'}
           onPress={() => props.changeToOfferFormHandler(offer.offerId, props.index, props.changeToForm) }
         />
       </View>

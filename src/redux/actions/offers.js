@@ -1,4 +1,5 @@
 import { firestoreDB } from '../../constants/Firebase';
+import * as notificationsActions from './notifications';
 
 export const SHOW_ACTIVE_OFFERS = 'SHOW_ACTIVE_OFFERS';
 export const REALIZE_OFFER = 'REALIZE_OFFER';
@@ -25,8 +26,8 @@ export const showActiveOffers = () => dispatch => {
                   ...offer.data(),
                   offerId: offer.id,
                   response: {
-                    message: 'Se te asignó la oferta por',
-                    status: 'OFFERED',
+                    message: 'Usted ha ofertado satisfactoriamente por',
+                    status: 'IN_PROGRESS',
                   }
                 });
               }
@@ -99,7 +100,8 @@ export const getOfferById = async (offerId) => {
     description,
     destinationAddress,
     destinationCity,
-    pickupDate
+    pickUpDate,
+    status,
   } = await dataOffer.then(doc => doc.data());
 
   return {
@@ -108,7 +110,8 @@ export const getOfferById = async (offerId) => {
     description,
     destinationAddress,
     destinationCity,
-    pickupDate
+    pickUpDate,
+    status,
   }
 };
 
@@ -138,8 +141,9 @@ const addHistoryOffer = async (offerId, driverId, newOfferValue) => {
 
     return await updateData.then(() => true).catch(() => false);
   } else {
-    const getOfferData = getOfferById(offerId);
-    firestoreDB
+    const getOfferData = await getOfferById(offerId);
+    if (getOfferData) {
+      firestoreDB
       .collection('HistoryOffersNotificationCenter')
       .doc(`${offerId}_${driverId}`)
       .set({
@@ -151,7 +155,7 @@ const addHistoryOffer = async (offerId, driverId, newOfferValue) => {
         dateOffered: Date.now(),
         status: 'OFFERED',
       });
-    
+    }
     return true;
   }
 };
@@ -161,7 +165,7 @@ export const realizeOffer = (offerId, newOfferValue, offerDriverId, index) => as
     .collection('OffersNotificationCenter')
     .doc(offerId)
     .get();
-  const { offerValue, status, driverId } = await data.then(doc => doc.data());
+  const { offerValue, status, driverId, userId } = await data.then(doc => doc.data());
 
   let response = '';
   let finalValue = offerValue !== ''
@@ -209,6 +213,8 @@ export const realizeOffer = (offerId, newOfferValue, offerDriverId, index) => as
           : 'No se pudo actualizar la oferta, por favor inténtelo nuevamente',
         status: responseUpdateData ? 'OK' : 'CANCEL',
       };
+
+      offerValue !== '' && notificationsActions.createOfferNotificationForUser(userId, offerId);
     } else {
       response = {
         message: 'Se le ha asignado la oferta a alguien más',
