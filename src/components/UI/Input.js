@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'Quicksand',
     fontWeight: 'bold',
+    paddingLeft: 15,
     marginVertical: normalizeLength(1),
     color: primaryColor
   },
