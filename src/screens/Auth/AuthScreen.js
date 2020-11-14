@@ -246,6 +246,8 @@ const styles = StyleSheet.create({
   },
   authContainer: {
     flex: 1,
+    paddingLeft: "5%",
+    paddingRight: "5%",
     marginTop: normalizeLength(70),
     paddingHorizontal: normalizeLength(20),
     minWidth: normalizeLength(380),
@@ -276,7 +278,8 @@ const styles = StyleSheet.create({
     marginTop: normalizeLength(2)
   },
   mainCarga: {
-    marginLeft: normalizeLength(-50)
+    marginLeft: normalizeLength(-30),
+    marginTop:normalizeLength(-165),
   }
 });
 

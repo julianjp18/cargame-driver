@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { ListItem } from 'react-native-elements';
+import { Icon, ListItem } from 'react-native-elements';
 import { textSecondaryColor, darkGrey, primaryColor } from '../../../constants/Colors';
 import DriverHeader from '../../../components/DriverHeader';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -91,14 +91,8 @@ const DriverTravelsScreen = props => {
                     />
                     <ListItem.Content>
                       <ListItem.Title style={styles.titleListItem}>
-                        <View>
-                          <Text>
-                            Destino: {tripInProgress.destinationCity}
-                          </Text>
-                          <Text>
-                            Fecha de recogida: {tripInProgress.pickUpDate}
-                          </Text>
-                        </View>
+                        <Text style={styles.titleListText}>Destino: {tripInProgress.destinationCity}</Text>
+                        <Text style={styles.titleListText}>{`\n`}Fecha de recogida: {tripInProgress.pickUpDate}</Text>
                       </ListItem.Title>
                     </ListItem.Content>
                     <ListItem.Chevron />
@@ -183,6 +177,9 @@ const styles = StyleSheet.create({
     fontSize: normalizeLength(18),
     fontWeight: '700',
     textAlign: 'center',
+  },
+  titleListText: {
+    fontSize: normalizeLength(14),
   },
   row: {
     flexDirection: 'row',

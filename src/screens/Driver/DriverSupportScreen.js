@@ -103,6 +103,7 @@ const styles = StyleSheet.create({
     paddingTop: normalizeLength(40)
   },
   logo: {
+    top: normalizeLength(-28),
     height: normalizeLength(150),
     width: normalizeLength(150),
   },
@@ -116,9 +117,9 @@ const styles = StyleSheet.create({
     marginRight: normalizeLength(2),
     minWidth: normalizeLength(400),
     height: normalizeLength(400),
-    position: 'relative',
-    top: normalizeLength(50),
-    left: normalizeLength(75)
+    position: 'absolute',
+    top: normalizeLength(-25),
+    left: normalizeLength(-20)
   },
   linearGradientContainer: {
     paddingTop: normalizeLength(15),

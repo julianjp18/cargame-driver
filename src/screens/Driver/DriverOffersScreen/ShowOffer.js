@@ -103,9 +103,10 @@ const ShowOffer = (props) => {
       <View
         style={[
           styles.showMessageContainer,
-          ['CONTRACTED', 'OFFERED', 'IN_PROGRESS'].includes(response.status)
+          ['OFFERED', 'IN_PROGRESS'].includes(response.status)
             && styles.showOfferedMessage,
-          response.status === 'OK' && styles.showConfirmMessage,
+          ['CONTRACTED', 'OK'].includes(response.status)
+            && styles.showConfirmMessage,
           changeOfferInfoColor && styles.showCancelMessage,
           response.status === 'CANCEL' && styles.showCancelMessage,
           response.status === 'REJECTED' && styles.showCancelMessage,
