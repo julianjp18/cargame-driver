@@ -104,13 +104,13 @@ const OfferForm = (props) => {
     formIsValid: false
   });
 
-  const isMultiple = (x) => {
-    const y = 5000;
-    return x % y == 0;
+  const isMultiple = (x, y) => {
+    return Math.round(x / y) / (1 / y) === x;
   }
 
   const offerHandler = () => {
     const value = formState.inputValues.value;
+    console.log(value, isMultiple(Number.parseInt(value), 5));
     if(value && isMultiple(value)) {
       const action = offerActions.realizeOffer(props.offerForm, value, props.driverId, props.index);
       const controller = new AbortController();
