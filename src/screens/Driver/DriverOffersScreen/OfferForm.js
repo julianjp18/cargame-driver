@@ -78,7 +78,7 @@ const OfferForm = (props) => {
   
   useEffect(() => {
     if (error) {
-        Alert.alert('¡Oh no, un error ha ocurrido!', error, [{ text: 'Está bien'}]);
+        Alert.alert('¡ Un error ha ocurrido!', error, [{ text: 'Está bien'}]);
     }
 }, [error]);
 
@@ -110,8 +110,7 @@ const OfferForm = (props) => {
 
   const offerHandler = () => {
     const value = formState.inputValues.value;
-    console.log(value, isMultiple(Number.parseInt(value), 5));
-    if(value && isMultiple(value)) {
+    if(value && isMultiple(Number.parseInt(value), 5000)) {
       const action = offerActions.realizeOffer(props.offerForm, value, props.driverId, props.index);
       const controller = new AbortController();
       setError(null);
@@ -127,7 +126,7 @@ const OfferForm = (props) => {
       controller.abort();
       
     } else {
-      setError('¡UPS! por favor ingresa un valor correcto.');
+      setError('¡ Valor no es multiplo de 5.000');
     }
   };
 
@@ -144,7 +143,7 @@ const OfferForm = (props) => {
           minLength={5}
           maxLength={10}
           autoCapitalize="none"
-          errorText="¡UPS! Por favor ingresa un valor mayor a 5000 y en múltiples de 5000 correctamente."
+          errorText="¡ Por favor ingresa un valor mayor a 5000 y en múltiples de 5000 correctamente."
           onInputChange={inputChangeHandler}
           initialValue=""
         />

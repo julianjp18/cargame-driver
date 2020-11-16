@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     height: '70%',
     maxHeight: '70%',
     marginHorizontal: '10%',
-    backgroundColor: '#eeeeee',
+    backgroundColor: '#fff',
     padding: '5%',
   },
   showInfoContent: {
@@ -109,7 +109,7 @@ const ShowOffer = (props) => {
             && styles.showConfirmMessage,
           changeOfferInfoColor && styles.showCancelMessage,
           response.status === 'CANCEL' && styles.showCancelMessage,
-          response.status === 'REJECTED' && styles.showCancelMessage,
+          response.status === 'REJECTED' && styles.showConfirmMessage,
           response.status === 'INFO' && styles.showMessageContainer,
         ]}
       >
