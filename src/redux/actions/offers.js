@@ -102,6 +102,7 @@ export const getOfferById = async (offerId) => {
     destinationCity,
     pickUpDate,
     status,
+    userId,
   } = await dataOffer.then(doc => doc.data());
 
   return {
@@ -112,6 +113,7 @@ export const getOfferById = async (offerId) => {
     destinationCity,
     pickUpDate,
     status,
+    userId
   }
 };
 
