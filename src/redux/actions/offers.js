@@ -3,6 +3,7 @@ import * as notificationsActions from './notifications';
 
 export const SHOW_ACTIVE_OFFERS = 'SHOW_ACTIVE_OFFERS';
 export const REALIZE_OFFER = 'REALIZE_OFFER';
+export const OFFER_SELECTED = 'OFFER_SELECTED';
 
 export const showActiveOffers = () => dispatch => {
   const data = firestoreDB
@@ -243,4 +244,94 @@ export const finalizeOfferState = async (offerId) => {
   const result = [];
   await updateData.then(() => result.push(true)).catch(() => result.push(false));
   return result[0];
+};
+
+export const saveOfferSelected = (offerId) => async dispatch => {
+  const data = firestoreDB
+    .collection("OffersNotificationCenter")
+    .doc(offerId)
+    .get();
+
+  const {
+    currentCity,
+    destinationCity,
+    timeZone,
+    pickUpDate,
+    offerValue,
+    userId,
+  } = await data.then((doc) => doc.data());
+  
+  const userData = firestoreDB
+  .collection("Users")
+  .doc(userId)
+  .get();
+
+  const {
+    name,
+    phone
+  } = await userData.then((doc) => doc.data());
+
+  if (currentCity && destinationCity) {
+    dispatch({
+      type: OFFER_SELECTED,
+      offerSelected: {
+        currentCity,
+        destinationCity,
+        timeZone,
+        pickUpDate,
+        offerValue,
+        offerId,
+        user: {
+          name,
+          phone,
+        },
+      },
+    });
+  }
+};
+
+export const saveResumeOfferSelected = (offerId) => async dispatch => {
+  const data = firestoreDB
+    .collection("OffersNotificationCenter")
+    .doc(offerId)
+    .get();
+
+  const {
+    currentCity,
+    destinationCity,
+    timeZone,
+    pickUpDate,
+    offerValue,
+    description,
+    userId,
+  } = await data.then((doc) => doc.data());
+
+  const userData = firestoreDB
+  .collection("Users")
+  .doc(userId)
+  .get();
+
+  const {
+    name,
+    phone
+  } = await userData.then((doc) => doc.data());
+
+  if (currentCity && destinationCity) {
+    dispatch({
+      type: OFFER_SELECTED,
+      offerSelected: {
+        currentCity,
+        destinationCity,
+        timeZone,
+        pickUpDate,
+        offerValue,
+        offerId,
+        description,
+        user: {
+          name,
+          phone,
+        },
+      },
+    });
+  }
 };

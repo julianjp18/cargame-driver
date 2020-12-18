@@ -23,6 +23,7 @@ import DriverOffersScreen from '../screens/Driver/DriverOffersScreen';
 import GoogleMapScreen from '../screens/GoogleMapScreen';
 import OfferForm from '../screens/Driver/DriverOffersScreen/OfferForm';
 import TravelSelectedScreen from '../screens/Driver/DriverTravelsScreen/TravelSelectedScreen';
+import CompleteDescriptionScreen from '../screens/Driver/DriverNotificationsScreen/CompleteDescriptionScreen';
 
 const profileNavigator = createSwitchNavigator({
   Profile: DriverProfileScreen,
@@ -37,6 +38,12 @@ const TravelsNavigator = createSwitchNavigator({
 const OffersNavigator = createSwitchNavigator({
   Offers: DriverOffersScreen,
   OfferForm: OfferForm,
+});
+
+const NotificationsNavigator = createSwitchNavigator({
+  Notifications: DriverNotificationsScreen,
+  ShowOffer: ShowOfferScreen,
+  ShoWResumeOffer: CompleteDescriptionScreen,
 });
 
 const DriverTabNavigator = createBottomTabNavigator({
@@ -60,13 +67,13 @@ const DriverTabNavigator = createBottomTabNavigator({
     }
   },
   Notifications: {
-    screen: DriverNotificationsScreen,
+    screen: NotificationsNavigator,
     navigationOptions: {
-      tabBarLabel: 'Notificaciones',
-      tabBarIcon: (tabInfo) => {
-        return <AntDesign name="inbox" size={25} color={accentColor} />
-      }
-    }
+      tabBarLabel: "Notificaciones",
+      tabBarIcon: () => {
+        return <AntDesign name="inbox" size={25} color={accentColor} />;
+      },
+    },
   },
   Travels: {
     screen: TravelsNavigator,
