@@ -2,6 +2,7 @@ import React, { useReducer, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Input } from 'react-native-elements';
 import { primaryColor } from '../../constants/Colors';
+import { normalizeLength } from '../../styles/layout';
 
 const INPUT_CHANGE = 'INPUT_CHANGE';
 const INPUT_BLUR = 'INPUT_BLUR';
@@ -34,7 +35,7 @@ const TextInput = props => {
   const { onInputChange, id } = props;
 
   useEffect(() => {
-    if (inputState.touched) {
+    if (inputState.touched && props.onInputChange) {
       onInputChange(id, inputState.value, inputState.isValid);
     }
   }, [inputState, onInputChange, id]);
@@ -76,6 +77,7 @@ const TextInput = props => {
         value={inputState.value}
         onChangeText={textChangeHandler}
         onBlur={lostFocusHandler}
+        autoCapitalize={props.autoCapitalize}
         errorMessage={!inputState.isValid && inputState.touched ? props.errorText : ''}
       />
     </View>
@@ -88,14 +90,14 @@ const styles = StyleSheet.create({
     marginBottom: 0
   },
   inputContainer: {
-    paddingHorizontal: 10,
+    paddingHorizontal: normalizeLength(10),
     marginBottom: 0,
     fontFamily: 'Quicksand',
-    fontSize: 10,
-    borderColor: '#1D59A2',
+    fontSize: normalizeLength(10),
+    borderColor: primaryColor,
     borderEndWidth: 1,
     borderWidth: 1,
-    borderRadius: 15,
+    borderRadius: normalizeLength(15),
   },
   input: {
     marginBottom: 0,
@@ -111,7 +113,8 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'Quicksand',
     fontWeight: 'bold',
-    marginVertical: 1,
+    paddingLeft: 15,
+    marginVertical: normalizeLength(1),
     color: primaryColor
   },
   errorContainer: {
@@ -123,10 +126,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: 'Quicksand',
     color: 'red',
-    fontSize: 11
+    fontSize: normalizeLength(11)
   },
   isMapField: {
-    fontSize: 14,
+    fontSize: normalizeLength(15),
+    fontWeight: '700',
+    color: '#000000'
   },
 });
 

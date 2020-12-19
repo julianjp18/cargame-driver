@@ -1,10 +1,13 @@
-import React, { useState, useCallback } from 'react';
-import { Text, StyleSheet, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, StyleSheet, View, Alert, YellowBox } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { ScrollView } from 'react-native-gesture-handler';
-import { ListItem } from 'react-native-elements';
+import { ListItem, Avatar } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
+
 import { textSecondaryColor, darkGrey, primaryColor } from '../../constants/Colors';
 import { categoristList, URBAN_SERVICE, RURAL_SERVICE } from '../../constants/Utils';
 
@@ -12,71 +15,72 @@ import WelcomeHeader from '../../components/WelcomeHeader';
 import Button from '../../components/UI/Button';
 import LocationPicker from '../../components/UI/LocationPicker';
 
-import * as offersAction from '../../redux/actions/offers';
+import * as offersActions from '../../redux/actions/offers';
 import * as placesActions from '../../redux/actions/places';
-import { useEffect } from 'react';
+import * as authActions from '../../redux/actions/auth';
+import * as travelsActions from '../../redux/actions/travels';
+import { getUserInfo } from '../../utils/helpers';
+import { normalizeLength } from '../../styles/layout';
 
 const styles = StyleSheet.create({
   homeContainer: {
+    flex: 1,
     backgroundColor: 'transparent',
-    height: '100%',
+    minHeight: normalizeLength(300)
   },
   title: {
-    paddingTop: '4%',
-    paddingLeft: '15%',
+    paddingTop: normalizeLength(10),
     color: textSecondaryColor,
     fontFamily: 'Quicksand',
-    fontSize: 18,
+    fontSize: normalizeLength(18),
     fontWeight: '700',
-    lineHeight: 22,
-    textAlign: 'left',
+    textAlign: 'center',
   },
   titleListItem: {
     color: darkGrey,
     fontFamily: 'Ruda',
-    fontSize: 20,
+    fontSize: normalizeLength(20),
     fontWeight: '500',
   },
   subtitleListItem: {
     color: darkGrey,
     fontFamily: 'Ruda',
-    fontSize: 12,
-    fontWeight: '400',
-    lineHeight: 20,
+    fontSize: normalizeLength(12),
+    fontWeight: '400'
   },
   listContainer: {
     backgroundColor: 'transparent',
-    paddingBottom: '10%',
+    paddingBottom: normalizeLength(10),
   },
   avatarContainer: {
-    height: '100%',
-    width: '22%',
+    minHeight: normalizeLength(70),
+    minWidth: normalizeLength(70),
   },
   avatar: {
-    width: '100%',
-    height: '100%',
+    width: normalizeLength(70),
+    height: normalizeLength(70),
   },
   row: {
     flexDirection: 'row',
-    width: '100%',
-    marginTop: '2%',
+    minWidth: normalizeLength(300),
+    marginTop: normalizeLength(5),
   },
   col1: {
-    width: '50%',
+    minWidth: normalizeLength(200),
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   col2: {
-    width: '50%',
+    minWidth: normalizeLength(200),
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   serviceTitle: {
     color: darkGrey,
     fontFamily: 'Quicksand',
-    fontSize: 15,
+    fontSize: normalizeLength(14),
     fontWeight: '500',
-    paddingBottom: '2%',
+    paddingBottom: normalizeLength(2),
   },
   serviceTitleSelected: {
     color: primaryColor,
@@ -85,7 +89,7 @@ const styles = StyleSheet.create({
     borderBottomColor: primaryColor,
   },
   infoContainer: {
-    padding: '5%',
+    padding: normalizeLength(20),
   },
   dateTravelTitle: {
     color: primaryColor,
@@ -93,19 +97,41 @@ const styles = StyleSheet.create({
   },
   dateTravelContent: {
     textAlign: 'center',
-    paddingVertical: '3%',
-    marginTop: '1%',
-    marginBottom: '15%',
+    paddingVertical: normalizeLength(10),
+    marginTop: normalizeLength(1),
+    marginBottom: normalizeLength(15),
     borderColor: primaryColor,
-    borderWidth: 1,
-    borderRadius: 15,
+    borderWidth: normalizeLength(1),
+    borderRadius: normalizeLength(15),
+    fontWeight: '700',
+    fontSize: normalizeLength(15)
   },
-  activateTypeService:{
+  activateTypeService: {
     color: darkGrey
   }
 });
 
 const DriverHomeScreen = props => {
+  const dispatch = useDispatch();
+  YellowBox.ignoreWarnings([
+    'Setting a timer',
+    "Can't perform a React state update on an unmounted component",
+    "Cannot update during an existing state transition (such as within `render`).",
+  ]);
+  const userAuth = useSelector(state => state.auth);
+  getUserInfo().then((data) => {
+    const userInfo = JSON.parse(data);
+    if (!userInfo.idToken) {
+      dispatch(authActions.logout());
+      props.navigation.navigate('Index');
+    }
+  });
+
+  useEffect(() => {
+    dispatch(travelsActions.getTripsInProgressByDriverId(userAuth.driverId));
+    dispatch(travelsActions.getTripsMadeByDriverId(userAuth.driverId));
+  }, []);
+
   const [typeTruckService, setTypeTruckService] = useState(RURAL_SERVICE);
   const places = useSelector(state => state.places);
   const [activateTypeService, setActivateTypeService] =
@@ -118,22 +144,51 @@ const DriverHomeScreen = props => {
     );
   const [show, setShow] = useState(false);
 
-  const dispatch = useDispatch();
+  const verifyPermissions = async () => {
+    const result = await Permissions.askAsync(Permissions.LOCATION);
+    if (result.status !== 'granted') {
+        Alert.alert(
+            'Permisos insuficientes',
+            'Necesita los permisos de geolocalización para poder obtener localización en tiempo real.',
+            [{ text: 'Está bien' }]
+        );
+        return verifyPermissions();
+    }
+    return true;
+  };
 
-  const userAuth = useSelector(state => state.auth);
-  if (!userAuth) {
-    props.navigation.navigate('Auth');
+  const validLocationTurnOn = () => {
+    if (!Location.hasServicesEnabledAsync()) {
+      Alert.alert('No se puede obtener la localización', 'Por favor enciende la localización.', [{ text: 'Esta bien' }]);
+      return validLocationTurnOn();
+    }
+    return true;
   }
 
+  const getCurrentLocation = async () => {
+    const hasPermissions = await verifyPermissions();
+    if (!hasPermissions) return;
+
+    try {
+        const location = await Location.getLastKnownPositionAsync();
+        dispatch(placesActions.currentPosition({
+          lat: location.coords.latitude,
+          lng: location.coords.longitude,
+        }));
+    } catch (err) {
+      validLocationTurnOn();
+    }
+  };
+
   useEffect(() => {
+    dispatch(offersActions.showActiveOffers());
     places.urbanServiceActivateAddress && setTypeTruckService(URBAN_SERVICE);
+    getCurrentLocation();
   }, []);
 
   const typeServiceId = userAuth.typeServiceSelected;
   const categorySelected = categoristList.find(
     category => category.id === typeServiceId);
-
-  userAuth && dispatch(offersAction.showActiveOffers());
 
   const changeTypeTruckService = (changeType) => {
     if (!activateTypeService) setTypeTruckService(changeType);
@@ -191,20 +246,14 @@ const DriverHomeScreen = props => {
         </View>
         <View>
           <ScrollView>
-            <ListItem
-              containerStyle={styles.listContainer}
-              title={categorySelected.name}
-              titleStyle={styles.titleListItem}
-              leftAvatar={{
-                source: categorySelected.avatar_url,
-                containerStyle: styles.avatarContainer,
-                avatarStyle: styles.avatar,
-                rounded: false,
-              }}
-              subtitleStyle={styles.subtitleListItem}
-              subtitle={categorySelected.subtitle}
-              bottomDivider
-            />
+            <ListItem containerStyle={styles.listContainer} bottomDivider>
+              <Avatar containerStyle={styles.avatarContainer} source={categorySelected.avatar_url} />
+              <ListItem.Content>
+                <ListItem.Title style={styles.titleListItem}>{categorySelected.name}</ListItem.Title>
+                <ListItem.Subtitle style={styles.subtitleListItem}>{categorySelected.subtitle}</ListItem.Subtitle>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
             <View style={styles.row}>
               <View style={styles.col1}>
                 <Text
@@ -255,7 +304,6 @@ const DriverHomeScreen = props => {
               </View>
               {typeTruckService == RURAL_SERVICE && (
                 <View>
-                  {console.log(places)}
                   <LocationPicker
                     navigation={props.navigation}
                     id="destiny"

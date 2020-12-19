@@ -4,11 +4,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { primaryColor } from '../../../constants/Colors';
 import DriverHeader from '../../../components/DriverHeader';
 import { AntDesign } from '@expo/vector-icons';
-import * as userActions from '../../../redux/actions/users';
 import TextInput from '../../../components/UI/Input';
 import Button from '../../../components/UI/Button';
 import { KeyboardAwareView } from 'react-native-keyboard-aware-view';
 import { ScrollView } from 'react-native-gesture-handler';
+
+import * as driverActions from '../../../redux/actions/drivers';
 
 const FORM_NUMBER_PHONE_UPDATE = 'FORM_NUMBER_PHONE_UPDATE';
 
@@ -39,10 +40,8 @@ const EditPhoneNumberScreen = props => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
     const dispatch = useDispatch();
-    const username = useSelector(state => state.user.name);
-    const userPhone = useSelector(state => state.user.phone);
-    const userId = useSelector(state => state.auth.userId);
-
+    const { name, phone, driverId } = useSelector(state => state.driver);
+    
     useEffect(() => {
         if (error) {
             Alert.alert('¡Oh no, un error ha ocurrido!', error, [{ text: 'Está bien'}]);
@@ -75,9 +74,9 @@ const EditPhoneNumberScreen = props => {
         let action;
         let passwordError = false;
         const phoneNumber = formState.inputValues.phoneNumber;
-        action = userActions.changePhoneNumber(
+        action = driverActions.changePhoneNumber(
             phoneNumber,
-            userId
+            driverId
         );
         if (!passwordError) {
             const controller = new AbortController();
@@ -98,12 +97,12 @@ const EditPhoneNumberScreen = props => {
         
     };
 
-    const goToProfile = () => props.navigation.navigate('Profile');;
+    const goToProfile = () => props.navigation.navigate('Profile');
 
     return (
         <View style={styles.servicesContainer}>
             <DriverHeader
-                title={username}
+                title={name}
                 subtitle="Edita tu número de teléfono"
                 leftIcon="user-o"
             />
@@ -127,7 +126,7 @@ const EditPhoneNumberScreen = props => {
                                 autoCapitalize="none"
                                 errorText="¡UPS! Por favor ingresa un número de celular correcto."
                                 onInputChange={inputChangeHandler}
-                                initialValue={userPhone}
+                                initialValue={phone}
                             />
                         </View>
                         {isLoading ? (
@@ -145,7 +144,7 @@ const EditPhoneNumberScreen = props => {
                                         title={'Volver'}
                                         colorOne={'white'}
                                         colorTwo={'white'}
-                                        fontColor={'#1D59A2'}
+                                        fontColor={primaryColor}
                                         onPress={goToProfile}
                                     />
                                 </View>

@@ -1,16 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { primaryColor, yellowColor } from '../../../constants/Colors';
+import { primaryColor, yellowColor, successColor, cancelColor, offeredColor } from '../../../constants/Colors';
 import Button from '../../../components/UI/Button';
+import { offerMessages } from '../../../constants/Utils';
+import { currencyFormat } from '../../../utils/helpers';
+
+import * as offersActions from '../../../redux/actions/offers';
+import moment from 'moment';
 
 const styles = StyleSheet.create({
   supportContainer: {
     height: '100%',
   },
+  buttonRefreshOffer: {
+    display: 'none'
+  },
   showMessageContainer: {
     backgroundColor: yellowColor,
     padding: '10%',
+  },
+  showOfferedMessage: {
+    backgroundColor: offeredColor,
+  },
+  showConfirmMessage: {
+    backgroundColor: successColor,
+    paddingHorizontal: '6%',
+    padding: '10%',
+  },
+  showCancelMessage: {
+    backgroundColor: cancelColor,
   },
   showMessageText: {
     color: primaryColor,
@@ -24,7 +43,7 @@ const styles = StyleSheet.create({
     height: '70%',
     maxHeight: '70%',
     marginHorizontal: '10%',
-    backgroundColor: '#eeeeee',
+    backgroundColor: '#fff',
     padding: '5%',
   },
   showInfoContent: {
@@ -48,16 +67,61 @@ const styles = StyleSheet.create({
 });
 
 const ShowOffer = (props) => {
+  moment.locale('es');
   const offer = props.offer;
+  const [offerValue, setofferValue] = useState(offer.offerValue);
+  const [lastOfferValue, setLastOfferValue] = useState(offer.offerValue);
+  const [response, setResponse] = useState(offer.response);
+  const [changeOfferInfoColor, setChangeOfferInfoColor] = useState(false);
+
+  const refreshOffer = async () => {
+    const changeOfferValue = await offersActions.getOfferValueById(offer.offerId);
+    if (changeOfferValue) {
+      if(parseInt(changeOfferValue) !== parseInt(lastOfferValue)) {
+        setofferValue(changeOfferValue);
+        setLastOfferValue(changeOfferValue);
+        const { status } = await offersActions.getOfferById(offer.offerId);
+        if (status) {
+          setResponse({
+            status,
+            message: offerMessages[status]
+          });
+        }
+        setChangeOfferInfoColor(true);
+      }
+      setTimeout(refreshOffer, 20000);
+    }
+  };
+
+  refreshOffer();
+
   return (
     <View
-      testId={`${offer.userId}-${offer.destinationCity}`}
+      testId={`${offer.driverId}-${offer.destinationCity}`}
       style={styles.offerContainer}
     >
-      <View style={styles.showMessageContainer}>
-        <Text style={styles.showMessageText}>Nadie ha ofertado</Text>
+      <View
+        style={[
+          styles.showMessageContainer,
+          ['OFFERED', 'IN_PROGRESS'].includes(response.status)
+            && styles.showOfferedMessage,
+          ['CONTRACTED', 'OK'].includes(response.status)
+            && styles.showConfirmMessage,
+          changeOfferInfoColor && styles.showCancelMessage,
+          response.status === 'CANCEL' && styles.showCancelMessage,
+          response.status === 'REJECTED' && styles.showConfirmMessage,
+          response.status === 'INFO' && styles.showMessageContainer,
+        ]}
+      >
+        <Text style={styles.showMessageText}>
+          {` ${response.message} ${
+            ['CONTRACTED', 'OK', 'OFFERED', 'IN_PROGRESS'].includes(response.status)
+              ? currencyFormat(offerValue, 0)
+              : ''
+            }`}
+        </Text>
       </View>
-      <View style={styles.showInfoContainer}>
+      <View style={ styles.showInfoContainer}>
         <ScrollView>
           <View style={styles.showInfoContent}>
             <Text style={styles.title}>Ciudad de Origen:</Text>
@@ -69,12 +133,12 @@ const ShowOffer = (props) => {
           </View>
           <View style={styles.showInfoContent}>
             <Text style={styles.title}>Fecha de recogida:</Text>
-            <Text style={styles.subtitle}>{offer.pickupDate}</Text>
+            <Text style={styles.subtitle}>{moment(offer.pickUpDate, 'DD/MM/YYYY').format("ll")}</Text>
           </View>
           <View style={styles.showInfoContent}>
             <Text style={styles.title}>Franja horaria de recogida:</Text>
             <Text style={styles.subtitle}>
-              {props.getcollectionTimeSlot(offer.collectionTimeSlot)}
+              {props.getcollectionTimeSlot(offer.timeZone)}
             </Text>
           </View>
           <View style={styles.showInfoContent}>
@@ -85,11 +149,17 @@ const ShowOffer = (props) => {
           </View>
         </ScrollView>
       </View>
-      <View style={styles.buttonContainer}>
+      <View
+        style={[
+          styles.buttonContainer,
+          response.status === 'REJECTED' && styles.disableButtonContainer,
+        ]}
+      >
         <Button
           title="Ofertar"
           paddingVertical={20}
-          onPress={() => props.changeToOfferFormHandler(props.offerId) }
+          disabled={response.status === 'REJECTED'}
+          onPress={() => props.changeToOfferFormHandler(offer.offerId, props.index, props.changeToForm) }
         />
       </View>
     </View>

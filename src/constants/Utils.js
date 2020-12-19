@@ -53,14 +53,25 @@ export const categoristList = [
 
 export const collectionTimeSlot = [
     {
-        label: 'morning',
+        label: 'manana',
         value: 'Mañana (7:00am - 12:00pm)'
     },
     {
-        label: 'night',
+        label: 'tarde',
+        value: 'Tarde (12:01pm - 6:59pm)'
+    },
+    {
+        label: 'noche',
         value: 'Noche (7:00pm - 10:00pm)'
     }
 ];
+
+export const offerMessages = {
+    'ACTIVE': 'Nadie ha ofertado',
+    'IN_PROGRESS': 'Usted ha ofertado satisfactoriamente por',
+    'OFFERED': 'Han realizado una oferta por',
+    'CONTRACTED': 'Se te asignó la oferta por'
+};
 
 export const URBAN_SERVICE = 1;
 export const RURAL_SERVICE = 0;

@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { useSelector } from 'react-redux';
 import Swiper from 'react-native-swiper';
 import { primaryColor, yellowColor } from '../../../constants/Colors';
 import { collectionTimeSlot } from '../../../constants/Utils';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import DriverHeader from '../../../components/DriverHeader';
 import ShowOffer from './ShowOffer';
 import OfferForm from './OfferForm';
+
+import * as offersActions from '../../../redux/actions/offers';
 
 const styles = StyleSheet.create({
   supportContainer: {
@@ -49,8 +52,20 @@ const styles = StyleSheet.create({
     position: 'relative',
     bottom: '3%',
     marginHorizontal: '10%',
-  }
+  },
+  notFoundContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '20%'
+  },
+  notFoundText: {
+
+  },
 });
+
+const CHANGE_TO_FORM = "CHANGE_TO_FORM";
+const SUCCESS_OFFER = "SUCCESS_OFFER";
 
 const getcollectionTimeSlot = (collectionTimeSlotItem) =>
   collectionTimeSlot.map((collectionTime) =>
@@ -58,13 +73,35 @@ const getcollectionTimeSlot = (collectionTimeSlotItem) =>
 
 const DriverOffersScreen = (props) => {
   const [offerForm, setofferForm] = useState();
-  const offers = useSelector(state => state.activeOffers.offers);
+  const [changeView, setChangeView] = useState(false);
+  
+  let offerState = useSelector(state => state.activeOffers);
+  const [offers, setOffers] = useState(offerState.offers);
 
-  const changeToOfferFormHandler = (offerId) => {
-    setofferForm(offerId);
+  const [indexSwiper, setIndex] = useState(offerState.index);
+  const userAuth = useSelector(state => state.auth);
+
+  if (!userAuth) {
+    dispatch(authActions.logout());
+    props.navigation.navigate('Auth');
+  }
+
+  const changeToOfferFormHandler = (offerId = null, index = indexSwiper, action) => {
+    if (offerId !== null) {
+      setofferForm(offerId);
+      setIndex(index);
+    }
+    if (action === CHANGE_TO_FORM) {
+      setChangeView(true);
+    } else 
+      setChangeView(false);
   };
 
-  const navigateToOffers = props.navigation.navigate('Offers');
+  const refreshOffers = async () => {
+    const changeOffers = await offersActions.showActiveOffersAsync();
+    setOffers(changeOffers);
+    setTimeout(refreshOffer, 20000);
+  };
 
   return (
     <View style={styles.supportContainer}>
@@ -73,20 +110,40 @@ const DriverOffersScreen = (props) => {
         subtitle="Explora las ofertas en tu zona"
         leftIcon="refresh"
       />
-      {!offerForm
-        ? <Swiper style={styles.swiperContainer} showsButtons showsPagination={false}>
-            {offers.map((offer) => (
+      {!changeView
+        ? <Swiper
+            style={styles.swiperContainer}
+            showsButtons
+            showsPagination={false}
+            index={indexSwiper}
+          >
+            {offers.length === 0 ? (
+              <View style={styles.notFoundContainer}>
+                <MaterialCommunityIcons name="delete-empty-outline" size={90} color={primaryColor} />
+                <Text style={styles.notFoundText}>
+                  No existen ofertas activas por el momento
+                </Text>
+              </View>
+            ) : offers.map((offer, index) => (
               <ShowOffer
-                key={offer.offerId}
-                offerId={offer.offerId}
+                index={index}
+                key={index}
                 offer={offer}
+                changeToForm={CHANGE_TO_FORM}
                 getcollectionTimeSlot={getcollectionTimeSlot}
                 changeToOfferFormHandler={changeToOfferFormHandler}
               />
-            ))} 
+            ))}
           </Swiper>
         : (
-          <OfferForm offers navigate={navigateToOffers} />
+          <OfferForm
+            index={indexSwiper}
+            offerForm={offerForm}
+            navigation={props.navigation}
+            driverId={userAuth.driverId}
+            successOffer={SUCCESS_OFFER}
+            changeToOfferFormHandler={changeToOfferFormHandler}
+          />
         )}
     </View>
   );
