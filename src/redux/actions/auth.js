@@ -71,7 +71,7 @@ const saveDataToStorage = (idToken, uid, expirationDate, email) => {
   AsyncStorage.setItem(
     'driverData',
     JSON.stringify({
-      token: idToken,
+      idToken,
       driverId: uid,
       expirationDate,
       email,

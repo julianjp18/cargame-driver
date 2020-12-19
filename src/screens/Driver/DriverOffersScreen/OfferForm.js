@@ -1,10 +1,10 @@
-import React, { useState, useCallback, useReducer, useEffect } from 'react';
+import React, { useState, useCallback, useReducer, useEffect,  } from 'react';
 import { Text, StyleSheet, View, Alert, ActivityIndicator } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import { LinearGradient } from 'expo-linear-gradient';
 import { primaryColor, accentColor } from '../../../constants/Colors';
 import TextInput from '../../../components/UI/Input';
 import Button from '../../../components/UI/Button';
-import { useDispatch } from 'react-redux';
 
 import * as offerActions from '../../../redux/actions/offers';
 
@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
     fontSize: 15
   },
   currencyExtraInfoText: {
-     textAlign: 'center',
-     marginBottom: '5%'
+    textAlign: 'center',
+    marginBottom: '5%'
   },
   bottomContainer: {
     height: '100%',
@@ -48,26 +48,26 @@ const styles = StyleSheet.create({
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
 const formReducer = (state, action) => {
-    if(action.type == FORM_INPUT_UPDATE) {
-        const updatedValues = {
-            ...state.inputValues,
-            [action.input]: action.value
-        };
-        const updatedValidities = {
-            ...state.inputValidities,
-            [action.input]: action.isValid
-        }
-        let updatedFormIsValid = true;
-        for (const key in updatedValidities) {
-            updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
-        }
-        return {
-            formIsValid: updatedFormIsValid,
-            inputValidities: updatedValidities,
-            inputValues: updatedValues
-        }
+  if (action.type == FORM_INPUT_UPDATE) {
+    const updatedValues = {
+      ...state.inputValues,
+      [action.input]: action.value
+    };
+    const updatedValidities = {
+      ...state.inputValidities,
+      [action.input]: action.isValid
     }
-    return state;
+    let updatedFormIsValid = true;
+    for (const key in updatedValidities) {
+      updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
+    }
+    return {
+      formIsValid: updatedFormIsValid,
+      inputValidities: updatedValidities,
+      inputValues: updatedValues
+    }
+  }
+  return state;
 };
 
 const OfferForm = (props) => {
@@ -75,25 +75,32 @@ const OfferForm = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
   const dispatch = useDispatch();
-  
+
+  const userAuth = useSelector(state => state.auth);
+
+  if (!userAuth) {
+    dispatch(authActions.logout());
+    props.navigation.navigate('Auth');
+  }
+
   useEffect(() => {
     if (error) {
-        Alert.alert('¡ Un error ha ocurrido!', error, [{ text: 'Está bien'}]);
+      Alert.alert('¡ Un error ha ocurrido!', error, [{ text: 'Está bien' }]);
     }
-}, [error]);
+  }, [error]);
 
   const inputChangeHandler = useCallback(
-    (inputIdentifier, inputValue, inputValidity ) => {
+    (inputIdentifier, inputValue, inputValidity) => {
       dispatchFormState({
         type: FORM_INPUT_UPDATE,
         value: inputValue,
         isValid: inputValidity,
-        input: inputIdentifier 
+        input: inputIdentifier
       });
     },
     [dispatchFormState]
   );
-  
+
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       value: '',
@@ -110,7 +117,8 @@ const OfferForm = (props) => {
 
   const offerHandler = () => {
     const value = formState.inputValues.value;
-    if(value && isMultiple(Number.parseInt(value), 5000)) {
+    if (value && isMultiple(Number.parseInt(value), 5000)) {
+      console.log('yes');
       const action = offerActions.realizeOffer(props.offerForm, value, props.driverId, props.index);
       const controller = new AbortController();
       setError(null);
@@ -120,11 +128,11 @@ const OfferForm = (props) => {
         props.changeToOfferFormHandler(props.offerForm, props.index, props.successOffer);
         controller.abort();
       } catch (err) {
-          setError(err.message);
+        setError(err.message);
       }
       setIsLoading(false);
       controller.abort();
-      
+
     } else {
       setError('¡ Valor no es multiplo de 5.000');
     }
@@ -150,7 +158,7 @@ const OfferForm = (props) => {
       </View>
       <View style={styles.currencyInfoContainer}>
         <Text style={styles.currencyInfoText}>
-          {`Valores en pesos Col ($)`} 
+          {`Valores en pesos Col ($)`}
         </Text>
         <Text style={styles.currencyExtraInfoText}>
           Digita un número mayor a 0 y en múltiples de 5.000.
@@ -175,14 +183,14 @@ const OfferForm = (props) => {
           {isLoading ? (
             <ActivityIndicator size='large' color={primaryColor} />
           ) : (
-            <Button
-              title="Ofertar"
-              style={styles.offerButton}
-              paddingVertical={20}
-              fontColor='white'
-              onPress={offerHandler}
-            />
-          )}
+              <Button
+                title="Ofertar"
+                style={styles.offerButton}
+                paddingVertical={20}
+                fontColor='white'
+                onPress={offerHandler}
+              />
+            )}
         </View>
         <Button
           title="Volver"
@@ -191,7 +199,7 @@ const OfferForm = (props) => {
           fontColor={primaryColor}
           paddingVertical={20}
           onPress={() => props.changeToOfferFormHandler(null)}
-        />       
+        />
       </LinearGradient>
     </View>
   );

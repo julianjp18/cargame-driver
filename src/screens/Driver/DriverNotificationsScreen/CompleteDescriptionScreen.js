@@ -2,11 +2,11 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
-import { currencyFormat, getUserInfo } from '../../../utils/helpers';
+import { getUserInfo } from '../../../utils/helpers';
 import * as authActions from '../../../redux/actions/auth';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import UserHeader from "../../../components/UserHeader";
+import DriverHeader from "../../../components/DriverHeader";
 import { normalizeLength } from "../../../styles/layout"
 import { primaryColor, accentColor, textAccentColor } from "../../../constants/Colors";
 import { ScrollView } from "react-native-gesture-handler";
@@ -27,7 +27,7 @@ const CompleteDescriptionScreen = (props) => {
 
     return (
         <View style={styles.servicesContainer}>
-            <UserHeader
+            <DriverHeader
                 title="Servicios"
                 subtitle="Explora tus servicios"
                 leftIcon="paper-plane-o"

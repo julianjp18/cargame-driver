@@ -21,6 +21,7 @@ import EditPhoneNumberScreen from '../screens/Driver/EditProfile/EditPhoneNumber
 import StartupScreen from '../screens/StartupScreen';
 import DriverOffersScreen from '../screens/Driver/DriverOffersScreen';
 import GoogleMapScreen from '../screens/GoogleMapScreen';
+import ShowOfferScreen from '../screens/Driver/DriverNotificationsScreen/ShowOfferScreen';
 import OfferForm from '../screens/Driver/DriverOffersScreen/OfferForm';
 import TravelSelectedScreen from '../screens/Driver/DriverTravelsScreen/TravelSelectedScreen';
 import CompleteDescriptionScreen from '../screens/Driver/DriverNotificationsScreen/CompleteDescriptionScreen';

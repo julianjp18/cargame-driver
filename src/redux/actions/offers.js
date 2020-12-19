@@ -169,15 +169,16 @@ export const realizeOffer = (offerId, newOfferValue, offerDriverId, index) => as
     .doc(offerId)
     .get();
   const { offerValue, status, driverId, userId } = await data.then(doc => doc.data());
-
+  console.log(newOfferValue, offerValue, status, userId);
   let response = '';
-  let finalValue = offerValue !== ''
+  let finalValue = offerValue && offerValue !== null && offerValue !== ''
       ? offerValue
       : newOfferValue;
 
   finalValue = parseInt(finalValue) > parseInt(newOfferValue)
     ? newOfferValue
     : finalValue; 
+  
   if (status === 'ACTIVE') {
 
     offerValue === '' && changeOfferState(offerId, 'IN_PROGRESS');
@@ -186,6 +187,7 @@ export const realizeOffer = (offerId, newOfferValue, offerDriverId, index) => as
       driverId: offerDriverId,
       offerValue: finalValue,
       dateOffered: Date.now(),
+      status: 'IN_PROGRESS',
     });
 
     const responseUpdateData = updateData.then(() => true).catch(() => false);
@@ -199,13 +201,12 @@ export const realizeOffer = (offerId, newOfferValue, offerDriverId, index) => as
 
   } else if (status === 'IN_PROGRESS') {
 
-    if (driverId === offerDriverId) {
-
-      offerValue !== '' && changeOfferState(offerId, 'CONTRACTED');
+    offerValue !== '' && changeOfferState(offerId, 'CONTRACTED');
 
       const updateData = firestoreDB.collection('OffersNotificationCenter').doc(offerId).update({
         offerValue: finalValue,
         dateOffered: Date.now(),
+        status: 'CONTRACTED',
       });
   
       const responseUpdateData = updateData.then(() => true).catch(() => false);
@@ -218,12 +219,6 @@ export const realizeOffer = (offerId, newOfferValue, offerDriverId, index) => as
       };
 
       offerValue !== '' && notificationsActions.createOfferNotificationForUser(userId, offerId);
-    } else {
-      response = {
-        message: 'Se le ha asignado la oferta a alguien más',
-        status: 'REJECTED',
-      };
-    }
   }
 
   finalValue !== '' && addHistoryOffer(offerId, offerDriverId, newOfferValue);
@@ -282,6 +277,7 @@ export const saveOfferSelected = (offerId) => async dispatch => {
         offerValue,
         offerId,
         user: {
+          id: userId,
           name,
           phone,
         },
@@ -328,6 +324,7 @@ export const saveResumeOfferSelected = (offerId) => async dispatch => {
         offerId,
         description,
         user: {
+          id: userId,
           name,
           phone,
         },
