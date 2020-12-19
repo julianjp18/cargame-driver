@@ -218,7 +218,6 @@ const AuthScreen = props => {
               />
             </View>
           </ScrollView>
-
         </View>
         <Image
           style={styles.mainCarga}
@@ -251,7 +250,7 @@ const styles = StyleSheet.create({
     marginTop: normalizeLength(70),
     paddingHorizontal: normalizeLength(20),
     minWidth: normalizeLength(380),
-    minHeight: normalizeLength(440)
+    minHeight: normalizeLength(400)
   },
   forgotPasswordContainer: {
     marginTop: normalizeLength(0)
@@ -278,8 +277,8 @@ const styles = StyleSheet.create({
     marginTop: normalizeLength(2)
   },
   mainCarga: {
-    marginLeft: normalizeLength(-30),
-    marginTop:normalizeLength(-165),
+    marginLeft: normalizeLength(-40),
+    marginTop:normalizeLength(-70),
   }
 });
 

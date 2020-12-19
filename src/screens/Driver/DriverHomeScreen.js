@@ -121,7 +121,7 @@ const DriverHomeScreen = props => {
   const userAuth = useSelector(state => state.auth);
   getUserInfo().then((data) => {
     const userInfo = JSON.parse(data);
-    if (!userInfo.token) {
+    if (!userInfo.idToken) {
       dispatch(authActions.logout());
       props.navigation.navigate('Index');
     }

@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     minHeight: normalizeLength(300)
   },
   title: {
-    paddingTop: normalizeLength(15),
+    paddingTop: normalizeLength(19),
     color: textSecondaryColor,
     fontFamily: 'Quicksand',
     fontSize: normalizeLength(17),
@@ -45,10 +45,10 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     backgroundColor: 'transparent',
-    paddingBottom: normalizeLength(4)
+    paddingBottom: normalizeLength(5)
   },
   avatarContainer: {
-    height: normalizeLength(70),
+    height: normalizeLength(65),
     width: normalizeLength(80)
   }
 });

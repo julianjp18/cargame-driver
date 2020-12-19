@@ -58,14 +58,14 @@ const styles = StyleSheet.create({
   },
   logo: {
     position: 'absolute',
-    left: normalizeLength(48),
-    top: normalizeLength(70),
+    left: normalizeLength(45),
+    top: normalizeLength(57),
     width: normalizeLength(100),
     height: normalizeLength(100),
   },
   whiteSquare: {
     position: 'absolute',
-    top: normalizeLength(52),
+    top: normalizeLength(55),
     left: normalizeLength(20),
     bottom: 0,
   }
