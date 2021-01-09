@@ -75,7 +75,7 @@ const DriverOffersScreen = (props) => {
   const [offerForm, setofferForm] = useState();
   const [changeView, setChangeView] = useState(false);
   
-  let offerState = useSelector(state => state.activeOffers);
+  let offerState = useSelector(state => state.offers);
   const [offers, setOffers] = useState(offerState.offers);
 
   const [indexSwiper, setIndex] = useState(offerState.index);

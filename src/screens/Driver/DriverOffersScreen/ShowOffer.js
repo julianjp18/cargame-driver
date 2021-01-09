@@ -107,7 +107,7 @@ const ShowOffer = (props) => {
             && styles.showOfferedMessage,
           ['CONTRACTED', 'OK'].includes(response.status)
             && styles.showConfirmMessage,
-          changeOfferInfoColor && styles.showCancelMessage,
+          changeOfferInfoColor && styles.showConfirmMessage,
           response.status === 'CANCEL' && styles.showCancelMessage,
           response.status === 'REJECTED' && styles.showConfirmMessage,
           response.status === 'INFO' && styles.showMessageContainer,

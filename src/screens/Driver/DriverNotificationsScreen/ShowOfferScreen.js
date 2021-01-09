@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
 });
 
 const ShowOfferScreen = props => {
+  const state = useSelector((state) => state);
   const dispatch = useDispatch();
   const {
     user,
@@ -106,8 +107,7 @@ const ShowOfferScreen = props => {
 
   getUserInfo().then((data) => {
     const userInfo = JSON.parse(data);
-
-    if (!userInfo.token || ! user.id) {
+    if (!userInfo.idToken) {
       dispatch(authActions.logout());
       props.navigation.navigate('Index');
     }

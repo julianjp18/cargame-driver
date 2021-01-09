@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { useSelector, useDispatch, useStore } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import DriverHeader from '../../../components/DriverHeader';
 import { AntDesign, FontAwesome } from '@expo/vector-icons'; 
 import { primaryColor, accentColor } from '../../../constants/Colors';
-//import Timeline from 'react-native-timeline-flatlist';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { getUserInfo } from '../../../utils/helpers';
@@ -92,11 +91,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const TravelSelectedScreen = props => {
+const StartOfferScreen = props => {
   const driverUser = useSelector(state => state.driver);
   const [user, setUser] = useState();
   const dispatch = useDispatch();
-  const { userId, pickUpDate, offerId, status, driverId } = useSelector(state => state.travels.tripSelected);
+  const { userId, pickUpDate, offerId, status, driverId } = useSelector(state => state.offers.offerSelected);
   
   useEffect(() => {
     travelsActions.getUserById(userId).then((data) => setUser(data));
@@ -115,7 +114,7 @@ const TravelSelectedScreen = props => {
     offersActions.finalizeOfferState(offerId).then(() => {
       dispatch(travelsActions.getTripsInProgressByDriverId(driverId));
       dispatch(travelsActions.getTripsMadeByDriverId(driverId));
-      props.navigation.navigate('Travels');
+      props.navigation.navigate('EndOffer');
     });
   };
 
@@ -236,4 +235,4 @@ const TravelSelectedScreen = props => {
   );
 };
 
-export default TravelSelectedScreen;
+export default StartOfferScreen;

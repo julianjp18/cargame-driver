@@ -30,7 +30,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   driver: driverReducer,
   notifications: notificationReducer,
-  activeOffers: offerReducer,
+  offers: offerReducer,
   places: placeReducer,
   travels: travelReducer,
 });

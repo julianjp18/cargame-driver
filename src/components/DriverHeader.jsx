@@ -81,7 +81,8 @@ const styles = StyleSheet.create({
     paddingTop: normalizeLength(15),
   },
   col3Icon: {
-    marginRight: normalizeLength(20)
+    marginRight: normalizeLength(20),
+    marginTop: normalizeLength(30),
   }
 });
 

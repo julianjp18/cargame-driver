@@ -6,7 +6,7 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case SHOW_ACTIVE_OFFERS:
       return {
-        offers: action.offers,
+        offers: [...action.offers],
         index: 0,
       };
     case REALIZE_OFFER:
