@@ -21,7 +21,8 @@ const styles = StyleSheet.create({
     color: darkGrey,
     fontFamily: 'Quicksand',
     fontWeight: '600',
-    fontSize: normalizeLength(14)
+    fontSize: normalizeLength(16),
+    marginBottom: normalizeLength(10)
   },
   subtitleListItem: {
     color: darkGrey,
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     backgroundColor: 'transparent',
-    paddingBottom: normalizeLength(4)
+    paddingBottom: normalizeLength(10)
   }
 });
 
@@ -41,7 +42,7 @@ const DriverNotificationsScreen = props => {
 
   getUserInfo().then((data) => {
     const userInfo = JSON.parse(data);
-    if (!userInfo.token) {
+    if (!userInfo.idToken) {
       dispatch(authActions.logout());
       props.navigation.navigate('Index');
     }
@@ -50,7 +51,7 @@ const DriverNotificationsScreen = props => {
   const showOfferScreen = (notification) => {
     if (!notification.offerId) return true;
     try {
-      dispatch(offersActions.saveOfferSelected(notification.offerId));
+      dispatch(offersActions.saveOfferSelected(notification.offerId, notification.id));
       setTimeout(() => {
         props.navigation.navigate('ShowOffer');
       }, 2000);
@@ -60,9 +61,10 @@ const DriverNotificationsScreen = props => {
   };
 
   const showResumeOfferScreen = (notification) => {
+    console.log(notification.offerId, notification);
     if (!notification.offerId) return true;
     try {
-      dispatch(offersActions.saveResumeOfferSelected(notification.offerId));
+      dispatch(offersActions.saveResumeOfferSelected(notification.offerId, notification.id));
       setTimeout(() => {
         props.navigation.navigate('ShowResumeOffer');
       }, 2000);

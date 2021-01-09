@@ -15,10 +15,22 @@ export const showDriverNotifications = (driverId) => async dispatch => {
         notification.data().driverId === "0" ||
         notification.data().driverId === driverId
       ) {
-        notificationsData.push({ ...notification.data() });
+        notificationsData.push({ ...notification.data(), id: notification.id });
       }
     });
   }
+
+  const dataConfirmationPayments = await firestoreDB
+    .collection('ConfirmationPayments')
+    .where("driverId", "==", driverId)
+    .get().then((allNotifications) => allNotifications);
+
+  if (dataConfirmationPayments.length > 0) {
+    dataConfirmationPayments.forEach(notification => {
+      notificationsData.push({ ...notification.data(), id: notification.id, message: 'Tu pago se encuentra confirmado, mira el resumen de tu servicio', driverId });
+    });
+  }
+
 
   dispatch({
     type: SHOW_NOTIFICATIONS,

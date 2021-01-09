@@ -25,6 +25,8 @@ import ShowOfferScreen from '../screens/Driver/DriverNotificationsScreen/ShowOff
 import OfferForm from '../screens/Driver/DriverOffersScreen/OfferForm';
 import TravelSelectedScreen from '../screens/Driver/DriverTravelsScreen/TravelSelectedScreen';
 import CompleteDescriptionScreen from '../screens/Driver/DriverNotificationsScreen/CompleteDescriptionScreen';
+import StartOfferScreen from '../screens/Driver/DriverNotificationsScreen/StartOfferScreen';
+import EndOfferScreen from '../screens/Driver/DriverNotificationsScreen/EndOfferScreen';
 
 const profileNavigator = createSwitchNavigator({
   Profile: DriverProfileScreen,
@@ -44,7 +46,11 @@ const OffersNavigator = createSwitchNavigator({
 const NotificationsNavigator = createSwitchNavigator({
   Notifications: DriverNotificationsScreen,
   ShowOffer: ShowOfferScreen,
-  ShoWResumeOffer: CompleteDescriptionScreen,
+  ShowResumeOffer: CompleteDescriptionScreen,
+  StartOffer: StartOfferScreen,
+  EndOffer: EndOfferScreen,
+  Profile: profileNavigator,
+  Travels: TravelsNavigator,
 });
 
 const DriverTabNavigator = createBottomTabNavigator({
