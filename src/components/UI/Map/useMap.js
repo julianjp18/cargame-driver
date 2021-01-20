@@ -1,39 +1,107 @@
 import { useState } from "react";
 
-const useMap = (initialize) => {
+const useMarkers = (_data = {}) => {
 
+    const [data, setData] = useState(_data);
+
+    const handlers = {
+        add: (name, newData) => {
+            const { coordinate, color } = newData;
+            setData({
+                ...data,
+                [name]: {
+                    coordinate,
+                    color
+                }
+            });
+        },
+        delete: (name) => {
+            const newData = { ...data };
+            delete newData[name];
+            setData(newData);
+        }
+    };
+    return [
+        data,
+        handlers
+    ];
+};
+
+const useRegion = (_data = {}) => {
+
+    const [data, setData] = useState(_data);
+
+    const handlers = {
+        change: (newData) => {
+            const {
+                latitude,
+                longitude,
+                latitudeDelta,
+                longitudeDelta
+            } = newData;
+            setData({
+                latitude,
+                longitude,
+                latitudeDelta,
+                longitudeDelta
+            });
+        },
+        // delete: (index) => {
+        //     const newData = [...data].filter((d, i) => i !== index);
+        //     setData(newData);
+        // }
+    };
+    return [
+        data,
+        handlers
+    ];
+};
+
+const useDirections = (_data = { origin: null, destination: null }) => {
+
+    const [data, setData] = useState(_data);
+
+    const handlers = {
+        setOrigin: (origin, props) => {
+            const { colors } = props
+            setData({
+                ...data,
+                origin,
+                colors
+            });
+        },
+        setDestination: (destination, props) => {
+            const { colors } = props
+            setData({
+                ...data,
+                destination,
+                colors
+            });
+        }
+    };
+    return [
+        data,
+        handlers
+    ];
+};
+
+const useMap = (initialize = {}) => {
     const {
         region: _region,
-        markers: _markers
+        markers: _markers,
+        directions: _directions
     } = initialize;
 
-    const [region, setRegion] = useState(_region);
-    const [markers, setMarkers] = useState(_markers);
+    const [region, regionHandlers] = useRegion(_region);
+    const [markers, markerHandlers] = useMarkers(_markers);
+    const [directions, directionHandlers] = useDirections(_directions);
 
-    const onChangeRegion = ({
-        latitude,
-        longitude,
-        latitudeDelta,
-        longitudeDelta
-    }) => {
-        console.log('onChangeRegion: ');
-        setRegion({
-            latitude,
-            longitude,
-            latitudeDelta,
-            longitudeDelta
-        });
+
+    return {
+        markers: { data: markers, handlers: markerHandlers },
+        region: { data: region, handlers: regionHandlers },
+        directions: { data: directions, handlers: directionHandlers }
     };
-
-    return [
-        {
-            region,
-            markers
-        },
-        {
-            onChangeRegion
-        }
-    ];
 };
 
 export default useMap;

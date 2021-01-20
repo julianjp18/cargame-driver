@@ -150,7 +150,7 @@ const AuthScreen = props => {
                 autoCapitalize="none"
                 errorText="¡UPS! Por favor ingresa un correo válido."
                 onInputChange={inputChangeHandler}
-                initialValue=""
+                initialValue="jdperezf@unbosque.edu.co"
               />
               <TextInput
                 id="password"
@@ -167,7 +167,7 @@ const AuthScreen = props => {
                   `¡UPS! Por favor ingresa una contraseña válida. Debe contener mínimo 6 carácteres`
                 }
                 onInputChange={inputChangeHandler}
-                initialValue=""
+                initialValue="123456"
               />
               {isSignUp ? (
                 <TextInput
