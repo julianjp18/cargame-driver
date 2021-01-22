@@ -1,10 +1,19 @@
 import { firestoreDB } from '../../constants/Firebase';
+import moment from 'moment';
+
 export const CREATE_DRIVER = 'CREATE_DRIVER';
 export const SHOW_DRIVER = 'SHOW_DRIVER';
 export const CHANGE_PHONE_NUMBER = 'CHANGE_PHONE_NUMBER';
 export const CHANGE_PROFILE_PICTURE = 'CHANGE_PROFILE_PICTURE';
 
-export const createDriver = ({ driverId, name, numberId, phone, referidNumber = '' }) => {
+export const createDriver = ({
+    driverId,
+    name,
+    numberId,
+    phone,
+    referidNumber = '',
+    ipAdress,
+}) => {
     return dispatch => {
         firestoreDB
             .collection('Drivers')
@@ -24,6 +33,9 @@ export const createDriver = ({ driverId, name, numberId, phone, referidNumber = 
                 expireLicense: '',
                 expiresPropertyCard: '',
                 propertyCard: '',
+                created_at: moment().format(),
+                ipAdress,
+                termsAndConditions: true,
             });
 
         dispatch({
@@ -40,7 +52,7 @@ export const createDriver = ({ driverId, name, numberId, phone, referidNumber = 
 };
 
 export const showDriver = (driverId) => async dispatch => {
-    if(driverId) {
+    if (driverId) {
         const data = await firestoreDB
             .collection('Drivers')
             .doc(driverId)
@@ -87,7 +99,7 @@ export const changeProfilePicture = (profilePicture, driverId) => async dispatch
         ...data,
         profilePicture,
     }
-   
+
     const updateData = await firestoreDB.collection('Drivers').doc(driverId).set(newData);
     dispatch({
         type: CHANGE_PROFILE_PICTURE,
