@@ -29,10 +29,10 @@ const LocationPicker = props => {
         typeFieldSelected = 'isDestinyCityTruckService';
       }
 
-      dispatch(
-        placesActions.changeFieldSelected(
-          typeFieldSelected,
-      ));
+      // dispatch(
+      //   placesActions.changeFieldSelected(
+      //     typeFieldSelected,
+      // ));
       props.navigation.navigate('Map');
     };
     

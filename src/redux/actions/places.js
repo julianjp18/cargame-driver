@@ -12,106 +12,123 @@ export const ACTIVATE_URBAN_SERVICE = 'ACTIVATE_URBAN_SERVICE';
 export const DEACTIVATE_URBAN_SERVICE = 'DEACTIVATE_URBAN_SERVICE';
 export const DEACTIVATE_RURAL_SERVICE = 'DEACTIVATE_RURAL_SERVICE';
 
-export const currentPosition = (location) => dispatch => {
-  
-  dispatch({
-    type: GET_CURRENT_POSITION,
-    latitude: location.lat,
-    longitude: location.lng,
-  });
-};
 
-export const getPosition = (location) => async dispatch => {
-  const response = await fetch(
-    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${
-    location.lat
-    },${location.lng}&result_type=locality&key=${ENV.googleApiKey}`)
-  
-  if (!response.ok) {
-    throw new Error('¡UPS! Error al conseguir la dirección');
-  }
+export const setOriginLocation = ({ coordinate, address }) => {
+  return {
+    type: GET_CURRENT_RURAL_SERVICE,
+    address,
+    coords: coordinate
+  };
+}
 
-  const responseData = await response.json();
+export const setDestinationLocation = ({ coordinate, address }) => {
+  return {
+    type: GET_DESTINY_RURAL_SERVICE,
+    address,
+    coords: coordinate
+  };
+}
 
-  if (!responseData.results) {
-    return;
-  }
-  let getPositionPicked;
-  if(responseData.status === 'ZERO_RESULTS') {
-    getPositionPicked = {
-      status: responseData.status,
-      address: 'Por favor selecciona un punto dentro de una ciudad'
-    };
-  } else {
-    getPositionPicked = {
-      lat: location.lat,
-      lng: location.lng,
-      address: responseData.results[0].formatted_address,
-      status: responseData.status,
-    };
-  }
+// export const currentPosition = (location) => dispatch => {
 
-  dispatch({
-    type: GET_POSITION,
-    getPositionPicked,
-  });
+//   dispatch({
+//     type: GET_CURRENT_POSITION,
+//     latitude: location.lat,
+//     longitude: location.lng,
+//   });
+// };
 
-  return getPositionPicked;
-};
+// export const getPosition = (location) => async dispatch => {
+//   const response = await fetch(
+//     `https://maps.googleapis.com/maps/api/geocode/json?latlng=${
+//     location.lat
+//     },${location.lng}&result_type=locality&key=${ENV.googleApiKey}`)
 
-export const savePosition = (location, typeFieldSelected) => dispatch => {
-  let action;
+//   if (!response.ok) {
+//     throw new Error('¡UPS! Error al conseguir la dirección');
+//   }
 
-  switch (typeFieldSelected) {
-    case 'isOriginCityTruckService':
-      action = GET_CURRENT_RURAL_SERVICE;
-      break;
-    case 'isDestinyCityTruckService':
-      action = GET_DESTINY_RURAL_SERVICE;
-      break;
-    case 'isActivationCityTruckService':
-      action = GET_ACTIVATION_URBAN_SERVICE;
-      break;
-    default:
-      action = '';
-      break;
-  }
+//   const responseData = await response.json();
 
-  dispatch({
-    type: action,
-    coords: {
-      lat: location.latitude,
-      lng: location.longitude,
-    },
-    address: location.address
-  });
-};
+//   if (!responseData.results) {
+//     return;
+//   }
+//   let getPositionPicked;
+//   if(responseData.status === 'ZERO_RESULTS') {
+//     getPositionPicked = {
+//       status: responseData.status,
+//       address: 'Por favor selecciona un punto dentro de una ciudad'
+//     };
+//   } else {
+//     getPositionPicked = {
+//       lat: location.lat,
+//       lng: location.lng,
+//       address: responseData.results[0].formatted_address,
+//       status: responseData.status,
+//     };
+//   }
 
-export const changeFieldSelected = (typeFieldSelected) => dispatch => {
-  dispatch({
-    type: CHANGE_FIELD_SELECTED,
-    typeFieldSelected,
-  });
-};
+//   dispatch({
+//     type: GET_POSITION,
+//     getPositionPicked,
+//   });
 
-export const activateService = (date, typeService) => dispatch => {
-  if(typeService === URBAN_SERVICE) {
-    dispatch({
-      type: ACTIVATE_URBAN_SERVICE,
-      date,   
-    });
-  } else {
-    dispatch({
-      type: ACTIVATE_RURAL_SERVICE,
-      date,
-    });
-  }
-};
+//   return getPositionPicked;
+// };
 
-export const deactivateService = (date, typeService) => dispatch => {
-  if(typeService === URBAN_SERVICE) {
-    dispatch({ type: DEACTIVATE_URBAN_SERVICE });
-  } else {
-    dispatch({ type: DEACTIVATE_RURAL_SERVICE });
-  }
-};
+// export const savePosition = (location, typeFieldSelected) => dispatch => {
+//   let action;
+
+//   switch (typeFieldSelected) {
+//     case 'isOriginCityTruckService':
+//       action = GET_CURRENT_RURAL_SERVICE;
+//       break;
+//     case 'isDestinyCityTruckService':
+//       action = GET_DESTINY_RURAL_SERVICE;
+//       break;
+//     case 'isActivationCityTruckService':
+//       action = GET_ACTIVATION_URBAN_SERVICE;
+//       break;
+//     default:
+//       action = '';
+//       break;
+//   }
+
+//   dispatch({
+//     type: action,
+//     coords: {
+//       lat: location.latitude,
+//       lng: location.longitude,
+//     },
+//     address: location.address
+//   });
+// };
+
+// export const changeFieldSelected = (typeFieldSelected) => dispatch => {
+//   dispatch({
+//     type: CHANGE_FIELD_SELECTED,
+//     typeFieldSelected,
+//   });
+// };
+
+// export const activateService = (date, typeService) => dispatch => {
+//   if(typeService === URBAN_SERVICE) {
+//     dispatch({
+//       type: ACTIVATE_URBAN_SERVICE,
+//       date,   
+//     });
+//   } else {
+//     dispatch({
+//       type: ACTIVATE_RURAL_SERVICE,
+//       date,
+//     });
+//   }
+// };
+
+// export const deactivateService = (date, typeService) => dispatch => {
+//   if(typeService === URBAN_SERVICE) {
+//     dispatch({ type: DEACTIVATE_URBAN_SERVICE });
+//   } else {
+//     dispatch({ type: DEACTIVATE_RURAL_SERVICE });
+//   }
+// };

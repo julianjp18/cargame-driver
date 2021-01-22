@@ -10,7 +10,7 @@ const useMarkers = (_data = {}) => {
             setData({
                 ...data,
                 [name]: {
-                    coordinate,
+                    coordinate: { ...coordinate },
                     color
                 }
             });
@@ -39,12 +39,19 @@ const useRegion = (_data = {}) => {
                 latitudeDelta,
                 longitudeDelta
             } = newData;
-            setData({
-                latitude,
-                longitude,
-                latitudeDelta,
-                longitudeDelta
-            });
+            if (
+                latitude !== data.latitude ||
+                longitude !== data.longitude ||
+                latitudeDelta !== data.latitudeDelta ||
+                longitudeDelta !== data.longitudeDelta
+            ) {
+                setData({
+                    latitude,
+                    longitude,
+                    latitudeDelta,
+                    longitudeDelta
+                });
+            }
         },
         // delete: (index) => {
         //     const newData = [...data].filter((d, i) => i !== index);
@@ -62,19 +69,20 @@ const useDirections = (_data = { origin: null, destination: null }) => {
     const [data, setData] = useState(_data);
 
     const handlers = {
-        setOrigin: (origin, props) => {
+        setOrigin: (origin, props = {}) => {
+            console.log('origin: ', origin);
             const { colors } = props
             setData({
                 ...data,
-                origin,
+                origin: { ...origin },
                 colors
             });
         },
-        setDestination: (destination, props) => {
+        setDestination: (destination, props = {}) => {
             const { colors } = props
             setData({
                 ...data,
-                destination,
+                destination: { ...destination },
                 colors
             });
         }
@@ -96,11 +104,15 @@ const useMap = (initialize = {}) => {
     const [markers, markerHandlers] = useMarkers(_markers);
     const [directions, directionHandlers] = useDirections(_directions);
 
+    const [relocate, setRelocation] = useState(null);
+    const [address, setAddress] = useState(null);
 
     return {
         markers: { data: markers, handlers: markerHandlers },
         region: { data: region, handlers: regionHandlers },
-        directions: { data: directions, handlers: directionHandlers }
+        directions: { data: directions, handlers: directionHandlers },
+        relocate: { data: relocate, handlers: { setRelocation } },
+        address: { data: address, handlers: { setAddress } }
     };
 };
 

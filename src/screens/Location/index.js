@@ -4,9 +4,15 @@ import { View, StyleSheet } from 'react-native';
 import { Dimensions } from 'react-native'
 import { Input } from 'react-native-elements';
 import { Entypo } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 
 import Map, { useMap } from '../../components/UI/Map';
+import SearchPlace from '../../components/UI/Map/SearchPlace';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
+import usePlace from './usePlace';
+
+import { getAdressFromLocation } from '../../utils/location';
 
 const latitudeDelta = 0.00522,
     longitudeDelta = Dimensions.get("window").width / Dimensions.get("window").height * 0.00522
@@ -18,47 +24,25 @@ const region = {
     longitude: -3.703790
 }
 
-const PlaceInput = ({ style }) => {
-
-    const [value, setValue] = useState('');
-    return (
-        <>
-            <Input
-                value={value}
-                onChangeText={setValue}
-                containerStyle={inputStyles.container}
-                inputContainerStyle={inputStyles.inputContainer}
-                placeholder="Busqueda..."
-            />
-        </>
-    )
-};
-
-const inputStyles = StyleSheet.create({
-    container: {
-        width: Dimensions.get("window").width - 100
-    },
-    inputContainer: {
-        margin: 0,
-        fontFamily: 'Quicksand',
-        fontSize: 10,
-        padding: 0,
-        paddingHorizontal: 0,
-        paddingVertical: 0,
-        height: '100%',
-        backgroundColor: 'white',
-        borderBottomColor: 'transparent'
-    }
-});
-
-const LocationInput = ({ handleEvent }) => {
-
+const LocationInput = ({ address, handlers }) => {
+    const leftComponent = () => (
+        <TouchableOpacity style={{ ...locationStyles.iconContainer, ...locationStyles.borderRight }} onPress={handlers.goBack} >
+            <AntDesign name="back" size={24} color="black" />
+        </TouchableOpacity>
+    );
+    const rightComponent = () => (
+        <TouchableOpacity style={locationStyles.iconContainer} onPress={handlers.marker}>
+            <Entypo name="location" size={30} color="black" />
+        </TouchableOpacity>
+    );
     return (
         <View style={locationStyles.container}>
-            <PlaceInput />
-            <TouchableOpacity style={locationStyles.iconContainer} onPress={handleEvent}>
-                <Entypo name="location" size={30} color="black" />
-            </TouchableOpacity>
+            <SearchPlace
+                address={address}
+                handleEvent={handlers.placeSearch}
+                leftComponent={leftComponent}
+                rightComponent={rightComponent}
+            />
         </View>
     );
 };
@@ -67,11 +51,11 @@ const locationStyles = StyleSheet.create({
     container: {
         position: 'absolute',
         display: 'flex',
-        height: 50,
+        // height: 500,
         top: 30,
         left: 0,
         right: 0,
-        justifyContent: 'center',
+        justifyContent: 'space-around',
         flexDirection: 'row',
         backgroundColor: 'white',
         borderRadius: 20,
@@ -91,17 +75,51 @@ const locationStyles = StyleSheet.create({
         width: 50,
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'flex-end'
+        // backgroundColor:'green',
+        alignItems: 'center',
+        borderRightColor: 'gray',
+    },
+    borderRight: {
+        borderRightWidth: 1
     }
 });
 
-const Location = () => {
+const Location = ({ navigation }) => {
 
     const data = useMap({ region });
 
-    const setMarker = () => {
-        data.markers.handlers.add('origin', { coordinate: data.region.data })
-    }
+    const [, { dispatchSetOrigin }] = usePlace();
+
+    const handlers = {
+        placeSearch: (place, details) => {
+
+            const coordinate = place && place.geometry
+                ? place.geometry.location
+                : details && details.geometry
+                    ? {
+                        latitude: details.geometry.location.lat,
+                        longitude: details.geometry.location.lng
+                    }
+                    : null;
+            if (!coordinate) { return; }
+            data.markers.handlers.add('origin', { coordinate });
+            data.relocate.handlers.setRelocation(coordinate);
+        },
+        marker: async () => {
+            const coordinate = data.region.data;
+            data.markers.handlers.add('origin', { coordinate });
+            dispatchSetOrigin({ coordinate, address: 'Av Siempre Viva' });
+            data.directions.handlers.setOrigin(data.region.data);
+
+            const address = await getAdressFromLocation(coordinate);
+            if (address) {
+                data.address.handlers.setAddress(address);
+            }
+        },
+        goBack: () => {
+            navigation.navigate('HomeDriver');
+        }
+    };
 
     return (
         <>
@@ -109,7 +127,7 @@ const Location = () => {
                 data={data}
                 configuration={{ zoom: true, showCenterMarker: true }}
             />
-            <LocationInput handleEvent={setMarker} />
+            <LocationInput address={data.address.data} handlers={handlers} />
         </>
     )
 };

@@ -3,25 +3,20 @@
  */
 
 // Dependencias
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, View, Dimensions, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-import * as Location from 'expo-location';
+
 
 import useMap from './useMap';
 import usePermission, { PERMISSIONS } from '../../../hooks/usePermission';
+import { getCurrentPosition } from '../../../utils/location';
 
-const getCurrentPosition = () => {
-    return Location.getCurrentPositionAsync({});
-};
 
-const watchCurrentPosition = (cb, options = {}) => {
-    return Location.watchPositionAsync(options, cb);
-};
 
 /**
  * Componente Mapa
@@ -32,8 +27,16 @@ const Map = ({ data, configuration, children }) => {
     const {
         region: { data: initialRegion, handlers: regionHandlers },
         markers: { data: markers, handlers: markersHandlers },
-        directions: { data: directions, handlers: directionsHandlers }
+        directions: { data: directions, handlers: directionsHandlers },
+        relocate: { data: relocate, handlers: relocateHandlers }
     } = data;
+
+    useEffect(() => {
+        if (relocate && mapRef.current) {
+            mapRef.current.animateToRegion(relocate);
+            relocateHandlers.setRelocation(null);
+        }
+    }, [relocate]);
 
     const {
         zoom,
@@ -48,20 +51,14 @@ const Map = ({ data, configuration, children }) => {
 
     const _getCurrentPosition = async () => {
         try {
-            const position = await getCurrentPosition()
-            // get Position
+            const position = await getCurrentPosition();
+            if (!position) { return; }
+            mapRef.current.animateToRegion(position.coords);
         }
         catch (error) {
-            console.log('error: ', error);
-
+            // TODO: nfv => Gestionar error
         }
     }
-
-    // useState(() => {
-    //     if (onCurrentLocationChange) {
-    //         watchCurrentPosition(onCurrentLocationChange);
-    //     }
-    // }, []);
 
     const permission = usePermission(PERMISSIONS.LOCATION, onDenyPermission);
 
@@ -77,21 +74,22 @@ const Map = ({ data, configuration, children }) => {
 
     const Directions = () => directions.origin && directions.destination
         ? <MapViewDirections
-            key={index}
             origin={directions.origin}
             destination={directions.destination}
             // onStart={this.onStart}
             // onReady={this.onReady}
             strokeWidth={3}
             strokeColor={directions.color || 'blue'}
-            apikey={"AIzaSyCN3wz6v8apPgkJKVzLnH2SymwRVj55N5A"}
+            apikey={"AIzaSyAx3ZM1YpfTSiV4dennpgT3hiZcJ2959s8"}
         />
         : null;
 
+    const mapRef = useRef(null);;
     return (
         <View style={styles.container}>
             { permission &&
                 <MapView
+                    ref={mapRef}
                     style={styles.map}
                     initialRegion={initialRegion}
                     zoomEnabled={zoom}
