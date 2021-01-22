@@ -61,7 +61,6 @@ const DriverNotificationsScreen = props => {
   };
 
   const showResumeOfferScreen = (notification) => {
-    console.log(notification.offerId, notification);
     if (!notification.offerId) return true;
     try {
       dispatch(offersActions.saveResumeOfferSelected(notification.offerId, notification.id));

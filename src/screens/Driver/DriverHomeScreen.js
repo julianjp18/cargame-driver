@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
 });
 
 const DriverHomeScreen = props => {
+  moment.locale('es');
   const dispatch = useDispatch();
   YellowBox.ignoreWarnings([
     'Setting a timer',
@@ -136,23 +137,22 @@ const DriverHomeScreen = props => {
   const places = useSelector(state => state.places);
   const [activateTypeService, setActivateTypeService] =
     useState(places.activateUrbanService || places.activateRuralService);
-  moment.locale();
   const [date, setDate] = useState(
     places.dayActivate
       ? places.dayActivate
       : new Date()
-    );
+  );
   const [show, setShow] = useState(false);
 
   const verifyPermissions = async () => {
     const result = await Permissions.askAsync(Permissions.LOCATION);
     if (result.status !== 'granted') {
-        Alert.alert(
-            'Permisos insuficientes',
-            'Necesita los permisos de geolocalización para poder obtener localización en tiempo real.',
-            [{ text: 'Está bien' }]
-        );
-        return verifyPermissions();
+      Alert.alert(
+        'Permisos insuficientes',
+        'Necesita los permisos de geolocalización para poder obtener localización en tiempo real.',
+        [{ text: 'Está bien' }]
+      );
+      return verifyPermissions();
     }
     return true;
   };
@@ -170,18 +170,17 @@ const DriverHomeScreen = props => {
     if (!hasPermissions) return;
 
     try {
-        const location = await Location.getLastKnownPositionAsync();
-        dispatch(placesActions.currentPosition({
-          lat: location.coords.latitude,
-          lng: location.coords.longitude,
-        }));
+      const location = await Location.getLastKnownPositionAsync();
+      dispatch(placesActions.currentPosition({
+        lat: location.coords.latitude,
+        lng: location.coords.longitude,
+      }));
     } catch (err) {
       validLocationTurnOn();
     }
   };
 
   useEffect(() => {
-    dispatch(offersActions.showActiveOffers());
     places.urbanServiceActivateAddress && setTypeTruckService(URBAN_SERVICE);
     getCurrentLocation();
   }, []);
@@ -205,7 +204,7 @@ const DriverHomeScreen = props => {
   };
 
   const activateService = () => {
-    if(!activateTypeService){
+    if (!activateTypeService) {
       if (typeTruckService === RURAL_SERVICE) {
         if (places.currentAddress && places.ruralServiceDestinyAddress)
           dispatch(placesActions.activateService(
@@ -222,6 +221,8 @@ const DriverHomeScreen = props => {
           ));
         setActivateTypeService(true);
       }
+
+      dispatch(offersActions.showActiveOffers(userAuth.driverId, date ? date : new Date()));
     } else {
       if (typeTruckService === RURAL_SERVICE) {
         if (places.currentAddress && places.ruralServiceDestinyAddress)
@@ -234,7 +235,7 @@ const DriverHomeScreen = props => {
         setActivateTypeService(false);
       }
     }
-    
+
   };
 
   return (
@@ -276,8 +277,8 @@ const DriverHomeScreen = props => {
                       ? styles.serviceTitleSelected
                       : '',
                     typeTruckService !== URBAN_SERVICE
-                      && activateTypeService
-                      && styles.activateTypeService
+                    && activateTypeService
+                    && styles.activateTypeService
                   ]}
                   onPress={() => changeTypeTruckService(URBAN_SERVICE)}
                 >
