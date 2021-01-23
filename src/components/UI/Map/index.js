@@ -5,11 +5,14 @@
 // Dependencias
 import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+
+// Componentes
+import Fallback from './Fallback';
 
 // Hooks
 import useMap from './useMap';
@@ -136,7 +139,7 @@ const Map = ({ data, configuration, children }) => {
     return (
         <View style={styles.container}>
             { !permission || !initialRegion
-                ? <ActivityIndicator />
+                ? <Fallback />
                 : <>
                     <MapView
                         ref={mapRef}

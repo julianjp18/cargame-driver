@@ -188,7 +188,9 @@ const Location = ({ navigation }) => {
                 data={data}
                 configuration={{ zoom: true, showCenterMarker: true }}
             />
-            <LocationInput address={address} label={label} handlers={handlers} />
+            {data.currentPosition.data &&
+                <LocationInput address={address} label={label} handlers={handlers} />
+            }
         </>
     )
 };
