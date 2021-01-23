@@ -81,7 +81,7 @@ const Map = ({ data, configuration, children }) => {
             centerMap(currentPosition.location);
         }
         catch (error) {
-            // TODO: nfv => Gestionar error
+            // No se hace nada con este error
         }
     }
 
