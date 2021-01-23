@@ -4,7 +4,7 @@
  */
 
 // Dependencias
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -32,6 +32,13 @@ const SearchPlace = ({ address, configuration, handleEvent, leftComponent, right
     // Estado para el texto actual
     const [value, setValue] = useState(address);
 
+    // Efecto para actualizar la dirección si cambia como prop
+    useEffect(() => {
+        if (value !== address) {
+            setValue(address);
+        }
+    }, [address]);
+
     if (!currentPosition) { return null; }
     /**
      * Función que controla el evento al seleccionar una ubicación
@@ -48,6 +55,7 @@ const SearchPlace = ({ address, configuration, handleEvent, leftComponent, right
                 }
                 : null;
         const _address = place && place.description;
+        console.log('_address: ', _address);
 
         if (!location || !_address) { return null };
 
@@ -91,6 +99,7 @@ const SearchPlace = ({ address, configuration, handleEvent, leftComponent, right
 // PropTypes
 SearchPlace.propTypes = {
     address: PropTypes.string,
+    configuration: PropTypes.object,
     handleEvent: PropTypes.func,
     leftComponent: PropTypes.func,
     rightComponent: PropTypes.func

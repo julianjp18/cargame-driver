@@ -24,12 +24,14 @@ const useMarkers = (_data = {}) => {
          * @param {Object} newData Datos del marcador
          */
         add: (name, newData) => {
-            const { location, color } = newData;
+            const { location, color, title, description } = newData;
             setData({
                 ...data,
                 [name]: {
                     location: { ...location },
-                    color
+                    color,
+                    title,
+                    description
                 }
             });
         },
@@ -139,7 +141,7 @@ const useDirections = (_data = { origin: null, destination: null }) => {
 /**
  * Hook principal del mapa
  * 
- * @param {Objecy} [initialize]
+ * @param {Object} [initialize] Datos de inicialización
  */
 const useMap = (initialize = {}) => {
     const {

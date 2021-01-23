@@ -105,6 +105,8 @@ const Map = ({ data, configuration, children }) => {
                 key={index}
                 coordinate={marker.location}
                 pinColor={marker.color}
+                title={marker.title}
+                description={marker.description}
             />
         )
         : null;

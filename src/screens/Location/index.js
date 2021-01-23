@@ -155,7 +155,7 @@ const Location = ({ navigation }) => {
          * @param {String} address  Dirección
          */
         placeSearch: ({ location, address }) => {
-            data.markers.handlers.add('A', { location });
+            data.markers.handlers.add('A', { location, title: address, color: accentColor });
             data.relocate.handlers.setRelocation(location);
             // Agrega el lugar
             locationHandler({ location, address });
@@ -166,10 +166,10 @@ const Location = ({ navigation }) => {
         marker: async () => {
             // Obtiene la ubicación
             const location = data.region.data;
-            // Agrega el marcador
-            data.markers.handlers.add('A', { location });
             // Obtiene la dirección de la ubicación
             const address = await getAdressFromLocation(location);
+            // Agrega el marcador
+            data.markers.handlers.add('A', { location, title: address, color: accentColor });
             if (address) {
                 // Agrega el lugar
                 locationHandler({ location, address });
