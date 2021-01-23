@@ -1,25 +1,45 @@
-import React, { useEffect, useRef } from 'react'
-import { View, StyleSheet, Dimensions } from 'react-native';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { Ionicons } from '@expo/vector-icons';
+/**
+ * Componente Input de busqueda de lugares
+ * 
+ */
 
+// Dependencias
+import React, { useEffect, useRef } from 'react'
+import PropTypes from 'prop-types';
+import { StyleSheet } from 'react-native';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+
+// Hooks
 import useCurrentLocation from '../../../hooks/useCurrentPosition';
 
-const SearchPlace = ({ address, handleEvent, leftComponent, rightComponent }) => {
-    console.log('SearchPlace: ', address);
+// Configuración
+import ENV from '../../../../env';
 
+/**
+ * Componente Input de busqueda de lugares
+ * 
+ * @param {String} [address]        Dirección a mostrar en el componente
+ * @param {Function} handleEvent    Manejador del evento al seleccionar una dirección 
+ * @param {Function} leftComponent  Componente izquierdo
+ * @param {Function} rightComponent Componente derecho
+ */
+const SearchPlace = ({ address, handleEvent, leftComponent, rightComponent }) => {
+
+    // Obtiene la ubicación actual
     const currentPosition = useCurrentLocation();
 
+    // Referencia del buscador
     const seachRef = useRef();
 
+    // Efecto para actualizar la dirección en el Input
     useEffect(() => {
         if (address && address.length > 0 && seachRef.current) {
-            console.log('ENTRAAA');
             seachRef.current.setAddressText(address);
         }
     }, [address]);
 
     if (!currentPosition) { return null; }
+
     return (
         <GooglePlacesAutocomplete
             ref={seachRef}
@@ -30,9 +50,13 @@ const SearchPlace = ({ address, handleEvent, leftComponent, rightComponent }) =>
             renderLeftButton={leftComponent}
             renderRightButton={rightComponent}
             onPress={handleEvent}
-            predefinedPlaces={[{ description: currentPosition.address, geometry: { location: currentPosition.location.coords } }]}
+            predefinedPlaces={[
+                {
+                    description: currentPosition.address,
+                    geometry: { location: currentPosition.location.coords }
+                }]}
             query={{
-                key: "AIzaSyAx3ZM1YpfTSiV4dennpgT3hiZcJ2959s8",
+                key: ENV.googleApiKey,
                 language: "es"
             }}
             debounce={200}
@@ -41,29 +65,16 @@ const SearchPlace = ({ address, handleEvent, leftComponent, rightComponent }) =>
     );
 }
 
+// PropTypes
+SearchPlace.propTypes = {
+    address: PropTypes.string,
+    handleEvent: PropTypes.func,
+    leftComponent: PropTypes.node,
+    rightComponent: PropTypes.node
+};
+
 const styles = StyleSheet.create({
-    container: {
-        // position: 'absolute',
-        // top: 0,
-        // left: 0,
-        // right: 0,
-        // bottom: 0,
-    },
-    field: {
-        // height: 40,
-        // margin: 15,
-        // backgroundColor: '#fdfdf6',
-        // padding: 10,
-        // borderRadius: 50,
-        // shadowColor: 'rgba(0, 0, 0, 0.1)',
-        // shadowOpacity: 0.8,
-        // elevation: 6,
-        // shadowRadius: 15,
-        // shadowOffset: { width: 1, height: 13 },
-        // overflow: 'hidden'
-    },
     textInput: {
-        // color: '#00539b',
         fontSize: 16,
     },
     description: {

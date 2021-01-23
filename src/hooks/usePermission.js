@@ -1,8 +1,18 @@
-
+/**
+ * Hook para obtener un permiso
+ * 
+ */
 import { useState } from 'react';
 
+// Util
 import askPermision, { PERMISSIONS } from '../permissions';
 
+/**
+ * Hook para obtener un permiso
+ * 
+ * @param {String} name       Nombre del permiso debe ser de una constante
+ * @param {Function} [onDeny] Función de retorno en caso de rechazo
+ */
 const usePermission = (name, onDeny) => {
 
     const [permission, setPermission] = useState(null);

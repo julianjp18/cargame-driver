@@ -1,10 +1,26 @@
+/**
+ * Hooks para el mapa
+ */
+
+//  Dependencias
 import { useState } from "react";
 
+/**
+ * Hook para los marcadores del mapa
+ * 
+ * @param {Object} [_data] Marcadores iniciales
+ */
 const useMarkers = (_data = {}) => {
 
     const [data, setData] = useState(_data);
 
+    // Manejadores de eventos
     const handlers = {
+        /**
+         * Agrega un nuevo marcador normalizado por nombre
+         * @param {String} name    Nombre/Clave del marcador
+         * @param {Object} newData Datos del marcador
+         */
         add: (name, newData) => {
             const { coordinate, color } = newData;
             setData({
@@ -15,6 +31,10 @@ const useMarkers = (_data = {}) => {
                 }
             });
         },
+        /**
+         * Elimina un marcador por su nombre
+         * @param {String} name Nombre/Clave a eliminar
+         */
         delete: (name) => {
             const newData = { ...data };
             delete newData[name];
@@ -27,11 +47,21 @@ const useMarkers = (_data = {}) => {
     ];
 };
 
+/**
+ * Hook para la región o la ubicación en el mapa
+ * 
+ * @param {Object} [_data] Región inicial
+ */
 const useRegion = (_data = {}) => {
 
     const [data, setData] = useState(_data);
 
+    // Manejadores de eventos
     const handlers = {
+        /**
+         * Actualiza la región actual
+         * @param {Object} newData Datos de la región
+         */
         change: (newData) => {
             const {
                 latitude,
@@ -52,11 +82,7 @@ const useRegion = (_data = {}) => {
                     longitudeDelta
                 });
             }
-        },
-        // delete: (index) => {
-        //     const newData = [...data].filter((d, i) => i !== index);
-        //     setData(newData);
-        // }
+        }
     };
     return [
         data,
@@ -64,13 +90,23 @@ const useRegion = (_data = {}) => {
     ];
 };
 
+/**
+ * Hook para la dirección
+ * 
+ * @param {Object} [_data] Dirección inicial
+ */
 const useDirections = (_data = { origin: null, destination: null }) => {
 
     const [data, setData] = useState(_data);
 
+    // Manejadores de eventos
     const handlers = {
+        /**
+         * Actualiza la ubicación de origen de la dirección
+         * @param {Object} origin Datos de la ubicación de origen
+         * @param {Object} props  Propiedades adicionales
+         */
         setOrigin: (origin, props = {}) => {
-            console.log('origin: ', origin);
             const { colors } = props
             setData({
                 ...data,
@@ -78,6 +114,11 @@ const useDirections = (_data = { origin: null, destination: null }) => {
                 colors
             });
         },
+        /**
+         * Actualiza la ubicación de destino de la dirección
+         * @param {Object} destination Datos de la ubicación de origen
+         * @param {Object} props       Propiedades adicionales
+         */
         setDestination: (destination, props = {}) => {
             const { colors } = props
             setData({
@@ -93,6 +134,11 @@ const useDirections = (_data = { origin: null, destination: null }) => {
     ];
 };
 
+/**
+ * Hook principal del mapa
+ * 
+ * @param {Objecy} [initialize]
+ */
 const useMap = (initialize = {}) => {
     const {
         region: _region,
@@ -100,6 +146,7 @@ const useMap = (initialize = {}) => {
         directions: _directions
     } = initialize;
 
+    // Hooks
     const [region, regionHandlers] = useRegion(_region);
     const [markers, markerHandlers] = useMarkers(_markers);
     const [directions, directionHandlers] = useDirections(_directions);

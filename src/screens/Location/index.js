@@ -17,13 +17,6 @@ import { getAdressFromLocation } from '../../utils/location';
 const latitudeDelta = 0.00522,
     longitudeDelta = Dimensions.get("window").width / Dimensions.get("window").height * 0.00522
 
-const region = {
-    latitudeDelta,
-    longitudeDelta,
-    latitude: 40.416775,
-    longitude: -3.703790
-}
-
 const LocationInput = ({ address, handlers }) => {
     const leftComponent = () => (
         <TouchableOpacity style={{ ...locationStyles.iconContainer, ...locationStyles.borderRight }} onPress={handlers.goBack} >
@@ -86,7 +79,7 @@ const locationStyles = StyleSheet.create({
 
 const Location = ({ navigation }) => {
 
-    const data = useMap({ region });
+    const data = useMap({});
 
     const [, { dispatchSetOrigin }] = usePlace();
 
