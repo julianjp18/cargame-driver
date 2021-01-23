@@ -53,7 +53,7 @@ const SearchPlace = ({ address, handleEvent, leftComponent, rightComponent }) =>
             predefinedPlaces={[
                 {
                     description: currentPosition.address,
-                    geometry: { location: currentPosition.location.coords }
+                    geometry: { location: currentPosition.location }
                 }]}
             query={{
                 key: ENV.googleApiKey,
@@ -69,8 +69,8 @@ const SearchPlace = ({ address, handleEvent, leftComponent, rightComponent }) =>
 SearchPlace.propTypes = {
     address: PropTypes.string,
     handleEvent: PropTypes.func,
-    leftComponent: PropTypes.node,
-    rightComponent: PropTypes.node
+    leftComponent: PropTypes.func,
+    rightComponent: PropTypes.func
 };
 
 const styles = StyleSheet.create({

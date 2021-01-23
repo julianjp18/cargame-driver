@@ -5,6 +5,9 @@
 //  Dependencias
 import { useState } from "react";
 
+// Hooks
+import useCurrentPosition from "../../../hooks/useCurrentPosition";
+
 /**
  * Hook para los marcadores del mapa
  * 
@@ -52,7 +55,7 @@ const useMarkers = (_data = {}) => {
  * 
  * @param {Object} [_data] Región inicial
  */
-const useRegion = (_data = {}) => {
+const useRegion = (_data = null) => {
 
     const [data, setData] = useState(_data);
 
@@ -69,7 +72,7 @@ const useRegion = (_data = {}) => {
                 latitudeDelta,
                 longitudeDelta
             } = newData;
-            if (
+            if (!data ||
                 latitude !== data.latitude ||
                 longitude !== data.longitude ||
                 latitudeDelta !== data.latitudeDelta ||
@@ -150,16 +153,16 @@ const useMap = (initialize = {}) => {
     const [region, regionHandlers] = useRegion(_region);
     const [markers, markerHandlers] = useMarkers(_markers);
     const [directions, directionHandlers] = useDirections(_directions);
+    const currentPosition = useCurrentPosition();
 
     const [relocate, setRelocation] = useState(null);
-    const [address, setAddress] = useState(null);
 
     return {
         markers: { data: markers, handlers: markerHandlers },
         region: { data: region, handlers: regionHandlers },
         directions: { data: directions, handlers: directionHandlers },
         relocate: { data: relocate, handlers: { setRelocation } },
-        address: { data: address, handlers: { setAddress } }
+        currentPosition: { data: currentPosition, handlers: {} }
     };
 };
 

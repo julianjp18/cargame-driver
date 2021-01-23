@@ -1,5 +1,10 @@
+// Dependencias
 import * as Location from 'expo-location';
 
+/**
+ * Obtiene la ubicación actual
+ * @param {Object} [options] Opciones adicionales
+ */
 const getCurrentPosition = async (options) => {
     let data;
     try {
@@ -11,6 +16,10 @@ const getCurrentPosition = async (options) => {
     return data;
 };
 
+/**
+ * Obtiene la ubicación de una dirección
+ * @param {String} address Dirección
+ */
 const getLocationFromAddress = async (address) => {
     let data;
     try {
@@ -23,6 +32,10 @@ const getLocationFromAddress = async (address) => {
     return data;
 }
 
+/**
+ * Obtiene la dirección de una ubicación
+ * @param {Object} location Ubicación {latitude,longitude}
+ */
 const getAdressFromLocation = async (location) => {
     let data;
     try {

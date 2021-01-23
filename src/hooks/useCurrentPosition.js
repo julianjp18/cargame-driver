@@ -22,7 +22,7 @@ const useCurrentPosition = () => {
             const location = await getCurrentPosition();
             if (!location) { return; }
             const address = await getAdressFromLocation(location.coords);
-            setLocation({ location, address });
+            setLocation({ location: location.coords, address });
         };
         get();
     }, []);

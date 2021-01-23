@@ -5,9 +5,8 @@
 // Dependencias
 import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Dimensions, TouchableOpacity, ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { Tile } from 'react-native-elements';
 import MapViewDirections from 'react-native-maps-directions';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -22,6 +21,10 @@ import { getCurrentPosition } from '../../../utils/location';
 // Configuración
 import ENV from '../../../../env';
 
+// Deltas por defecto
+const latitudeDelta = 0.00522,
+    longitudeDelta = (Dimensions.get("window").width / Dimensions.get("window").height * 0.00522);
+
 /**
  * Componente Mapa
  * 
@@ -35,34 +38,27 @@ const Map = ({ data, configuration, children }) => {
     }
 
     const {
-        region: { data: initialRegion, handlers: regionHandlers },
+        region: { data: region, handlers: regionHandlers },
         markers: { data: markers, handlers: markersHandlers },
         directions: { data: directions, handlers: directionsHandlers },
-        relocate: { data: relocate, handlers: relocateHandlers }
+        relocate: { data: relocate, handlers: relocateHandlers },
+        currentPosition: { data: currentPosition }
     } = data;
 
     const {
         zoom,
         showCenterMarker = true,
         showCurrentLocationMarker = true,
-        defaultCurrentLocation = true,
         onDenyPermission: _onDenyPermission
     } = configuration;
 
     // Hook para comprobar permisos de ubicación
     const permission = usePermission(PERMISSIONS.LOCATION, onDenyPermission);
 
-    // Efecto para localizar el mapa en la ubicación actual al abrir
-    useEffect(() => {
-        if (defaultCurrentLocation && !relocate && permission) {
-            centerCurrentLocation();
-        }
-    }, [permission]);
-
     // Effecto para reubicar mapa
     useEffect(() => {
         if (relocate && mapRef.current) {
-            mapRef.current.animateToRegion(relocate);
+            centerMap(relocate);
             relocateHandlers.setRelocation(null);
         }
     }, [relocate]);
@@ -83,14 +79,25 @@ const Map = ({ data, configuration, children }) => {
      */
     const centerCurrentLocation = async () => {
         try {
-            const position = await getCurrentPosition();
-            if (!position) { return; }
-            mapRef.current.animateToRegion(position.coords);
+            centerMap(currentPosition.location);
         }
         catch (error) {
             // TODO: nfv => Gestionar error
         }
     }
+
+    /**
+     * Centra el mapa en una ubicación
+     * @param {Object} location Ubicación
+     */
+    const centerMap = (location) => {
+        mapRef.current.animateToRegion({
+            latitudeDelta,
+            longitudeDelta,
+            ...region,
+            ...location
+        });
+    };
 
     // Componente con Marcadores que se hayan agregado
     const Markers = () => markers
@@ -119,14 +126,16 @@ const Map = ({ data, configuration, children }) => {
     // Referencia del mapa
     const mapRef = useRef(null);
 
+    const initialRegion = region
+        ? region
+        : currentPosition
+            ? { ...currentPosition.location, latitudeDelta, longitudeDelta }
+            : null;
+
     return (
         <View style={styles.container}>
-            { !permission
-                ? <Tile
-                    title="No se ha podido cargar el mapa"
-                    featured
-                    caption="Revisa los permisos"
-                />
+            { !permission || !initialRegion
+                ? <ActivityIndicator />
                 : <>
                     <MapView
                         ref={mapRef}
@@ -134,6 +143,7 @@ const Map = ({ data, configuration, children }) => {
                         zoomEnabled={zoom}
                         zoomControlEnabled={zoom}
                         onRegionChangeComplete={regionHandlers.change}
+                        initialRegion={initialRegion}
                     >
                         <Markers />
                         <Directions />
@@ -190,7 +200,7 @@ const styles = StyleSheet.create({
     },
     currentLocation: {
         position: "absolute",
-        left: (device_width - 60),
+        left: (device_width - 50),
         bottom: 100
     }
 });
