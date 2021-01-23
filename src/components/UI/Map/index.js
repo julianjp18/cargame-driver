@@ -5,7 +5,7 @@
 // Dependencias
 import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, Dimensions, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { Entypo } from '@expo/vector-icons';
@@ -15,15 +15,15 @@ import { MaterialIcons } from '@expo/vector-icons';
 import useMap from './useMap';
 import usePermission, { PERMISSIONS } from '../../../hooks/usePermission';
 
-// Utils
-import { getCurrentPosition } from '../../../utils/location';
-
 // Configuración
 import ENV from '../../../../env';
 
+// Estilos
+import { fullWidth, fullHeight } from '../../../styles/layout';
+
 // Deltas por defecto
 const latitudeDelta = 0.00522,
-    longitudeDelta = (Dimensions.get("window").width / Dimensions.get("window").height * 0.00522);
+    longitudeDelta = (fullWidth / fullHeight * 0.00522);
 
 /**
  * Componente Mapa
@@ -32,7 +32,6 @@ const latitudeDelta = 0.00522,
  * @param {Object} configuration Configuración adicional
  */
 const Map = ({ data, configuration, children }) => {
-
     if (!data || !data.region || !data.directions || !data.relocate) {
         return null;
     }
@@ -104,7 +103,7 @@ const Map = ({ data, configuration, children }) => {
         ? Object.values(markers).map((marker, index) =>
             <Marker
                 key={index}
-                coordinate={marker.coordinate}
+                coordinate={marker.location}
                 pinColor={marker.color}
             />
         )
@@ -127,7 +126,7 @@ const Map = ({ data, configuration, children }) => {
     const mapRef = useRef(null);
 
     const initialRegion = region
-        ? region
+        ? { latitudeDelta, longitudeDelta, ...region }
         : currentPosition
             ? { ...currentPosition.location, latitudeDelta, longitudeDelta }
             : null;
@@ -172,9 +171,6 @@ Map.propTypes = {
     configuration: PropTypes.object
 };
 
-var device_width = Dimensions.get('window').width;
-var device_height = Dimensions.get('window').height;
-
 const styles = StyleSheet.create({
     container: {
         position: "absolute",
@@ -196,11 +192,11 @@ const styles = StyleSheet.create({
         position: "absolute",
         flex: 1,
         alignItems: "center",
-        bottom: ((device_height / 2) - 20)
+        bottom: ((fullHeight / 2) - 20)
     },
     currentLocation: {
         position: "absolute",
-        left: (device_width - 50),
+        left: (fullWidth - 50),
         bottom: 100
     }
 });

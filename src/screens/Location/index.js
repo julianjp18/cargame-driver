@@ -6,7 +6,7 @@
 //  Dependencias
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -15,11 +15,12 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import Map, { useMap } from '../../components/UI/Map';
 import SearchPlace from '../../components/UI/Map/SearchPlace';
 
-// Hooks
-import usePlace from './usePlace';
-
 // Utils
 import { getAdressFromLocation } from '../../utils/location';
+
+// Estilos
+import { fullWidth, boxShadow } from '../../styles/layout';
+import { accentColor } from '../../constants/Colors';
 
 /**
  * Componente Input de busqueda de lugares
@@ -27,11 +28,13 @@ import { getAdressFromLocation } from '../../utils/location';
  * @param {String} address  Dirección actual
  * @param {Object} handlers Funciones manejadoras de ventos
  */
-const LocationInput = ({ address, handlers }) => {
+const LocationInput = ({ label, address, handlers }) => {
 
     // Componente para regresar al Home
     const leftComponent = () => (
-        <TouchableOpacity style={{ ...locationStyles.iconContainer, ...locationStyles.borderRight }} onPress={handlers.goBack} >
+        <TouchableOpacity
+            style={{ ...locationStyles.iconContainer, ...locationStyles.borderRight }}
+            onPress={handlers.goBack} >
             <AntDesign name="back" size={24} color="black" />
         </TouchableOpacity>
     );
@@ -45,12 +48,20 @@ const LocationInput = ({ address, handlers }) => {
 
     return (
         <View style={locationStyles.container}>
-            <SearchPlace
-                address={address}
-                handleEvent={handlers.placeSearch}
-                leftComponent={leftComponent}
-                rightComponent={rightComponent}
-            />
+            <View style={locationStyles.banner} />
+            <View style={locationStyles.labelContainer}>
+                <Text style={locationStyles.label}>
+                    {label}
+                </Text>
+            </View>
+            <View style={locationStyles.searchContainer}>
+                <SearchPlace
+                    address={address}
+                    handleEvent={handlers.placeSearch}
+                    leftComponent={leftComponent}
+                    rightComponent={rightComponent}
+                />
+            </View>
         </View>
     );
 };
@@ -58,25 +69,39 @@ const LocationInput = ({ address, handlers }) => {
 const locationStyles = StyleSheet.create({
     container: {
         position: 'absolute',
-        display: 'flex',
-        // height: 500,
-        top: 30,
+        top: 20,
         left: 0,
         right: 0,
+    },
+    banner: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        height: 95,
+        backgroundColor: accentColor,
+        marginLeft: 10,
+        marginRight: 10,
+        ...boxShadow,
+        borderRadius: 20
+    },
+    labelContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        width: fullWidth,
+        height: 25
+    },
+    label: {
+        color: 'white',
+        textAlign: 'center'
+    },
+    searchContainer: {
+        display: 'flex',
         justifyContent: 'space-around',
         flexDirection: 'row',
         backgroundColor: 'white',
-        borderRadius: 20,
-        marginLeft: 10,
-        marginRight: 10,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
+        marginLeft: 20,
+        marginRight: 20,
+        borderRadius: 20
     },
     iconContainer: {
         height: 50,
@@ -103,52 +128,51 @@ LocationInput.propTypes = {
  */
 const Location = ({ navigation }) => {
 
-    // Hook con datos del mapa
-    const data = useMap({});
+    const {
+        handleEvent: locationHandler,
+        label,
+        data: _initialData
+    } = navigation.state.params;
 
-    // Hook con datos de Redux
-    const [, { dispatchSetOrigin }] = usePlace();
+    // Hook con datos del mapa
+    const data = useMap({
+        region: _initialData.location,
+        markers: _initialData.location
+            ? { A: { location: _initialData.location } }
+            : undefined
+    });
+
     // Estado para la dirección a mostrar, cuando se utilizan
     // Marcadores se actualiza con éste estado
-    const [address, setAddress] = useState(null);
+    const [address, setAddress] = useState(_initialData.address);
 
     // Manejadores
     const handlers = {
         /**
          * Función que maneja la busqueda de un lugar
          * 
-         * @param {Object} place   Datos del lugar
-         * @param {Object} details Detalles del lugar
+         * @param {Object} location Ubicación
+         * @param {String} address  Dirección
          */
-        placeSearch: (place, details) => {
-
-            // Obtiene la ubicación del lugar
-            const coordinate = place && place.geometry
-                ? place.geometry.location
-                : details && details.geometry
-                    ? {
-                        latitude: details.geometry.location.lat,
-                        longitude: details.geometry.location.lng
-                    }
-                    : null;
-            if (!coordinate) { return; }
-            // Agrega un marcador del origen
-            data.markers.handlers.add('origin', { coordinate });
-            data.relocate.handlers.setRelocation(coordinate);
+        placeSearch: ({ location, address }) => {
+            data.markers.handlers.add('A', { location });
+            data.relocate.handlers.setRelocation(location);
+            // Agrega el lugar
+            locationHandler({ location, address });
         },
         /**
          * Agrega marcadores en la ubicación actual del mapa
          */
         marker: async () => {
             // Obtiene la ubicación
-            const coordinate = data.region.data;
+            const location = data.region.data;
             // Agrega el marcador
-            data.markers.handlers.add('origin', { coordinate });
+            data.markers.handlers.add('A', { location });
             // Obtiene la dirección de la ubicación
-            const address = await getAdressFromLocation(coordinate);
+            const address = await getAdressFromLocation(location);
             if (address) {
                 // Agrega el lugar
-                dispatchSetOrigin({ coordinate, address });
+                locationHandler({ location, address });
                 // Actualiza la dirección
                 setAddress(address);
             }
@@ -164,7 +188,7 @@ const Location = ({ navigation }) => {
                 data={data}
                 configuration={{ zoom: true, showCenterMarker: true }}
             />
-            <LocationInput address={address} handlers={handlers} />
+            <LocationInput address={address} label={label} handlers={handlers} />
         </>
     )
 };

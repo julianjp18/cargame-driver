@@ -5,7 +5,7 @@ import * as Location from 'expo-location';
  * Obtiene la ubicación actual
  * @param {Object} [options] Opciones adicionales
  */
-const getCurrentPosition = async (options) => {
+const getCurrentLocation = async (options) => {
     let data;
     try {
         data = await Location.getCurrentPositionAsync(options);
@@ -51,7 +51,7 @@ const getAdressFromLocation = async (location) => {
     return data;
 }
 export {
-    getCurrentPosition,
+    getCurrentLocation,
     getLocationFromAddress,
     getAdressFromLocation
 };

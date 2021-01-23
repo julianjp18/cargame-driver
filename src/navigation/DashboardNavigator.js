@@ -20,7 +20,6 @@ import DriverTravelsScreen from '../screens/Driver/DriverTravelsScreen';
 import EditPhoneNumberScreen from '../screens/Driver/EditProfile/EditPhoneNumberScreen';
 import StartupScreen from '../screens/StartupScreen';
 import DriverOffersScreen from '../screens/Driver/DriverOffersScreen';
-// import GoogleMapScreen from '../screens/GoogleMapScreen';
 import Location from '../screens/Location';
 import ShowOfferScreen from '../screens/Driver/DriverNotificationsScreen/ShowOfferScreen';
 import OfferForm from '../screens/Driver/DriverOffersScreen/OfferForm';
@@ -163,7 +162,6 @@ const MainNavigator = createSwitchNavigator({
   },
   Dashboard: DriverTabNavigator,
   Map: {
-    // screen: GoogleMapScreen,
     screen: Location,
     navigationOptions: {
       headerTitle: '',

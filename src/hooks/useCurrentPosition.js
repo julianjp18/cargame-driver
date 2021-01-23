@@ -6,28 +6,39 @@
 //  Dependencias
 import { useEffect, useState } from 'react';
 
+// Hooks
+import usePermission, { PERMISSIONS } from './usePermission';
+
 // Utils
-import { getCurrentPosition, getAdressFromLocation } from '../utils/location';
+import { getCurrentLocation, getAdressFromLocation } from '../utils/location';
 
 /**
  * Hook para obtener la posición actual
+ * 
+ * @param {Function} [onDeny] Función de retorno en caso de rechazar
+ *                            permisos de ubicación
  */
-const useCurrentPosition = () => {
+const useCurrentPosition = (onDeny) => {
 
-    const [location, setLocation] = useState(null);
+    const [position, setPosition] = useState(null);
+
+    // Solicita permisos de ubicación
+    const permission = usePermission(PERMISSIONS.LOCATION, onDeny);
 
     // Efecto que obtiene la posición actual
     useEffect(() => {
         const get = async () => {
-            const location = await getCurrentPosition();
+            const location = await getCurrentLocation();
             if (!location) { return; }
             const address = await getAdressFromLocation(location.coords);
-            setLocation({ location: location.coords, address });
+            setPosition({ location: location.coords, address });
         };
-        get();
-    }, []);
+        if (permission) {
+            get();
+        }
+    }, [permission]);
 
-    return location;
+    return position;
 };
 
 export default useCurrentPosition;

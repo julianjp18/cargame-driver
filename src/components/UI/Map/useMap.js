@@ -14,7 +14,6 @@ import useCurrentPosition from "../../../hooks/useCurrentPosition";
  * @param {Object} [_data] Marcadores iniciales
  */
 const useMarkers = (_data = {}) => {
-
     const [data, setData] = useState(_data);
 
     // Manejadores de eventos
@@ -25,11 +24,11 @@ const useMarkers = (_data = {}) => {
          * @param {Object} newData Datos del marcador
          */
         add: (name, newData) => {
-            const { coordinate, color } = newData;
+            const { location, color } = newData;
             setData({
                 ...data,
                 [name]: {
-                    coordinate: { ...coordinate },
+                    location: { ...location },
                     color
                 }
             });
