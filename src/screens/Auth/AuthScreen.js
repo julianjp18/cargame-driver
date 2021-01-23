@@ -2,7 +2,7 @@ import React, { useState, useEffect, useReducer, useCallback } from 'react';
 import {
   Text, StyleSheet, View,
   ActivityIndicator, Alert, Image,
-  ScrollView, KeyboardAvoidingView
+  ScrollView, KeyboardAvoidingView,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '../../components/UI/Button';
@@ -45,6 +45,7 @@ const formReducer = (state, action) => {
 const AuthScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isSelected, setSelection] = useState(false);
   const [isSignUp, setIsSignUp] = useState(useSelector(state => state.auth.isSignUp));
   const dispatch = useDispatch();
   const userToken = useSelector(state => state.auth.token);
@@ -135,7 +136,6 @@ const AuthScreen = props => {
           />
         </View>
         <View style={styles.authContainer}>
-
           <ScrollView>
             <View style={styles.scrollViewContainer}>
               <TextInput
@@ -170,24 +170,26 @@ const AuthScreen = props => {
                 initialValue="123456"
               />
               {isSignUp ? (
-                <TextInput
-                  id="repeatPassword"
-                  label="Repite tu contraseña"
-                  keyboardType="default"
-                  secureTextEntry
-                  required
-                  leftIcon={
-                    <AntDesign name="eyeo" size={20} color={primaryColor} />
-                  }
-                  minLength={6}
-                  autoCapitalize="none"
-                  errorText={
-                    `¡UPS! Por favor ingresa una contraseña válida. Debe contener mínimo 6 carácteres
-                            `
-                  }
-                  onInputChange={inputChangeHandler}
-                  initialValue=""
-                />
+                <View>
+                  <TextInput
+                    id="repeatPassword"
+                    label="Repite tu contraseña"
+                    keyboardType="default"
+                    secureTextEntry
+                    required
+                    leftIcon={
+                      <AntDesign name="eyeo" size={20} color={primaryColor} />
+                    }
+                    minLength={6}
+                    autoCapitalize="none"
+                    errorText={
+                      `¡UPS! Por favor ingresa una contraseña válida. Debe contener mínimo 6 carácteres
+                              `
+                    }
+                    onInputChange={inputChangeHandler}
+                    initialValue=""
+                  />
+                </View>
               ) : (<View />)}
             </View>
             <View style={styles.forgotPasswordContainer}>
@@ -235,7 +237,7 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     flex: 1,
-    marginTop: normalizeLength(100),
+    marginTop: normalizeLength(90),
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -251,6 +253,25 @@ const styles = StyleSheet.create({
     paddingHorizontal: normalizeLength(20),
     minWidth: normalizeLength(380),
     minHeight: normalizeLength(400)
+  },
+  checkboxContainer: {
+    flex: 1,
+    width: '100%'
+  },
+  checkboxRow1: {
+    flexDirection: 'row',
+    width: '5%',
+    position: 'relative',
+    top: 0,
+  },
+  checkboxRow2: {
+    flexDirection: 'row',
+    width: '95%',
+    position: 'relative',
+    top: 0,
+  },
+  label: {
+    fontSize: normalizeLength(10)
   },
   forgotPasswordContainer: {
     marginTop: normalizeLength(0)
@@ -278,7 +299,7 @@ const styles = StyleSheet.create({
   },
   mainCarga: {
     marginLeft: normalizeLength(-40),
-    marginTop:normalizeLength(-70),
+    marginTop: normalizeLength(-10),
   }
 });
 

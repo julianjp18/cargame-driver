@@ -63,12 +63,15 @@ export default (state = initialState, action) => {
         return {
           ...state,
           dayActivate: action.date,
+          urbanCurrentAddress: action.currentAddress,
           activateUrbanService: true,
         };
       case ACTIVATE_RURAL_SERVICE:
         return {
           ...state,
           dayActivate: action.date,
+          ruralCurrentAddress: action.currentAddress,
+          ruralDestinyAddress: action.ruralServiceDestinyAddress,
           activateRuralService: true,
         };
       case DEACTIVATE_URBAN_SERVICE:

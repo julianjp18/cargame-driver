@@ -118,7 +118,6 @@ const OfferForm = (props) => {
   const offerHandler = () => {
     const value = formState.inputValues.value;
     if (value && isMultiple(Number.parseInt(value), 5000)) {
-      console.log('yes');
       const action = offerActions.realizeOffer(props.offerForm, value, props.driverId, props.index);
       const controller = new AbortController();
       setError(null);

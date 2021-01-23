@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, dispatch } from 'react-redux';
 import Swiper from 'react-native-swiper';
 import { primaryColor, yellowColor } from '../../../constants/Colors';
 import { collectionTimeSlot } from '../../../constants/Utils';
@@ -74,12 +74,27 @@ const getcollectionTimeSlot = (collectionTimeSlotItem) =>
 const DriverOffersScreen = (props) => {
   const [offerForm, setofferForm] = useState();
   const [changeView, setChangeView] = useState(false);
-  
-  let offerState = useSelector(state => state.offers);
-  const [offers, setOffers] = useState(offerState.offers);
 
-  const [indexSwiper, setIndex] = useState(offerState.index);
+  let offerState = useSelector(state => state.offers);
+  let offerStateAsync = '';
+  const [indexSwiper, setIndex] = useState();
+  const [offers, setOffers] = useState();
   const userAuth = useSelector(state => state.auth);
+  const dayActivate = useSelector(state => state.dayActivate);
+
+  useEffect(() => {
+    if(offerState) {
+      setOffers(offerState.offers ? offerState.offers : '');
+      setIndex(offerState.index);
+    }
+  }, [offerState]);
+
+  useEffect(() => {
+    if (offerStateAsync) {
+      offerState = useSelector(state => state.offers);
+      setOffers(offerStateAsync);
+    }
+  }, [offerStateAsync]);
 
   if (!userAuth) {
     dispatch(authActions.logout());
@@ -93,15 +108,23 @@ const DriverOffersScreen = (props) => {
     }
     if (action === CHANGE_TO_FORM) {
       setChangeView(true);
-    } else 
+    } else
       setChangeView(false);
   };
 
   const refreshOffers = async () => {
-    const changeOffers = await offersActions.showActiveOffersAsync();
-    setOffers(changeOffers);
-    setTimeout(refreshOffer, 20000);
+    offerStateAsync = true;
+    dispatch(offersActions.showActiveOffersAsync(userAuth.driverId, dayActivate));
   };
+
+  useEffect(() => {
+    setInterval(() => {
+      if (dayActivate) {
+        console.log(true);
+        refreshOffers();
+      }
+    }, 5000);
+  }, []);
 
   return (
     <View style={styles.supportContainer}>
@@ -112,29 +135,32 @@ const DriverOffersScreen = (props) => {
       />
       {!changeView
         ? <Swiper
-            style={styles.swiperContainer}
-            showsButtons
-            showsPagination={false}
-            index={indexSwiper}
-          >
-            {offers.length === 0 ? (
-              <View style={styles.notFoundContainer}>
-                <MaterialCommunityIcons name="delete-empty-outline" size={90} color={primaryColor} />
-                <Text style={styles.notFoundText}>
-                  No existen ofertas activas por el momento
-                </Text>
-              </View>
-            ) : offers.map((offer, index) => (
-              <ShowOffer
-                index={index}
-                key={index}
-                offer={offer}
-                changeToForm={CHANGE_TO_FORM}
-                getcollectionTimeSlot={getcollectionTimeSlot}
-                changeToOfferFormHandler={changeToOfferFormHandler}
-              />
-            ))}
-          </Swiper>
+          style={styles.swiperContainer}
+          showsButtons
+          showsPagination={false}
+          index={indexSwiper}
+        >
+          {!offers || offers.length === 0 ? (
+            <View style={styles.notFoundContainer}>
+              <MaterialCommunityIcons name="delete-empty-outline" size={90} color={primaryColor} />
+              <Text>
+                Activate en la pestaña de inicio.
+              </Text>
+              <Text style={styles.notFoundText}>
+                No existen ofertas activas por el momento
+              </Text>
+            </View>
+          ) : offers.map((offer, index) => (
+            <ShowOffer
+              index={index}
+              key={index}
+              offer={offer}
+              changeToForm={CHANGE_TO_FORM}
+              getcollectionTimeSlot={getcollectionTimeSlot}
+              changeToOfferFormHandler={changeToOfferFormHandler}
+            />
+          ))}
+        </Swiper>
         : (
           <OfferForm
             index={indexSwiper}

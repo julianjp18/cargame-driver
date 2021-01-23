@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { primaryColor, yellowColor, successColor, cancelColor, offeredColor } from '../../../constants/Colors';
@@ -8,6 +8,7 @@ import { currencyFormat } from '../../../utils/helpers';
 
 import * as offersActions from '../../../redux/actions/offers';
 import moment from 'moment';
+import { normalizeLength } from '../../../styles/layout';
 
 const styles = StyleSheet.create({
   supportContainer: {
@@ -59,6 +60,10 @@ const styles = StyleSheet.create({
   subtitle: {
     color: '#000000',
   },
+  subtitleTimer: {
+    fontSize: normalizeLength(15),
+    fontWeight: 'bold',
+  },
   buttonContainer: {
     position: 'relative',
     bottom: '3%',
@@ -74,11 +79,24 @@ const ShowOffer = (props) => {
   const [lastOfferValue, setLastOfferValue] = useState(offer.offerValue);
   const [response, setResponse] = useState(offer.response);
   const [changeOfferInfoColor, setChangeOfferInfoColor] = useState(false);
+  const [timer, setTimer] = useState();
+
 
   const refreshOffer = async () => {
-    const changeOfferValue = await offersActions.getOfferValueById(offer.offerId);
+    const { changeOfferValue, dateStarted } = await offersActions.getOfferValueById(offer.offerId);
+
+    if (dateStarted) {
+      var now = moment().format("DD/MM/YYYY HH:mm:ss");
+      var dur = moment.utc(moment(now, "DD/MM/YYYY HH:mm:ss").diff(moment(dateStarted, "DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss")
+      setTimer(dur);
+
+      if (dur > "00:04:00") {
+        offersActions.changeOfferState(offer.offerId, 'EXPIRED');
+      }
+    }
+
     if (changeOfferValue) {
-      if(parseInt(changeOfferValue) !== parseInt(lastOfferValue)) {
+      if (parseInt(changeOfferValue) !== parseInt(lastOfferValue)) {
         setofferValue(changeOfferValue);
         setLastOfferValue(changeOfferValue);
         const { status } = await offersActions.getOfferById(offer.offerId);
@@ -90,11 +108,14 @@ const ShowOffer = (props) => {
         }
         setChangeOfferInfoColor(true);
       }
-      setTimeout(refreshOffer, 20000);
     }
   };
 
-  refreshOffer();
+  useEffect(() => {
+    setInterval(() => {
+      refreshOffer();
+    }, 1000);
+  }, []);
 
   return (
     <View
@@ -104,26 +125,29 @@ const ShowOffer = (props) => {
       <View
         style={[
           styles.showMessageContainer,
+          response.status === 'INFO' && styles.showMessageContainer,
           ['OFFERED', 'IN_PROGRESS'].includes(response.status)
-            && styles.showOfferedMessage,
+          && styles.showOfferedMessage,
           ['CONTRACTED', 'OK'].includes(response.status)
-            && styles.showConfirmMessage,
-          changeOfferInfoColor && styles.showConfirmMessage,
+          && styles.showConfirmMessage,
           response.status === 'CANCEL' && styles.showCancelMessage,
           response.status === 'REJECTED' && styles.showConfirmMessage,
           response.status === 'INFO' && styles.showMessageContainer,
         ]}
       >
         <Text style={styles.showMessageText}>
-          {` ${response.message} ${
-            ['CONTRACTED', 'OK', 'OFFERED', 'IN_PROGRESS'].includes(response.status)
-              ? currencyFormat(offerValue, 0)
-              : ''
+          {` ${response.message} ${['CONTRACTED', 'OK', 'OFFERED', 'IN_PROGRESS'].includes(response.status)
+            ? currencyFormat(offerValue, 0)
+            : ''
             }`}
         </Text>
       </View>
-      <View style={ styles.showInfoContainer}>
+      <View style={styles.showInfoContainer}>
         <ScrollView>
+          <View style={styles.showInfoContent}>
+            <Text style={styles.title}>Tiempo transcurrido:</Text>
+            <Text style={styles.subtitleTimer}>{timer}</Text>
+          </View>
           <View style={styles.showInfoContent}>
             <Text style={styles.title}>Ciudad de Origen:</Text>
             <Text style={styles.subtitle}>{offer.currentCity}</Text>
@@ -160,7 +184,7 @@ const ShowOffer = (props) => {
           title="Ofertar"
           paddingVertical={20}
           disabled={response.status === 'REJECTED'}
-          onPress={() => props.changeToOfferFormHandler(offer.offerId, props.index, props.changeToForm) }
+          onPress={() => props.changeToOfferFormHandler(offer.offerId, props.index, props.changeToForm)}
         />
       </View>
     </View>

@@ -28,6 +28,7 @@ import TravelSelectedScreen from '../screens/Driver/DriverTravelsScreen/TravelSe
 import CompleteDescriptionScreen from '../screens/Driver/DriverNotificationsScreen/CompleteDescriptionScreen';
 import StartOfferScreen from '../screens/Driver/DriverNotificationsScreen/StartOfferScreen';
 import EndOfferScreen from '../screens/Driver/DriverNotificationsScreen/EndOfferScreen';
+import SuccessRegisterScreen from '../screens/Auth/SuccessRegisterScreen';
 
 const profileNavigator = createSwitchNavigator({
   Profile: DriverProfileScreen,
@@ -152,6 +153,7 @@ const MainNavigator = createSwitchNavigator({
       headerShown: false
     }
   },
+  SuccessRegister: SuccessRegisterScreen,
   ServicesList: {
     screen: DriverDashboardScreen,
     navigationOptions: {
