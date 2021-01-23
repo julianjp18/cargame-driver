@@ -210,6 +210,8 @@ const DriverHomeScreen = props => {
           dispatch(placesActions.activateService(
             date,
             RURAL_SERVICE,
+            places.currentAddress,
+            places.ruralServiceDestinyAddress,
           ));
         setActivateTypeService(true);
       }
@@ -218,11 +220,19 @@ const DriverHomeScreen = props => {
           dispatch(placesActions.activateService(
             new Date(),
             URBAN_SERVICE,
+            places.currentAddress,
           ));
         setActivateTypeService(true);
       }
 
-      dispatch(offersActions.showActiveOffers(userAuth.driverId, date ? date : new Date()));
+      dispatch(
+        offersActions.showActiveOffers(
+          userAuth.driverId,
+          date ? date : new Date(),
+          places.currentAddress,
+          places.ruralServiceDestinyAddress,
+        )
+      );
     } else {
       if (typeTruckService === RURAL_SERVICE) {
         if (places.currentAddress && places.ruralServiceDestinyAddress)

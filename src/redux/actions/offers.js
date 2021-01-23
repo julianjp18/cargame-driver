@@ -6,13 +6,17 @@ export const SHOW_ACTIVE_OFFERS = 'SHOW_ACTIVE_OFFERS';
 export const REALIZE_OFFER = 'REALIZE_OFFER';
 export const OFFER_SELECTED = 'OFFER_SELECTED';
 
-export const showActiveOffers = (driverId, dayActivate) => dispatch => {
+export const showActiveOffers = (
+  driverId,
+  dayActivate,
+  currentAddress,
+  ruralServiceDestinyAddress,
+) => dispatch => {
   const data = firestoreDB
     .collection("OffersNotificationCenter");
   data.onSnapshot((allOffers) => {
     const offersData = [];
     allOffers.forEach((offer) => {
-      console.log(moment(dayActivate).format('DD/MM/YYYY'), offer.data().pickUpDate);
       if (
         offer.data().status === 'ACTIVE' || offer.data().status === 'IN_PROGRESS' &&
         moment(dayActivate).format('DD/MM/YYYY') === offer.data().pickUpDate
@@ -69,14 +73,22 @@ export const showActiveOffers = (driverId, dayActivate) => dispatch => {
   });
 };
 
-export const showActiveOffersAsync = async () => {
+export const showActiveOffersAsync = async (
+  driverId,
+  dayActivate,
+  currentAddress,
+  ruralServiceDestinyAddress,
+) => {
   const data = firestoreDB
     .collection("OffersNotificationCenter");
 
-  const offersData = [];
   data.onSnapshot((allOffers) => {
+    const offersData = [];
     allOffers.forEach((offer) => {
-      if (offer.data().status === 'ACTIVE') {
+      if (
+        offer.data().status === 'ACTIVE' || offer.data().status === 'IN_PROGRESS' &&
+        moment(dayActivate).format('DD/MM/YYYY') === offer.data().pickUpDate
+      ) {
         if (!offer.data().offerValue || offer.data().offerValue === '') {
           offersData.push({
             ...offer.data(),
@@ -87,20 +99,46 @@ export const showActiveOffersAsync = async () => {
             }
           });
         } else {
-          offersData.push({
-            ...offer.data(),
-            offerId: offer.id,
-            response: {
-              message: 'Han realizado una oferta por',
-              status: 'OFFERED',
+          if (offer.data().driverId === driverId) {
+            if (offer.data().status === 'IN_PROGRESS') {
+              offersData.push({
+                ...offer.data(),
+                offerId: offer.id,
+                response: {
+                  message: 'Usted ha ofertado satisfactoriamente por',
+                  status: 'IN_PROGRESS',
+                }
+              });
+            } else {
+              offersData.push({
+                ...offer.data(),
+                offerId: offer.id,
+                response: {
+                  message: 'Se te ha asignado la oferta',
+                  status: 'CONTRACTED',
+                }
+              });
             }
-          });
+          } else {
+            offersData.push({
+              ...offer.data(),
+              offerId: offer.id,
+              response: {
+                message: 'Alguien ha ofertado por',
+                status: 'IN_PROGRESS',
+              }
+            });
+          }
+
         }
       }
     });
-  });
 
-  return offersData;
+    dispatch({
+      type: SHOW_ACTIVE_OFFERS,
+      offers: offersData
+    });
+  });
 };
 
 export const getOfferValueById = async (offerId) => {

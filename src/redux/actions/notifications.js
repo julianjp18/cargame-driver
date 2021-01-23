@@ -31,7 +31,6 @@ export const showDriverNotifications = (driverId) => async dispatch => {
     });
   }
 
-
   dispatch({
     type: SHOW_NOTIFICATIONS,
     driverNotifications: notificationsData

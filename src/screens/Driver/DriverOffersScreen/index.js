@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, dispatch } from 'react-redux';
 import Swiper from 'react-native-swiper';
 import { primaryColor, yellowColor } from '../../../constants/Colors';
 import { collectionTimeSlot } from '../../../constants/Utils';
@@ -76,15 +76,25 @@ const DriverOffersScreen = (props) => {
   const [changeView, setChangeView] = useState(false);
 
   let offerState = useSelector(state => state.offers);
+  let offerStateAsync = '';
   const [indexSwiper, setIndex] = useState();
   const [offers, setOffers] = useState();
-
-  if (offerState) {
-    setOffers(offerState.offers ? offerState.offers : '');
-    setIndex(offerState.index);
-  }
-
   const userAuth = useSelector(state => state.auth);
+  const dayActivate = useSelector(state => state.dayActivate);
+
+  useEffect(() => {
+    if(offerState) {
+      setOffers(offerState.offers ? offerState.offers : '');
+      setIndex(offerState.index);
+    }
+  }, [offerState]);
+
+  useEffect(() => {
+    if (offerStateAsync) {
+      offerState = useSelector(state => state.offers);
+      setOffers(offerStateAsync);
+    }
+  }, [offerStateAsync]);
 
   if (!userAuth) {
     dispatch(authActions.logout());
@@ -103,13 +113,16 @@ const DriverOffersScreen = (props) => {
   };
 
   const refreshOffers = async () => {
-    const changeOffers = await offersActions.showActiveOffersAsync();
-    setOffers(changeOffers);
+    offerStateAsync = true;
+    dispatch(offersActions.showActiveOffersAsync(userAuth.driverId, dayActivate));
   };
 
   useEffect(() => {
     setInterval(() => {
-      refreshOffers();
+      if (dayActivate) {
+        console.log(true);
+        refreshOffers();
+      }
     }, 5000);
   }, []);
 

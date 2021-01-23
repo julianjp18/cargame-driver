@@ -90,9 +90,10 @@ const ShowOffer = (props) => {
       setTimer(dur);
 
       if (dur > "00:04:00") {
-        //offersActions.changeOfferState(offer.offerId, 'EXPIRED');
+        offersActions.changeOfferState(offer.offerId, 'EXPIRED');
       }
     }
+
     if (changeOfferValue) {
       if (parseInt(changeOfferValue) !== parseInt(lastOfferValue)) {
         setofferValue(changeOfferValue);

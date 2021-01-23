@@ -37,6 +37,7 @@ export const getPosition = (location) => async dispatch => {
     return;
   }
   let getPositionPicked;
+  console.log(responseData);
   if(responseData.status === 'ZERO_RESULTS') {
     getPositionPicked = {
       status: responseData.status,
@@ -94,16 +95,24 @@ export const changeFieldSelected = (typeFieldSelected) => dispatch => {
   });
 };
 
-export const activateService = (date, typeService) => dispatch => {
+export const activateService = (
+    date,
+    typeService,
+    currentAddress,
+    ruralServiceDestinyAddress = '',
+  ) => dispatch => {
   if(typeService === URBAN_SERVICE) {
     dispatch({
       type: ACTIVATE_URBAN_SERVICE,
-      date,   
+      date,
+      currentAddress,
     });
   } else {
     dispatch({
       type: ACTIVATE_RURAL_SERVICE,
       date,
+      currentAddress,
+      ruralServiceDestinyAddress,
     });
   }
 };
