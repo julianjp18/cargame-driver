@@ -17,7 +17,9 @@ const getCurrentLocation = async (options) => {
 };
 
 /**
- * Obtiene la ubicación actual
+ * Suscribe a un evento para actualizar la ubicación actual
+ * @param {Function} cb      Función de retorno para actualizar
+ *                           la ubicación 
  * @param {Object} [options] Opciones adicionales
  */
 const watchCurrentLocation = async (cb, options = {}) => {
