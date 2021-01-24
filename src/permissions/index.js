@@ -15,13 +15,13 @@ const _getStandardPermission = async (permission) => {
         // Obtiene el estado del permiso
         status = (await Permissions.getAsync(permission)).status;
 
-        // Si fue concedido responde tru
-        if (status) { return status === 'granted' || status === 'undetermined'; }
+        // Si fue concedido responde true
+        if (status) { return status === 'granted'; }
 
         // De lo contrario se pregunta por el permiso
         status = (await Permissions.askAsync(permission)).status;
 
-        return status === 'granted' || status === 'undetermined';
+        return status === 'granted';
     }
     catch (err) {
         // TODO: nfv => Tratar error

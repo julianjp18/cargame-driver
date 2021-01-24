@@ -3,7 +3,8 @@
  */
 
 //  Dependencias
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Image, StyleSheet, View, ActivityIndicator, Text } from 'react-native';
 
 // Constantes
@@ -16,17 +17,9 @@ import { fullWidth, fullHeight, boxShadow } from '../../../styles/layout';
 /**
  * Componente Fallback a mostrar en lugar del mapa
  * 
+ * @param {Boolean} showMessage Si se va a mostrar mensaje de error
  */
-const Fallback = () => {
-
-    const [text, setText] = useState();
-
-    // Luego de un periodo muestra el mensaje
-    useEffect(() => {
-        setTimeout(() => {
-            setText('Lo sentimos. Imposible continuar, por favor asegurate de que la ubicación este encendida y el permiso concedido');
-        }, 10000);
-    }, []);
+const Fallback = ({ showMessage }) => {
 
     return (
         <View style={styles.container}>
@@ -34,18 +27,24 @@ const Fallback = () => {
                 style={styles.logo}
                 source={shortBrandOrangeGreyUrl}
             />
-            {!text && <ActivityIndicator size="large" />}
-            {text &&
-                <View style={styles.textContainer}>
-                    <Text style={styles.text}>
-                        {text}
-                    </Text>
-                </View>
+            {
+                !showMessage
+                    ? <ActivityIndicator size="large" />
+                    : <View style={styles.textContainer}>
+                        <Text style={styles.text}>
+                            Lo sentimos. Imposible continuar, por favor asegurate de que la ubicación este encendida y el permiso concedido
+                        </Text>
+                    </View>
             }
         </View>
     );
 
 };
+// Proptypes
+Fallback.propTypes = {
+    showMessage: PropTypes.bool
+};
+
 // Estilos
 const styles = StyleSheet.create({
     container: {

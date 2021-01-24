@@ -55,7 +55,10 @@ const Map = ({ data, configuration, children }) => {
     } = configuration;
 
     // Hook para comprobar permisos de ubicación
-    const permission = usePermission(PERMISSIONS.LOCATION, onDenyPermission);
+    const {
+        data: permission,
+        isLoading: isLoadingPermission
+    } = usePermission(PERMISSIONS.LOCATION);
 
     // Effecto para reubicar mapa
     useEffect(() => {
@@ -64,17 +67,6 @@ const Map = ({ data, configuration, children }) => {
             relocateHandlers.setRelocation(null);
         }
     }, [relocate]);
-
-    /**
-     * Manejador en caso de rechazo de los permisos
-     */
-    const onDenyPermission = () => {
-        if (_onDenyPermission) {
-            _onDenyPermission();
-            return;
-        }
-        alert('Para continuar debes aceptar los permisos de ubicación');
-    }
 
     /**
      * Centra el mapa en la ubicación actual
@@ -139,7 +131,7 @@ const Map = ({ data, configuration, children }) => {
     return (
         <View style={styles.container}>
             { !permission || !initialRegion
-                ? <Fallback />
+                ? <Fallback showMessage={!isLoadingPermission && !permission} />
                 : <>
                     <MapView
                         ref={mapRef}

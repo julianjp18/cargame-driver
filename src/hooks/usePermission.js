@@ -11,25 +11,25 @@ import askPermision, { PERMISSIONS } from '../permissions';
  * Hook para obtener un permiso
  * 
  * @param {String} name       Nombre del permiso debe ser de una constante
- * @param {Function} [onDeny] Función de retorno en caso de rechazo
  */
-const usePermission = (name, onDeny) => {
+const usePermission = (name) => {
 
-    const [permission, setPermission] = useState(null);
+    // Estado del permiso
+    const [data, setData] = useState(null);
+    // Estado de carga
+    const [isLoading, setIsLoading] = useState(true);
 
     useState(() => {
 
         const _askPermission = async () => {
             const _permission = await askPermision(name);
-            if (onDeny && !_permission) {
-                onDeny();
-            }
-            setPermission(_permission);
+            setData(_permission);
+            setIsLoading(false);
         };
         _askPermission();
     }, [])
 
-    return permission;
+    return { data, isLoading };
 };
 
 export { PERMISSIONS };
