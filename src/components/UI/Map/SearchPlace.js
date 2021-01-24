@@ -55,7 +55,6 @@ const SearchPlace = ({ address, configuration, handleEvent, leftComponent, right
                 }
                 : null;
         const _address = place && place.description;
-        console.log('_address: ', _address);
 
         if (!location || !_address) { return null };
 

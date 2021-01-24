@@ -17,6 +17,27 @@ const getCurrentLocation = async (options) => {
 };
 
 /**
+ * Obtiene la ubicación actual
+ * @param {Object} [options] Opciones adicionales
+ */
+const watchCurrentLocation = async (cb, options = {}) => {
+    let data;
+    try {
+        data = await Location.watchPositionAsync(
+            {
+                accuracy: Location.Accuracy.High,
+                ...options
+            },
+            cb
+        );
+    }
+    catch (err) {
+        // 
+    }
+    return data;
+};
+
+/**
  * Obtiene la ubicación de una dirección
  * @param {String} address Dirección
  */
@@ -52,6 +73,7 @@ const getAdressFromLocation = async (location) => {
 }
 export {
     getCurrentLocation,
+    watchCurrentLocation,
     getLocationFromAddress,
     getAdressFromLocation
 };

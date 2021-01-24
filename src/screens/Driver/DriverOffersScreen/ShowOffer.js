@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
 });
 
 const ShowOffer = (props) => {
-  console.log('props: ', props);
   moment.locale('es');
   const offer = props.offer;
   const [offerValue, setofferValue] = useState(offer.offerValue);
