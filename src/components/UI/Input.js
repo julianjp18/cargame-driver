@@ -73,7 +73,7 @@ const TextInput = props => {
         labelStyle={styles.disabledLabel}
         containerStyle={styles.mainContainer}
         inputContainerStyle={styles.inputContainer}
-        inputStyle={{...styles.input, ...(props.isMapField ? styles.isMapField : '')}}
+        inputStyle={styles.input}
         value={inputState.value}
         onChangeText={textChangeHandler}
         onBlur={lostFocusHandler}
@@ -127,12 +127,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Quicksand',
     color: 'red',
     fontSize: normalizeLength(11)
-  },
-  isMapField: {
-    fontSize: normalizeLength(15),
-    fontWeight: '700',
-    color: '#000000'
-  },
+  }
 });
 
 export default TextInput;

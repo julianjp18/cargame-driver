@@ -5,15 +5,15 @@ import moment from 'moment';
 import { ScrollView } from 'react-native-gesture-handler';
 import { ListItem, Avatar } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import * as Location from 'expo-location';
-import * as Permissions from 'expo-permissions';
-
 import { textSecondaryColor, darkGrey, primaryColor } from '../../constants/Colors';
 import { categoristList, URBAN_SERVICE, RURAL_SERVICE } from '../../constants/Utils';
 
 import WelcomeHeader from '../../components/WelcomeHeader';
 import Button from '../../components/UI/Button';
 import LocationPicker from '../../components/UI/LocationPicker';
+
+// Hooks
+import useCurrentPosition from '../../hooks/useCurrentPosition';
 
 import * as offersActions from '../../redux/actions/offers';
 import * as placesActions from '../../redux/actions/places';
@@ -144,45 +144,28 @@ const DriverHomeScreen = props => {
   );
   const [show, setShow] = useState(false);
 
-  const verifyPermissions = async () => {
-    const result = await Permissions.askAsync(Permissions.LOCATION);
-    if (result.status !== 'granted') {
-      Alert.alert(
-        'Permisos insuficientes',
-        'Necesita los permisos de geolocalización para poder obtener localización en tiempo real.',
-        [{ text: 'Está bien' }]
-      );
-      return verifyPermissions();
-    }
-    return true;
+  /**
+   * Función de retorno al rechazar permisos de ubicación
+   */
+  const onDenyPermission = () => {
+    Alert.alert('No se puede obtener la localización', 'Por favor enciende la localización.', [{ text: 'Esta bien' }]);
   };
 
-  const validLocationTurnOn = () => {
-    if (!Location.hasServicesEnabledAsync()) {
-      Alert.alert('No se puede obtener la localización', 'Por favor enciende la localización.', [{ text: 'Esta bien' }]);
-      return validLocationTurnOn();
-    }
-    return true;
-  }
+  // Hook que obtiene la ubicación actual y valida sus permisos
+  const currentPosition = useCurrentPosition(onDenyPermission);
 
-  const getCurrentLocation = async () => {
-    const hasPermissions = await verifyPermissions();
-    if (!hasPermissions) return;
-
-    try {
-      const location = await Location.getLastKnownPositionAsync();
+  // Efecto para actualizar la ubicación actual
+  useEffect(() => {
+    if (currentPosition && currentPosition.location) {
       dispatch(placesActions.currentPosition({
-        lat: location.coords.latitude,
-        lng: location.coords.longitude,
+        lat: currentPosition.location.latitude,
+        lng: currentPosition.location.longitude,
       }));
-    } catch (err) {
-      validLocationTurnOn();
     }
-  };
+  }, [currentPosition]);
 
   useEffect(() => {
     places.urbanServiceActivateAddress && setTypeTruckService(URBAN_SERVICE);
-    getCurrentLocation();
   }, []);
 
   const typeServiceId = userAuth.typeServiceSelected;
@@ -248,6 +231,15 @@ const DriverHomeScreen = props => {
 
   };
 
+  const setOriginLocation = ({ location, address }) => {
+    dispatch(placesActions.setOriginLocation({ location, address }));
+  };
+
+  const setDestinationLocation = ({ location, address }) => {
+    dispatch(placesActions.setDestinationLocation({ location, address }));
+  };
+
+  const isRural = typeTruckService == RURAL_SERVICE;
   return (
     typeServiceId ? (
       <View style={styles.homeContainer}>
@@ -300,34 +292,24 @@ const DriverHomeScreen = props => {
               <View>
                 <LocationPicker
                   navigation={props.navigation}
-                  id="origin"
-                  label={`Ciudad de ${typeTruckService == RURAL_SERVICE ? 'Origen' : 'Activación'}`}
+                  label={`Ciudad de ${isRural ? 'Origen' : 'Activación'}`}
                   errorText="¡UPS! Por favor ingresa una dirección válida."
-                  initialValue={
-                    places.currentAddress
-                      ? places.currentAddress
-                      : ''
-                  }
+                  value={places.currentAddress}
+                  location={places.currentCoords}
                   disabled={activateTypeService}
-                  isOriginCityTruckService={typeTruckService == RURAL_SERVICE}
-                  isActivationCityTruckService={typeTruckService == URBAN_SERVICE}
+                  handleEvent={setOriginLocation}
                 />
               </View>
-              {typeTruckService == RURAL_SERVICE && (
+              {isRural && (
                 <View>
                   <LocationPicker
                     navigation={props.navigation}
-                    id="destiny"
                     label="Ciudad de Destino"
                     errorText="¡UPS! Por favor ingresa una dirección válida."
-                    initialValue={
-                      places.ruralServiceDestinyAddress
-                        ? places.ruralServiceDestinyAddress
-                        : ''
-                    }
+                    value={places.ruralServiceDestinyAddress}
+                    location={places.ruralServiceDestinyCoords}
                     disabled={activateTypeService}
-                    isDestinyCityTruckService={typeTruckService == RURAL_SERVICE}
-                    isActivationCityTruckService={typeTruckService == URBAN_SERVICE}
+                    handleEvent={setDestinationLocation}
                   />
                   <Text
                     style={styles.dateTravelTitle}

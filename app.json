@@ -25,7 +25,12 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.julianjp18.cargameDriver"
+      "package": "com.julianjp18.cargameDriver",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAx3ZM1YpfTSiV4dennpgT3hiZcJ2959s8"
+        }
+      }
     }
   }
 }
