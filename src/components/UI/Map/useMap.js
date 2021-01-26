@@ -9,6 +9,21 @@ import { useState } from "react";
 import useCurrentPosition from "../../../hooks/useCurrentPosition";
 
 /**
+ * Valida que la ubicación sea correcta
+ * @param {Object} data Ubicación
+ */
+const validLocation = (data) => {
+    if (
+        !data ||
+        !data.latitude ||
+        !data.longitude
+    ) {
+        return false;
+    }
+    return true;
+};
+
+/**
  * Hook para los marcadores del mapa
  * 
  * @param {Object} [_data] Marcadores iniciales
@@ -24,7 +39,10 @@ const useMarkers = (_data = {}) => {
          * @param {Object} newData Datos del marcador
          */
         add: (name, newData) => {
-            const { location, color, title, description } = newData;
+            const { location, color, title, description } = newData || {};
+            if (!newData || !validLocation(location)) {
+                return;
+            }
             setData({
                 ...data,
                 [name]: {
@@ -67,12 +85,16 @@ const useRegion = (_data = null) => {
          * @param {Object} newData Datos de la región
          */
         change: (newData) => {
+            if (!validLocation(newData)) {
+                return;
+            }
             const {
                 latitude,
                 longitude,
                 latitudeDelta,
                 longitudeDelta
             } = newData;
+
             if (!data ||
                 latitude !== data.latitude ||
                 longitude !== data.longitude ||
@@ -106,29 +128,36 @@ const useDirections = (_data = { origin: null, destination: null }) => {
     // Manejadores de eventos
     const handlers = {
         /**
-         * Actualiza la ubicación de origen de la dirección
-         * @param {Object} origin Datos de la ubicación de origen
-         * @param {Object} props  Propiedades adicionales
+         * Actualiza la ubicación la dirección
+         * @param {String} key Clave de la ubicación
+         * @param {Object} _data Datos de ubicación
          */
-        setOrigin: (origin, props = {}) => {
-            const { colors } = props
+        setData: (key, _data) => {
+            if (
+                !validLocation(_data) ||
+                (
+                    key !== 'origin' &&
+                    key !== 'destination'
+                )
+            ) {
+                return;
+            }
             setData({
                 ...data,
-                origin: { ...origin },
-                colors
+                [key]: { ..._data }
             });
         },
+
         /**
-         * Actualiza la ubicación de destino de la dirección
-         * @param {Object} destination Datos de la ubicación de origen
-         * @param {Object} props       Propiedades adicionales
+         * Establece propepiedades de configuración y manejadores
+         * @param {Object} config   Propiedades configuración
+         * @param {Object} handlers Manejadores
          */
-        setDestination: (destination, props = {}) => {
-            const { colors } = props
+        setConfig: (config, handlers) => {
             setData({
                 ...data,
-                destination: { ...destination },
-                colors
+                config,
+                handlers
             });
         }
     };
