@@ -29,6 +29,96 @@ const latitudeDelta = 0.00522,
     longitudeDelta = (fullWidth / fullHeight * 0.00522);
 
 /**
+ * Componente de Direcciones
+ * 
+ * @param {Object} origin      Ubicación de origen
+ * @param {Object} destination Ubicación de destino
+ * @param {Object} config      Configuración adicional
+ * @param {Object} handlers    Manejadores de eventos
+ */
+const Directions = React.memo(({
+    origin,
+    destination,
+    config,
+    handlers
+}) => {
+
+    if (
+        !origin ||
+        !origin.latitude ||
+        !origin.longitude ||
+        !destination ||
+        !destination.latitude ||
+        !destination.longitude
+    ) {
+        return null;
+    }
+
+    const {
+        strokeWidth = 3,
+        strokeColor = 'blue'
+    } = config || {};
+
+    const {
+        onStart,
+        onReady
+    } = handlers || {};
+
+    return (
+        <MapViewDirections
+            origin={origin}
+            destination={destination}
+            onStart={onStart}
+            onReady={onReady}
+            strokeWidth={strokeWidth}
+            strokeColor={strokeColor}
+            apikey={ENV.googleApiKey}
+        />
+    );
+});
+
+/**
+ * PropTypes
+ */
+Directions.propTypes = {
+    data: PropTypes.array
+};
+
+/**
+ * Componente de marcadores
+ * 
+ * @param {Array} data Lista de marcadores
+ */
+const Markers = React.memo(({ data }) => {
+
+    if (!data || data.length === 0) {
+        return null;
+    }
+    return (
+        data.map((marker, index) =>
+            marker.location &&
+                marker.location.latitude &&
+                marker.location.longitude
+                ? <Marker
+                    key={index}
+                    coordinate={marker.location}
+                    pinColor={marker.color}
+                    title={marker.title}
+                    description={marker.description}
+                />
+                : null
+        )
+    );
+});
+
+/**
+ * PropTypes
+ */
+Markers.propTypes = {
+    data: PropTypes.array
+};
+
+/**
  * Componente Mapa
  * 
  * @param {Object} data          Datos del hook useMap
@@ -50,8 +140,7 @@ const Map = ({ data, configuration, children }) => {
     const {
         zoom,
         showCenterMarker = true,
-        showCurrentLocationMarker = true,
-        onDenyPermission: _onDenyPermission
+        showCurrentLocationMarker = true
     } = configuration;
 
     // Hook para comprobar permisos de ubicación
@@ -63,17 +152,32 @@ const Map = ({ data, configuration, children }) => {
     // Effecto para reubicar mapa
     useEffect(() => {
         if (relocate && mapRef.current) {
-            centerMap(relocate);
+            centerMap([{
+                latitudeDelta,
+                longitudeDelta,
+                ...relocate
+            }]);
             relocateHandlers.setRelocation(null);
         }
     }, [relocate]);
+
+    // Efecto para reubicar mapa al actualizar la dirección
+    useEffect(() => {
+        if (mapRef.current && directions.origin && directions.destination) {
+            centerMap([directions.origin, directions.destination])
+        }
+    }, [directions]);
 
     /**
      * Centra el mapa en la ubicación actual
      */
     const centerCurrentLocation = async () => {
         try {
-            centerMap(currentPosition.location);
+            centerMap([{
+                latitudeDelta,
+                longitudeDelta,
+                ...currentPosition.location
+            }]);
         }
         catch (error) {
             // No se hace nada con este error
@@ -81,43 +185,23 @@ const Map = ({ data, configuration, children }) => {
     }
 
     /**
-     * Centra el mapa en una ubicación
-     * @param {Object} location Ubicación
+     * Centra el mapa en una lista de coordenadas
+     * @param {Array} locations Ubicaciones a centrar
      */
-    const centerMap = (location) => {
-        mapRef.current.animateToRegion({
-            latitudeDelta,
-            longitudeDelta,
-            ...region,
-            ...location
-        });
-    };
-
-    // Componente con Marcadores que se hayan agregado
-    const Markers = () => markers
-        ? Object.values(markers).map((marker, index) =>
-            <Marker
-                key={index}
-                coordinate={marker.location}
-                pinColor={marker.color}
-                title={marker.title}
-                description={marker.description}
-            />
+    const centerMap = (locations) => {
+        mapRef.current.fitToCoordinates(
+            locations,
+            {
+                edgePadding: {
+                    top: 150,
+                    right: 50,
+                    bottom: 50,
+                    left: 50,
+                },
+                animated: true
+            }
         )
-        : null;
-
-    // Componente con Direcciones que se hayan agregado
-    const Directions = () => directions.origin && directions.destination
-        ? <MapViewDirections
-            origin={directions.origin}
-            destination={directions.destination}
-            // onStart={this.onStart}
-            // onReady={this.onReady}
-            strokeWidth={3}
-            strokeColor={directions.color || 'blue'}
-            apikey={ENV.googleApiKey}
-        />
-        : null;
+    };
 
     // Referencia del mapa
     const mapRef = useRef(null);
@@ -135,14 +219,19 @@ const Map = ({ data, configuration, children }) => {
                 : <>
                     <MapView
                         ref={mapRef}
+                        initialRegion={initialRegion}
                         style={styles.map}
                         zoomEnabled={zoom}
                         zoomControlEnabled={zoom}
                         onRegionChangeComplete={regionHandlers.change}
-                        initialRegion={initialRegion}
                     >
-                        <Markers />
-                        <Directions />
+                        <Markers data={Object.values(markers)} />
+                        <Directions
+                            origin={directions.origin}
+                            destination={directions.destination}
+                            config={directions.config}
+                            handlers={directions.handlers}
+                        />
                         {children}
                     </MapView>
 
