@@ -48,19 +48,20 @@ const LocationInput = ({ label, address, handlers }) => {
 
     return (
         <View style={locationStyles.container}>
-            <View style={locationStyles.banner} />
-            <View style={locationStyles.labelContainer}>
-                <Text style={locationStyles.label}>
-                    {label}
-                </Text>
-            </View>
-            <View style={locationStyles.searchContainer}>
-                <SearchPlace
-                    address={address}
-                    handleEvent={handlers.placeSearch}
-                    leftComponent={leftComponent}
-                    rightComponent={rightComponent}
-                />
+            <View style={locationStyles.banner}>
+                <View style={locationStyles.labelContainer}>
+                    <Text style={locationStyles.label}>
+                        {label}
+                    </Text>
+                </View>
+                <View style={locationStyles.searchContainer}>
+                    <SearchPlace
+                        address={address}
+                        handleEvent={handlers.placeSearch}
+                        leftComponent={leftComponent}
+                        rightComponent={rightComponent}
+                    />
+                </View>
             </View>
         </View>
     );
@@ -69,7 +70,7 @@ const LocationInput = ({ label, address, handlers }) => {
 const locationStyles = StyleSheet.create({
     container: {
         position: 'absolute',
-        top: 20,
+        top: 25,
         left: 0,
         right: 0,
     },
