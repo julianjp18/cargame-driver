@@ -12,6 +12,10 @@ export const showActiveOffers = (
   currentAddress,
   ruralServiceDestinyAddress,
 ) => dispatch => {
+  console.log(dayActivate, currentAddress, ruralServiceDestinyAddress);
+  const currentCity = currentAddress.split(',')[0];
+  const destinyCity = ruralServiceDestinyAddress.split(',')[0];
+
   const data = firestoreDB
     .collection("OffersNotificationCenter");
   data.onSnapshot((allOffers) => {
@@ -19,7 +23,9 @@ export const showActiveOffers = (
     allOffers.forEach((offer) => {
       if (
         offer.data().status === 'ACTIVE' || offer.data().status === 'IN_PROGRESS' &&
-        moment(dayActivate).format('DD/MM/YYYY') === offer.data().pickUpDate
+        moment(dayActivate).format('DD/MM/YYYY') === offer.data().pickUpDate &&
+        currentCity === offer.data().currentCity &&
+        destinationCity === offer.data().destinationCity
       ) {
         if (!offer.data().offerValue || offer.data().offerValue === '') {
           offersData.push({

@@ -145,10 +145,6 @@ const ShowOffer = (props) => {
       <View style={styles.showInfoContainer}>
         <ScrollView>
           <View style={styles.showInfoContent}>
-            <Text style={styles.title}>Tiempo transcurrido:</Text>
-            <Text style={styles.subtitleTimer}>{offer.dateStarted === '' ? 'No ha iniciado' : timer}</Text>
-          </View>
-          <View style={styles.showInfoContent}>
             <Text style={styles.title}>Ciudad de Origen:</Text>
             <Text style={styles.subtitle}>{offer.currentCity}</Text>
           </View>
