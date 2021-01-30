@@ -167,6 +167,7 @@ export const getOfferById = async (offerId) => {
     pickUpDate,
     status,
     userId,
+    timesOffered,
   } = await dataOffer.then(doc => doc.data());
 
   return {
@@ -177,7 +178,8 @@ export const getOfferById = async (offerId) => {
     destinationCity,
     pickUpDate,
     status,
-    userId
+    userId,
+    timesOffered,
   }
 };
 
@@ -189,7 +191,7 @@ export const changeOfferState = async (offerId, status) => {
   return await updateData.then(() => true).catch(() => false);
 };
 
-const addHistoryOffer = async (offerId, driverId, newOfferValue) => {
+export const addHistoryOffer = async (offerId, driverId, newOfferValue) => {
   const data = firestoreDB
     .collection('HistoryOffersNotificationCenter')
     .doc(`${offerId}_${driverId}`)
@@ -200,7 +202,6 @@ const addHistoryOffer = async (offerId, driverId, newOfferValue) => {
   if (doc) {
     const updateData = firestoreDB.collection('HistoryOffersNotificationCenter').doc(`${offerId}_${driverId}`).update({
       offerValue: newOfferValue,
-      timesOffered: 2,
       dateOffered: Date.now(),
       status: 'CONTRACTED',
     });
@@ -217,7 +218,6 @@ const addHistoryOffer = async (offerId, driverId, newOfferValue) => {
           driverId,
           offerId,
           offerValue: newOfferValue,
-          timesOffered: 1,
           dateOffered: Date.now(),
           status: 'OFFERED',
         });
@@ -231,8 +231,8 @@ export const realizeOffer = (offerId, newOfferValue, offerDriverId, index) => as
     .collection('OffersNotificationCenter')
     .doc(offerId)
     .get();
-  const { offerValue, status, driverId, userId } = await data.then(doc => doc.data());
-  console.log(newOfferValue, offerValue, status, userId);
+  const { offerValue, status, driverId, userId, timesOffered } = await data.then(doc => doc.data());
+
   let response = '';
   let finalValue = offerValue && offerValue !== null && offerValue !== ''
     ? offerValue
@@ -249,6 +249,8 @@ export const realizeOffer = (offerId, newOfferValue, offerDriverId, index) => as
     const updateData = firestoreDB.collection('OffersNotificationCenter').doc(offerId).update({
       driverId: offerDriverId,
       offerValue: finalValue,
+      timesOffered: 1,
+      dateStarted: moment().format("DD/MM/YYYY HH:mm:ss"),
       dateOffered: Date.now(),
       status: 'IN_PROGRESS',
     });
@@ -264,12 +266,12 @@ export const realizeOffer = (offerId, newOfferValue, offerDriverId, index) => as
 
   } else if (status === 'IN_PROGRESS') {
 
-    offerValue !== '' && changeOfferState(offerId, 'CONTRACTED');
-
     const updateData = firestoreDB.collection('OffersNotificationCenter').doc(offerId).update({
+      driverId: offerDriverId,
       offerValue: finalValue,
+      timesOffered: timesOffered + 1,
       dateOffered: Date.now(),
-      status: 'CONTRACTED',
+      status: 'IN_PROGRESS',
     });
 
     const responseUpdateData = updateData.then(() => true).catch(() => false);
@@ -283,8 +285,6 @@ export const realizeOffer = (offerId, newOfferValue, offerDriverId, index) => as
 
     offerValue !== '' && notificationsActions.createOfferNotificationForUser(userId, offerId);
   }
-
-  finalValue !== '' && addHistoryOffer(offerId, offerDriverId, newOfferValue);
 
   dispatch({
     type: REALIZE_OFFER,

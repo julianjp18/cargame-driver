@@ -84,13 +84,14 @@ const ShowOffer = (props) => {
   const refreshOffer = async () => {
     const { changeOfferValue, dateStarted } = await offersActions.getOfferValueById(offer.offerId);
 
-    if (dateStarted) {
+    if (dateStarted != '') {
       var now = moment().format("DD/MM/YYYY HH:mm:ss");
       var dur = moment.utc(moment(now, "DD/MM/YYYY HH:mm:ss").diff(moment(dateStarted, "DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss")
       setTimer(dur);
 
       if (dur > "00:04:00") {
-        offersActions.changeOfferState(offer.offerId, 'EXPIRED');
+        offersActions.changeOfferState(offer.offerId, 'CONTRACTED');
+        offersActions.addHistoryOffer(offer.offerId, offer.driverId, changeOfferValue);
       }
     }
 
@@ -145,7 +146,7 @@ const ShowOffer = (props) => {
         <ScrollView>
           <View style={styles.showInfoContent}>
             <Text style={styles.title}>Tiempo transcurrido:</Text>
-            <Text style={styles.subtitleTimer}>{timer}</Text>
+            <Text style={styles.subtitleTimer}>{offer.dateStarted === '' ? 'No ha iniciado' : timer}</Text>
           </View>
           <View style={styles.showInfoContent}>
             <Text style={styles.title}>Ciudad de Origen:</Text>
