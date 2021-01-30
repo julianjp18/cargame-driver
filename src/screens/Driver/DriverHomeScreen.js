@@ -113,13 +113,17 @@ const styles = StyleSheet.create({
 
 const DriverHomeScreen = props => {
   moment.locale('es');
+
   const dispatch = useDispatch();
+
   YellowBox.ignoreWarnings([
     'Setting a timer',
     "Can't perform a React state update on an unmounted component",
     "Cannot update during an existing state transition (such as within `render`).",
   ]);
+
   const userAuth = useSelector(state => state.auth);
+
   getUserInfo().then((data) => {
     const userInfo = JSON.parse(data);
     if (!userInfo.idToken) {
@@ -240,6 +244,7 @@ const DriverHomeScreen = props => {
   };
 
   const isRural = typeTruckService == RURAL_SERVICE;
+
   return (
     typeServiceId ? (
       <View style={styles.homeContainer}>
