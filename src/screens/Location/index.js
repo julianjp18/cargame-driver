@@ -19,7 +19,7 @@ import SearchPlace from '../../components/UI/Map/SearchPlace';
 import { getAdressFromLocation } from '../../utils/location';
 
 // Estilos
-import { fullWidth, boxShadow } from '../../styles/layout';
+import { fullWidth } from '../../styles/layout';
 import { accentColor } from '../../constants/Colors';
 
 /**
@@ -48,20 +48,18 @@ const LocationInput = ({ label, address, handlers }) => {
 
     return (
         <View style={locationStyles.container}>
-            <View style={locationStyles.banner}>
-                <View style={locationStyles.labelContainer}>
-                    <Text style={locationStyles.label}>
-                        {label}
-                    </Text>
-                </View>
-                <View style={locationStyles.searchContainer}>
-                    <SearchPlace
-                        address={address}
-                        handleEvent={handlers.placeSearch}
-                        leftComponent={leftComponent}
-                        rightComponent={rightComponent}
-                    />
-                </View>
+            <View style={locationStyles.labelContainer}>
+                <Text style={locationStyles.label}>
+                    {label}
+                </Text>
+            </View>
+            <View style={locationStyles.searchContainer}>
+                <SearchPlace
+                    address={address}
+                    handleEvent={handlers.placeSearch}
+                    leftComponent={leftComponent}
+                    rightComponent={rightComponent}
+                />
             </View>
         </View>
     );
@@ -74,7 +72,7 @@ const locationStyles = StyleSheet.create({
         left: 0,
         right: 0,
     },
-    banner: {
+    labelContainer: {
         position: 'absolute',
         left: 0,
         right: 0,
@@ -82,20 +80,17 @@ const locationStyles = StyleSheet.create({
         backgroundColor: accentColor,
         marginLeft: 10,
         marginRight: 10,
-        ...boxShadow,
         borderRadius: 20
     },
-    labelContainer: {
-        display: 'flex',
-        justifyContent: 'center',
-        width: fullWidth,
-        height: 25
-    },
     label: {
+        position: 'absolute',
+        width: fullWidth,
         color: 'white',
         textAlign: 'center'
     },
     searchContainer: {
+        position: 'absolute',
+        top: 25,
         display: 'flex',
         justifyContent: 'space-around',
         flexDirection: 'row',
