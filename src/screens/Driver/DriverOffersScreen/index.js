@@ -83,7 +83,7 @@ const DriverOffersScreen = (props) => {
   const dayActivate = useSelector(state => state.dayActivate);
 
   useEffect(() => {
-    if(offerState) {
+    if (offerState) {
       setOffers(offerState.offers ? offerState.offers : '');
       setIndex(offerState.index);
     }
@@ -129,8 +129,8 @@ const DriverOffersScreen = (props) => {
   return (
     <View style={styles.supportContainer}>
       <DriverHeader
-        title="Ofertas actuales"
-        subtitle="Explora las ofertas en tu zona"
+        title="Servicios actuales"
+        subtitle="Explora los servicios requeridos en tu zona"
         leftIcon="refresh"
       />
       {!changeView

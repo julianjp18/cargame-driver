@@ -37,7 +37,7 @@ export const showDriverNotifications = (driverId) => async dispatch => {
   });
 };
 
-export const createOfferNotificationForUser = (userId, offerId) => {
+export const createOfferNotificationForUser = (userId, offerId, notificationId) => {
   firestoreDB
     .collection("NotificationsUsers")
     .add({
