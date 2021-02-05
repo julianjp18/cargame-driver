@@ -12,7 +12,6 @@ export const showActiveOffers = (
   currentAddress,
   ruralServiceDestinyAddress,
 ) => dispatch => {
-  console.log(dayActivate, currentAddress, ruralServiceDestinyAddress);
   const currentCity = currentAddress.split(',')[0];
   const destinyCity = ruralServiceDestinyAddress.split(',')[0];
 
