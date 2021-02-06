@@ -167,16 +167,11 @@ const Map = ({ data, configuration, children }) => {
      */
     const centerCurrentLocation = async () => {
         if (!currentPosition) { return; }
-        try {
-            centerMap([{
-                latitudeDelta,
-                longitudeDelta,
-                ...currentPosition.location
-            }]);
-        }
-        catch (error) {
-            // No se hace nada con este error
-        }
+        centerMap([{
+            latitudeDelta,
+            longitudeDelta,
+            ...currentPosition.location
+        }]);
     }
 
     /**

@@ -4,7 +4,7 @@
  */
 
 //  Dependencias
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { View, StyleSheet, Text } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
@@ -141,6 +141,15 @@ const Location = ({ navigation }) => {
     // Estado para la dirección a mostrar, cuando se utilizan
     // Marcadores se actualiza con éste estado
     const [address, setAddress] = useState(_initialData.address);
+
+    // Efecto para reubicar el mapa en la ubicación actual al obtenerla
+    useEffect(() => {
+        if (data.currentPosition.data) {
+            data.relocate.handlers.setRelocation(
+                data.currentPosition.data.location
+            );
+        }
+    }, [data.currentPosition])
 
     // Manejadores
     const handlers = {
