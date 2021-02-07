@@ -144,12 +144,12 @@ const Location = ({ navigation }) => {
 
     // Efecto para reubicar el mapa en la ubicación actual al obtenerla
     useEffect(() => {
-        if (data.currentPosition.data) {
+        if (!data.relocate.data && data.currentPosition.data) {
             data.relocate.handlers.setRelocation(
                 data.currentPosition.data.location
             );
         }
-    }, [data.currentPosition])
+    }, [data.currentPosition]);
 
     // Manejadores
     const handlers = {

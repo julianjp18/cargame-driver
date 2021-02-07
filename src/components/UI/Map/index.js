@@ -151,7 +151,6 @@ const Map = ({ data, configuration, children }) => {
                 longitudeDelta,
                 ...relocate
             }]);
-            relocateHandlers.setRelocation(null);
         }
     }, [relocate]);
 
