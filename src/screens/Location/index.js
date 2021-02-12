@@ -140,7 +140,7 @@ const Location = ({ navigation }) => {
 
     // Estado para la dirección a mostrar, cuando se utilizan
     // Marcadores se actualiza con éste estado
-    const [address, setAddress] = useState(_initialData.address);
+    const [address, setAddress] = useState(_initialData.address || '');
 
     // Efecto para reubicar el mapa en la ubicación actual al obtenerla
     useEffect(() => {
