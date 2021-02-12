@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
 });
 
 const DriverHomeScreen = props => {
-  moment.locale('es');
+  // moment.locale('es');
 
   const dispatch = useDispatch();
 
