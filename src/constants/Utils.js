@@ -1,3 +1,5 @@
+import { ACTIVE, CONTRACTED, IN_PROGRESS, OFFERED } from '../utils/constantsStatusOffers';
+
 export const shortBackgroundImageUrl = require('../../assets/background.png');
 export const shortBrandOrangeGreyUrl = require('../../assets/logos/cargame-transportador-naranja-letra-gris.png');
 export const shortMainCargaUrl = require('../../assets/extras/main-carga.png');
@@ -13,17 +15,17 @@ export const secondaryFont = 'Quicksand';
 
 export const categoristList = [
     {
-      id: 'truck',
-      name: 'Camión',
-      avatar_url: truckSquareUrl,
-      subtitle: 'Lleva documentos y paquetes',
-      routeName: 'HomeDriver',
+        id: 'truck',
+        name: 'Camión',
+        avatar_url: truckSquareUrl,
+        subtitle: 'Lleva documentos y paquetes',
+        routeName: 'HomeDriver',
     },
     {
-      id: 'car',
-      name: 'Carro particular',
-      avatar_url: carSquareUrl,
-      subtitle: 'Lleva documentos, paquetes y personas',
+        id: 'car',
+        name: 'Carro particular',
+        avatar_url: carSquareUrl,
+        subtitle: 'Lleva documentos, paquetes y personas',
     },
     {
         id: 'motocycle',
@@ -67,10 +69,10 @@ export const collectionTimeSlot = [
 ];
 
 export const offerMessages = {
-    'ACTIVE': 'Nadie ha ofertado',
-    'IN_PROGRESS': 'Usted ha ofertado satisfactoriamente por',
-    'OFFERED': 'Han realizado una oferta por',
-    'CONTRACTED': 'Se te asignó la oferta por'
+    [ACTIVE]: 'Nadie ha ofertado',
+    [IN_PROGRESS]: 'Usted ha ofertado satisfactoriamente por',
+    [OFFERED]: 'Han realizado una oferta por',
+    [CONTRACTED]: 'Se te asignó la oferta por'
 };
 
 export const URBAN_SERVICE = 1;

@@ -9,6 +9,7 @@ import { currencyFormat } from '../../../utils/helpers';
 import * as offersActions from '../../../redux/actions/offers';
 import moment from 'moment';
 import { normalizeLength } from '../../../styles/layout';
+import { CONTRACTED, IN_PROGRESS, OFFERED } from '../../../utils/constantsStatusOffers';
 
 const styles = StyleSheet.create({
   supportContainer: {
@@ -90,7 +91,7 @@ const ShowOffer = (props) => {
       setTimer(dur);
 
       if (dur > "00:04:00") {
-        offersActions.changeOfferState(offer.offerId, 'CONTRACTED');
+        offersActions.changeOfferState(offer.offerId, CONTRACTED);
         offersActions.addHistoryOffer(offer.offerId, offer.driverId, changeOfferValue);
       }
     }
@@ -126,9 +127,9 @@ const ShowOffer = (props) => {
         style={[
           styles.showMessageContainer,
           response.status === 'INFO' && styles.showMessageContainer,
-          ['OFFERED', 'IN_PROGRESS'].includes(response.status)
+          [OFFERED, IN_PROGRESS].includes(response.status)
           && styles.showOfferedMessage,
-          ['CONTRACTED', 'OK'].includes(response.status)
+          [CONTRACTED, 'OK'].includes(response.status)
           && styles.showConfirmMessage,
           response.status === 'CANCEL' && styles.showCancelMessage,
           response.status === 'REJECTED' && styles.showConfirmMessage,
@@ -136,7 +137,7 @@ const ShowOffer = (props) => {
         ]}
       >
         <Text style={styles.showMessageText}>
-          {` ${response.message} ${['CONTRACTED', 'OK', 'OFFERED', 'IN_PROGRESS'].includes(response.status)
+          {` ${response.message} ${[CONTRACTED, 'OK', CONTRACTED, IN_PROGRESS].includes(response.status)
             ? currencyFormat(offerValue, 0)
             : ''
             }`}

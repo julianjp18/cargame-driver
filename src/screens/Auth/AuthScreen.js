@@ -86,41 +86,45 @@ const AuthScreen = props => {
     let passwordError = false;
     const email = formState.inputValues.email;
     const password = formState.inputValues.password;
-    if (isSignUp) {
-      if (password === formState.inputValues.repeatPassword) {
-        action = authActions.signup(
+
+    if (email && password) {
+      if (isSignUp) {
+        if (password === formState.inputValues.repeatPassword) {
+          action = authActions.signup(
+            email,
+            password
+          );
+
+          nextPage = 'Member';
+        } else {
+          passwordError = true;
+        }
+      } else {
+        action = authActions.signin(
           email,
           password
         );
+        nextPage = 'ServicesList';
+      }
 
-        nextPage = 'Member';
+      if (passwordError) {
+        setError('¡UPS! Las contraseñas no coinciden. Intentalo nuevamente.');
       } else {
-        passwordError = true;
-      }
-    } else {
-      action = authActions.signin(
-        email,
-        password
-      );
-      nextPage = 'ServicesList';
-    }
-    if (!passwordError) {
-      const controller = new AbortController();
-      setError('');
-      setIsLoading(true);
-      try {
-        dispatch(action);
+        const controller = new AbortController();
+        setError('');
+        setIsLoading(true);
+        try {
+          dispatch(action);
+          controller.abort();
+          props.navigation.navigate(nextPage);
+        } catch (err) {
+          setError(err.message);
+        }
+        setIsLoading(false);
         controller.abort();
-        props.navigation.navigate(nextPage);
-      } catch (err) {
-        setError(err.message);
       }
-      setIsLoading(false);
-      controller.abort();
-    } else {
-      setError('¡UPS! Las contraseñas no coinciden. Intentalo nuevamente.');
-    }
-
+    } else
+      Alert.alert('¡UPS!', 'Por favor complete todos los campos', error, [{ text: 'Intentar nuevamente' }]);
   };
 
   return !userToken ? (
@@ -237,7 +241,7 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     flex: 1,
-    marginTop: normalizeLength(90),
+    marginTop: normalizeLength(100),
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -252,7 +256,7 @@ const styles = StyleSheet.create({
     marginTop: normalizeLength(70),
     paddingHorizontal: normalizeLength(20),
     minWidth: normalizeLength(380),
-    minHeight: normalizeLength(400)
+    minHeight: normalizeLength(410)
   },
   checkboxContainer: {
     flex: 1,
