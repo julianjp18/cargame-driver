@@ -1,5 +1,6 @@
 import { firestoreDB } from '../../constants/Firebase';
 import moment from 'moment';
+import { CONTRACTED } from '../../utils/constantsStatusOffers';
 export const SHOW_NOTIFICATIONS = 'SHOW_NOTIFICATIONS';
 
 export const showDriverNotifications = (driverId) => async dispatch => {
@@ -46,6 +47,6 @@ export const createOfferNotificationForUser = (userId, offerId, notificationId) 
       offerId,
       typeMessage: 'Information',
       userId,
-      status: 'CONTRACTED'
+      status: CONTRACTED
     }).then(() => true);
 };
