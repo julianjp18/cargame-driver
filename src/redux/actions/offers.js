@@ -14,7 +14,7 @@ export const showActiveOffers = (
 ) => dispatch => {
   console.log(dayActivate, currentAddress, ruralServiceDestinyAddress);
   const currentCity = currentAddress.split(',')[0];
-  const destinyCity = ruralServiceDestinyAddress.split(',')[0];
+  const destinyCity = ruralServiceDestinyAddress && ruralServiceDestinyAddress.split(',')[0];
 
   const data = firestoreDB
     .collection("OffersNotificationCenter");

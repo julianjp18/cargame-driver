@@ -1,4 +1,5 @@
 import { firestoreDB } from '../../constants/Firebase';
+import { getNotificationToken } from '../../utils/notifications';
 import moment from 'moment';
 
 export const CREATE_DRIVER = 'CREATE_DRIVER';
@@ -14,7 +15,8 @@ export const createDriver = ({
     referidNumber = '',
     ipAdress,
 }) => {
-    return dispatch => {
+    return async (dispatch) => {
+        const pushToken = await getNotificationToken();
         firestoreDB
             .collection('Drivers')
             .doc(driverId)
@@ -36,6 +38,7 @@ export const createDriver = ({
                 created_at: moment().format(),
                 ipAdress,
                 termsAndConditions: true,
+                pushToken
             });
 
         dispatch({
@@ -47,6 +50,7 @@ export const createDriver = ({
             phone,
             referidNumber: referidNumber ? referidNumber : '',
             profilePicture: null,
+            pushToken
         });
     };
 };
@@ -58,6 +62,15 @@ export const showDriver = (driverId) => async dispatch => {
             .doc(driverId)
             .get().then((doc) => doc.data());
 
+        const pushToken = await getNotificationToken();
+        if (pushToken && (!data.pushToken || data.pushToken !== pushToken)) {
+            data.pushToken = pushToken;
+            firestoreDB
+                .collection('Drivers')
+                .doc(driverId)
+                .set({ pushToken });
+        }
+
         dispatch({
             type: SHOW_DRIVER,
             driverId,
@@ -67,6 +80,7 @@ export const showDriver = (driverId) => async dispatch => {
             phone: data.phone,
             referidNumber: data.referidNumber,
             profilePicture: data.profilePicture,
+            pushToken: data.pushToken
         });
     }
 };

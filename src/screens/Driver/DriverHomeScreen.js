@@ -161,10 +161,7 @@ const DriverHomeScreen = props => {
   // Efecto para actualizar la ubicación actual
   useEffect(() => {
     if (currentPosition && currentPosition.location) {
-      dispatch(placesActions.currentPosition({
-        lat: currentPosition.location.latitude,
-        lng: currentPosition.location.longitude,
-      }));
+      dispatch(placesActions.currentPosition(currentPosition.location));
     }
   }, [currentPosition]);
 
@@ -192,59 +189,38 @@ const DriverHomeScreen = props => {
 
   const activateService = () => {
     if (!activateTypeService) {
-      if (typeTruckService === RURAL_SERVICE) {
-        if (places.currentAddress && places.ruralServiceDestinyAddress)
-          dispatch(placesActions.activateService(
-            date,
-            RURAL_SERVICE,
-            places.currentAddress,
-            places.ruralServiceDestinyAddress,
-          ));
-        setActivateTypeService(true);
-      }
-      if (typeTruckService === URBAN_SERVICE) {
-        if (places.currentAddress)
-          dispatch(placesActions.activateService(
-            new Date(),
-            URBAN_SERVICE,
-            places.currentAddress,
-          ));
-        setActivateTypeService(true);
-      }
+
+      dispatch(placesActions.activateService({
+        driverId: userAuth.driverId,
+        dayActivate: date,
+        origin: places.origin,
+        destination: places.destination,
+        serviceType: typeTruckService
+      }));
 
       dispatch(
         offersActions.showActiveOffers(
           userAuth.driverId,
           date ? date : new Date(),
-          places.currentAddress,
-          places.ruralServiceDestinyAddress,
+          places.origin.address,
+          places.destination ? places.destination.address : null,
         )
       );
     } else {
-      if (typeTruckService === RURAL_SERVICE) {
-        if (places.currentAddress && places.ruralServiceDestinyAddress)
-          dispatch(placesActions.deactivateService(RURAL_SERVICE));
-        setActivateTypeService(false);
-      }
-      if (typeTruckService === URBAN_SERVICE) {
-        if (places.currentAddress)
-          dispatch(placesActions.deactivateService(URBAN_SERVICE));
-        setActivateTypeService(false);
-      }
+      dispatch(placesActions.deactivateService());
     }
 
   };
 
-  const setOriginLocation = ({ location, address }) => {
-    dispatch(placesActions.setOriginLocation({ location, address }));
+  const setOriginLocation = ({ location, address, city }) => {
+    dispatch(placesActions.setOriginLocation({ location, address, city }));
   };
 
-  const setDestinationLocation = ({ location, address }) => {
-    dispatch(placesActions.setDestinationLocation({ location, address }));
+  const setDestinationLocation = ({ location, address, city }) => {
+    dispatch(placesActions.setDestinationLocation({ location, address, city }));
   };
 
   const isRural = typeTruckService == RURAL_SERVICE;
-
   return (
     typeServiceId ? (
       <View style={styles.homeContainer}>
@@ -299,8 +275,8 @@ const DriverHomeScreen = props => {
                   navigation={props.navigation}
                   label={`Ciudad de ${isRural ? 'Origen' : 'Activación'}`}
                   errorText="¡UPS! Por favor ingresa una dirección válida."
-                  value={places.currentAddress}
-                  location={places.currentCoords}
+                  value={places.origin && places.origin.address}
+                  location={places.origin && places.origin.location}
                   disabled={activateTypeService}
                   handleEvent={setOriginLocation}
                 />
@@ -311,8 +287,8 @@ const DriverHomeScreen = props => {
                     navigation={props.navigation}
                     label="Ciudad de Destino"
                     errorText="¡UPS! Por favor ingresa una dirección válida."
-                    value={places.ruralServiceDestinyAddress}
-                    location={places.ruralServiceDestinyCoords}
+                    value={places.destination && places.destination.address}
+                    location={places.destination && places.destination.location}
                     disabled={activateTypeService}
                     handleEvent={setDestinationLocation}
                   />

@@ -19,3 +19,4 @@ try {
 } catch (err) { }
 export const firebaseAuth = firebase.auth();
 export const firestoreDB = firebase.firestore();
+export const GeoPoint = firebase.firestore.GeoPoint;

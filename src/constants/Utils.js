@@ -13,17 +13,17 @@ export const secondaryFont = 'Quicksand';
 
 export const categoristList = [
     {
-      id: 'truck',
-      name: 'Camión',
-      avatar_url: truckSquareUrl,
-      subtitle: 'Lleva documentos y paquetes',
-      routeName: 'HomeDriver',
+        id: 'truck',
+        name: 'Camión',
+        avatar_url: truckSquareUrl,
+        subtitle: 'Lleva documentos y paquetes',
+        routeName: 'HomeDriver',
     },
     {
-      id: 'car',
-      name: 'Carro particular',
-      avatar_url: carSquareUrl,
-      subtitle: 'Lleva documentos, paquetes y personas',
+        id: 'car',
+        name: 'Carro particular',
+        avatar_url: carSquareUrl,
+        subtitle: 'Lleva documentos, paquetes y personas',
     },
     {
         id: 'motocycle',
@@ -73,5 +73,10 @@ export const offerMessages = {
     'CONTRACTED': 'Se te asignó la oferta por'
 };
 
-export const URBAN_SERVICE = 1;
-export const RURAL_SERVICE = 0;
+export const URBAN_SERVICE = 'URBAN_SERVICE';
+export const RURAL_SERVICE = 'RURAL_SERVICE';
+
+export const STATUS = {
+    ACTIVE: 'STATUS_ACTIVE',
+    DESACTIVE: 'STATUS_DESACTIVE'
+}

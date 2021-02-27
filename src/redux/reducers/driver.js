@@ -13,6 +13,7 @@ const initialState = {
   referidNumber: null,
   driverId: null,
   profilePicture: null,
+  pushToken: null
 };
 
 export default (state = initialState, action) => {
@@ -27,6 +28,7 @@ export default (state = initialState, action) => {
         referidNumber: action.referidNumber,
         driverId: action.driverId,
         profilePicture: action.profilePicture,
+        pushToken: action.pushToken,
       };
     case CHANGE_PHONE_NUMBER:
       return {
@@ -39,6 +41,6 @@ export default (state = initialState, action) => {
         profilePicture: action.profilePicture,
       };
     default:
-        return state;
+      return state;
   }
 };

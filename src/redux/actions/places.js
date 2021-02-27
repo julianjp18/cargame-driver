@@ -1,31 +1,30 @@
 import ENV from '../../../env';
-import { URBAN_SERVICE, SERVICE_TYPE } from '../../constants/Utils';
+import { URBAN_SERVICE, STATUS } from '../../constants/Utils';
 
-export const GET_POSITION = 'GET_POSITION';
+import * as Firebase from '../../services/firebase';
+import { COLLECTIONS } from '../../services/firebase/constants';
+import { parseToGeoPoint } from '../../services/firebase/utils';
+
 export const GET_CURRENT_POSITION = 'GET_CURRENT_POSITION';
-export const GET_CURRENT_RURAL_SERVICE = 'GET_CURRENT_RURAL_SERVICE';
+export const SET_ORIGIN_LOCATION = 'SET_ORIGIN_LOCATION';
 export const CHANGE_FIELD_SELECTED = 'CHANGE_FIELD_SELECTED';
-export const GET_DESTINY_RURAL_SERVICE = 'GET_DESTINY_RURAL_SERVICE';
-export const GET_ACTIVATION_URBAN_SERVICE = 'GET_ACTIVATION_URBAN_SERVICE';
-export const ACTIVATE_RURAL_SERVICE = 'ACTIVATE_RURAL_SERVICE';
-export const ACTIVATE_URBAN_SERVICE = 'ACTIVATE_URBAN_SERVICE';
-export const DEACTIVATE_URBAN_SERVICE = 'DEACTIVATE_URBAN_SERVICE';
-export const DEACTIVATE_RURAL_SERVICE = 'DEACTIVATE_RURAL_SERVICE';
+export const SET_DESTINATION_LOCATION = 'SET_DESTINATION_LOCATION';
+export const ACTIVATE_SERVICE = 'ACTIVATE_SERVICE';
+export const DEACTIVATE_SERVICE = 'DEACTIVATE_SERVICE';
 
+const COLLECTION = COLLECTIONS.DRIVER_LOCATION;
 
-export const setOriginLocation = ({ location, address }) => {
+export const setOriginLocation = (payload) => {
   return {
-    type: GET_CURRENT_RURAL_SERVICE,
-    address,
-    location
+    type: SET_ORIGIN_LOCATION,
+    payload
   };
 }
 
-export const setDestinationLocation = ({ location, address }) => {
+export const setDestinationLocation = (payload) => {
   return {
-    type: GET_DESTINY_RURAL_SERVICE,
-    address,
-    location
+    type: SET_DESTINATION_LOCATION,
+    payload
   };
 }
 
@@ -33,49 +32,10 @@ export const currentPosition = (location) => dispatch => {
 
   dispatch({
     type: GET_CURRENT_POSITION,
-    latitude: location.lat,
-    longitude: location.lng,
+    latitude: location.latitude,
+    longitude: location.longitude,
   });
 };
-
-export const getPosition = (location) => async dispatch => {
-  const response = await fetch(
-    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.lat
-    },${location.lng}&result_type=locality&key=${ENV.googleApiKey}`)
-
-  if (!response.ok) {
-    throw new Error('¡UPS! Error al conseguir la dirección');
-  }
-
-  const responseData = await response.json();
-
-  if (!responseData.results) {
-    return;
-  }
-  let getPositionPicked;
-  console.log(responseData);
-  if (responseData.status === 'ZERO_RESULTS') {
-    getPositionPicked = {
-      status: responseData.status,
-      address: 'Por favor selecciona un punto dentro de una ciudad'
-    };
-  } else {
-    getPositionPicked = {
-      lat: location.lat,
-      lng: location.lng,
-      address: responseData.results[0].formatted_address,
-      status: responseData.status,
-    };
-  }
-
-  dispatch({
-    type: GET_POSITION,
-    getPositionPicked,
-  });
-
-  return getPositionPicked;
-};
-
 
 export const changeFieldSelected = (typeFieldSelected) => dispatch => {
   dispatch({
@@ -84,32 +44,55 @@ export const changeFieldSelected = (typeFieldSelected) => dispatch => {
   });
 };
 
-export const activateService = (
-  date,
-  typeService,
-  currentAddress,
-  ruralServiceDestinyAddress = '',
-) => dispatch => {
-  if (typeService === URBAN_SERVICE) {
-    dispatch({
-      type: ACTIVATE_URBAN_SERVICE,
-      date,
-      currentAddress,
-    });
-  } else {
-    dispatch({
-      type: ACTIVATE_RURAL_SERVICE,
-      date,
-      currentAddress,
-      ruralServiceDestinyAddress,
-    });
-  }
+export const activateService = (payload) => dispatch => {
+
+  const {
+    // TODO: nfv => Cambiar cuando esten bien los identificadores
+    // driverId,
+    origin,
+    destination,
+    serviceType,
+    dayActivate
+  } = payload;
+
+  const status = STATUS.ACTIVE;
+  payload.status = status;
+
+  const newData = {
+    // TODO: nfv => Cambiar cuando esten bien los identificadores
+    driverId: 'adasdsas',
+    originLocation: parseToGeoPoint(origin.location),
+    originAddress: origin.address,
+    originCity: origin.city,
+    destinationLocation: serviceType !== URBAN_SERVICE && destination ? parseToGeoPoint(destination.location) : null,
+    destinationAddress: serviceType !== URBAN_SERVICE && destination ? destination.address : null,
+    destinationCity: serviceType !== URBAN_SERVICE && destination ? destination.city : null,
+    serviceType,
+    dayActivate,
+    status
+  };
+
+  Firebase.findOneAndUpdate(
+    COLLECTION,
+    { key: 'driverId', value: newData.driverId },
+    newData
+  );
+
+  dispatch({
+    type: ACTIVATE_SERVICE,
+    payload
+  })
 };
 
-export const deactivateService = (date, typeService) => dispatch => {
-  if (typeService === URBAN_SERVICE) {
-    dispatch({ type: DEACTIVATE_URBAN_SERVICE });
-  } else {
-    dispatch({ type: DEACTIVATE_RURAL_SERVICE });
-  }
+export const deactivateService = () => dispatch => {
+
+  Firebase.findOneAndUpdate(
+    COLLECTION,
+    { key: 'driverId', value: driverId },
+    { active: false }
+  );
+  dispatch({
+    type: DEACTIVATE_SERVICE,
+    payload: STATUS.DESACTIVE
+  })
 };
