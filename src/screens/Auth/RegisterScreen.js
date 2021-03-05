@@ -2,8 +2,9 @@ import React, { useState, useEffect, useReducer, useCallback } from 'react';
 import {
   StyleSheet, View, Text,
   ActivityIndicator, Alert, Image, KeyboardAvoidingView,
+  Picker, ScrollView,
 } from 'react-native';
-import { Picker } from '@react-native-community/picker'; //https://github.com/react-native-picker/picker
+//import { Picker } from '@react-native-community/picker'; //https://github.com/react-native-picker/picker
 import { CheckBox } from 'react-native-elements';
 import * as Linking from 'expo-linking';
 import * as Network from 'expo-network';
@@ -135,117 +136,119 @@ const RegisterScreen = props => {
       behavior={Platform.OS == "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
-      <View style={styles.mainContainer}>
-        <View style={styles.logoContainer}>
-          <Image
-            style={styles.logo}
-            source={shortBrandOrangeGreyUrl}
-          />
-        </View>
-        <Text style={styles.registerInfoText}>¡Te ayudamos a conectar directamente con los clientes!</Text>
-        <View style={styles.authContainer}>
-          <View style={styles.scrollViewContainer}>
-            <TextInput
-              id="name"
-              label="Nombres y apellidos (*)"
-              keyboardType="default"
-              minLength={5}
-              required
-              autoCapitalize="words"
-              errorText="¡UPS! Por favor ingresa tu nombre y apellido correctamente."
-              onInputChange={inputChangeHandler}
-              initialValue=""
-              leftIcon={
-                <FontAwesome name="user" size={20} color={primaryColor} />
-              }
+      <ScrollView>
+        <View style={styles.mainContainer}>
+          <View style={styles.logoContainer}>
+            <Image
+              style={styles.logo}
+              source={shortBrandOrangeGreyUrl}
             />
-            <Text style={styles.referidNumberInfo}>Más tarde deberás verificar tu cédula desde tu perfil</Text>
-            <TextInput
-              id="numberId"
-              label="Cédula de ciudadania (*)"
-              keyboardType="numeric"
-              required
-              minLength={4}
-              maxLength={10}
-              autoCapitalize="none"
-              errorText="¡UPS! Por favor ingresa un número de identificación correcto."
-              onInputChange={inputChangeHandler}
-              initialValue=""
-              leftIcon={
-                <FontAwesome name="id-card-o" size={20} color={primaryColor} />
-              }
-            />
-            <TextInput
-              id="phone"
-              label="Celular (*)"
-              keyboardType="numeric"
-              required
-              minLength={10}
-              maxLength={10}
-              autoCapitalize="none"
-              errorText="¡UPS! Por favor ingresa un número de celular correcto."
-              onInputChange={inputChangeHandler}
-              initialValue=""
-              leftIcon={
-                <FontAwesome name="phone" size={20} color={primaryColor} />
-              }
-            />
-            <Picker
-              selectedValue={selectedCity}
-              onValueChange={(itemValue, itemIndex) =>
-                setselectedCity(itemValue)
-              }>
-              <Picker.Item label="Selecciona una ciudad" value="empty" />
-              <Picker.Item label="Bogotá D.C." value="Bogotá D.C." />
-              <Picker.Item label="Villavicencio" value="Villavicencio" />
-            </Picker>
-            <TextInput
-              id="referidNumber"
-              label="Número de referido"
-              keyboardType="numeric"
-              minLength={6}
-              maxLength={6}
-              autoCapitalize="none"
-              errorText="¡UPS! Por favor ingresa un número de referido correcto."
-              leftIcon={
-                <FontAwesome name="pencil" size={20} color={primaryColor} />
-              }
-              initialValue=""
-            />
-            <View
-              style={styles.checkboxContainer}
-              onPress={() => setSelection(!isSelected)}
-            >
-              <CheckBox
-                title={
-                  <Text style={styles.checkBoxText}>
-                    {`Estoy de acuerdo con los `}
-                    <Text style={styles.termsAndConditions} onPress={termsAndConditionsOnPress}>términos y condiciones</Text>
-                  </Text>
+          </View>
+          <Text style={styles.registerInfoText}>¡Te ayudamos a conectar directamente con los clientes!</Text>
+          <View style={styles.authContainer}>
+            <View style={styles.scrollViewContainer}>
+              <TextInput
+                id="name"
+                label="Nombres y apellidos (*)"
+                keyboardType="default"
+                minLength={5}
+                required
+                autoCapitalize="words"
+                errorText="¡UPS! Por favor ingresa tu nombre y apellido correctamente."
+                onInputChange={inputChangeHandler}
+                initialValue=""
+                leftIcon={
+                  <FontAwesome name="user" size={20} color={primaryColor} />
                 }
-                checked={isSelected}
-                onPress={() => setSelection(!isSelected)}
               />
+              <Text style={styles.referidNumberInfo}>Más tarde deberás verificar tu cédula desde tu perfil</Text>
+              <TextInput
+                id="numberId"
+                label="Cédula de ciudadania (*)"
+                keyboardType="numeric"
+                required
+                minLength={4}
+                maxLength={10}
+                autoCapitalize="none"
+                errorText="¡UPS! Por favor ingresa un número de identificación correcto."
+                onInputChange={inputChangeHandler}
+                initialValue=""
+                leftIcon={
+                  <FontAwesome name="id-card-o" size={20} color={primaryColor} />
+                }
+              />
+              <TextInput
+                id="phone"
+                label="Celular (*)"
+                keyboardType="numeric"
+                required
+                minLength={10}
+                maxLength={10}
+                autoCapitalize="none"
+                errorText="¡UPS! Por favor ingresa un número de celular correcto."
+                onInputChange={inputChangeHandler}
+                initialValue=""
+                leftIcon={
+                  <FontAwesome name="phone" size={20} color={primaryColor} />
+                }
+              />
+              <Picker
+                selectedValue={selectedCity}
+                onValueChange={(itemValue, itemIndex) =>
+                  setselectedCity(itemValue)
+                }>
+                <Picker.Item label="Selecciona una ciudad" value="empty" />
+                <Picker.Item label="Bogotá D.C." value="Bogotá D.C." />
+                <Picker.Item label="Villavicencio" value="Villavicencio" />
+              </Picker>
+              <TextInput
+                id="referidNumber"
+                label="Número de referido"
+                keyboardType="numeric"
+                minLength={6}
+                maxLength={6}
+                autoCapitalize="none"
+                errorText="¡UPS! Por favor ingresa un número de referido correcto."
+                leftIcon={
+                  <FontAwesome name="pencil" size={20} color={primaryColor} />
+                }
+                initialValue=""
+              />
+              <View
+                style={styles.checkboxContainer}
+                onPress={() => setSelection(!isSelected)}
+              >
+                <CheckBox
+                  title={
+                    <Text style={styles.checkBoxText}>
+                      {`Estoy de acuerdo con los `}
+                      <Text style={styles.termsAndConditions} onPress={termsAndConditionsOnPress}>términos y condiciones</Text>
+                    </Text>
+                  }
+                  checked={isSelected}
+                  onPress={() => setSelection(!isSelected)}
+                />
+              </View>
+            </View>
+            <View style={styles.btnActionContainer}>
+              {isLoading
+                ? <ActivityIndicator size='large' color={primaryColor} />
+                : <Button
+                  title="Finalizar registro"
+                  onPress={registerHandler}
+                />
+              }
             </View>
           </View>
-          <View style={styles.btnActionContainer}>
-            {isLoading
-              ? <ActivityIndicator size='large' color={primaryColor} />
-              : <Button
-                title="Finalizar registro"
-                onPress={registerHandler}
-              />
-            }
-          </View>
         </View>
-      </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   mainContainer: {
-    minHeight: normalizeLength(300),
+    minHeight: normalizeLength(200),
     flex: 1,
     marginTop: normalizeLength(40)
   },
