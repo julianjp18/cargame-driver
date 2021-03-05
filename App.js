@@ -6,6 +6,7 @@ import { AppLoading } from 'expo';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import ReduxThunk from 'redux-thunk';
+import logger from 'redux-logger';
 
 import * as Font from 'expo-font';
 import DashboardNavigator from './src/navigation/DashboardNavigator';
@@ -35,7 +36,7 @@ const rootReducer = combineReducers({
   travels: travelReducer,
 });
 
-const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
+const store = createStore(rootReducer, applyMiddleware(logger, ReduxThunk));
 
 const styles = StyleSheet.create({
   container: {
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
 const App = () => {
   const [fontLoaded, setFontLoaded] = useState(false);
 
-  if(!fontLoaded){
+  if (!fontLoaded) {
     return (
       <AppLoading
         startAsync={fecthFonts}

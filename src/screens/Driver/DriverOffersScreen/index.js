@@ -120,7 +120,6 @@ const DriverOffersScreen = (props) => {
   useEffect(() => {
     setInterval(() => {
       if (dayActivate) {
-        console.log(true);
         refreshOffers();
       }
     }, 5000);

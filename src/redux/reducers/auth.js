@@ -23,7 +23,7 @@ export default (state = initialState, action) => {
     case AUTHENTICATE:
       return {
         ...state,
-        token: action.token,
+        token: action.idToken,
         driverId: action.driverId,
         email: action.email,
       };

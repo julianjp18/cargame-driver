@@ -3,6 +3,7 @@ import {
   StyleSheet, View, Text,
   ActivityIndicator, Alert, Image, KeyboardAvoidingView,
 } from 'react-native';
+import { Picker } from '@react-native-community/picker'; //https://github.com/react-native-picker/picker
 import { CheckBox } from 'react-native-elements';
 import * as Linking from 'expo-linking';
 import * as Network from 'expo-network';
@@ -46,6 +47,7 @@ const RegisterScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
   const [isSelected, setSelection] = useState(false);
+  const [selectedCity, setselectedCity] = useState();
   const { driverId } = useSelector(state => state.auth);
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
@@ -76,24 +78,29 @@ const RegisterScreen = props => {
         numberId &&
         phone
       ) {
-        const ipAdress = await Network.getIpAddressAsync();
+        if (selectedCity !== 'empty') {
+          const ipAdress = await Network.getIpAddressAsync();
 
-        const action = driverActions.createDriver({
-          driverId,
-          name,
-          numberId,
-          phone,
-          referidNumber: referidNumber ? referidNumber : '',
-          ipAdress,
-        });
-        setError(null);
-        setIsLoading(true);
-        try {
-          dispatch(action);
-          props.navigation.navigate('SuccessRegister');
-        } catch (err) {
-          setError(err.message);
-          setIsLoading(false);
+          const action = driverActions.createDriver({
+            driverId,
+            name,
+            numberId,
+            phone,
+            referidNumber: referidNumber ? referidNumber : '',
+            ipAdress,
+            city: selectedCity
+          });
+          setError(null);
+          setIsLoading(true);
+          try {
+            dispatch(action);
+            props.navigation.navigate('SuccessRegister');
+          } catch (err) {
+            setError(err.message);
+            setIsLoading(false);
+          }
+        } else {
+          Alert.alert('', 'Por favor selecciona una ciudad', error, [{ text: 'Está bien' }]);
         }
       } else {
         Alert.alert('', 'Por favor completa todos los campos requeridos', error, [{ text: 'Está bien' }]);
@@ -115,7 +122,7 @@ const RegisterScreen = props => {
     [dispatchFormState]
   );
 
-  const termsAndConditionsOnPress = () => Linking.openURL('https://expo.io');
+  const termsAndConditionsOnPress = () => Linking.openURL('https://cargame.com.co/terms-and-conditions-driver');
 
   useEffect(() => {
     if (error) {
@@ -138,7 +145,6 @@ const RegisterScreen = props => {
         <Text style={styles.registerInfoText}>¡Te ayudamos a conectar directamente con los clientes!</Text>
         <View style={styles.authContainer}>
           <View style={styles.scrollViewContainer}>
-
             <TextInput
               id="name"
               label="Nombres y apellidos (*)"
@@ -184,6 +190,15 @@ const RegisterScreen = props => {
                 <FontAwesome name="phone" size={20} color={primaryColor} />
               }
             />
+            <Picker
+              selectedValue={selectedCity}
+              onValueChange={(itemValue, itemIndex) =>
+                setselectedCity(itemValue)
+              }>
+              <Picker.Item label="Selecciona una ciudad" value="empty" />
+              <Picker.Item label="Bogotá D.C." value="Bogotá D.C." />
+              <Picker.Item label="Villavicencio" value="Villavicencio" />
+            </Picker>
             <TextInput
               id="referidNumber"
               label="Número de referido"

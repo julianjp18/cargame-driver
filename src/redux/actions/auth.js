@@ -6,10 +6,10 @@ export const LOGOUT = 'LOGOUT';
 export const IS_SIGNUP = 'IS_SIGNUP';
 export const CHANGE_TYPE_SERVICE_SELECTED = 'CHANGE_TYPE_SERVICE_SELECTED';
 
-export const authenticate = (localId, idToken, email) => {
+export const authenticate = (uid, idToken, email) => {
   return {
     type: AUTHENTICATE,
-    driverId: localId,
+    driverId: uid,
     idToken,
     email,
   };
@@ -20,7 +20,7 @@ export const signup = (email, password) => async dispatch => {
     .createUserWithEmailAndPassword(email, password)
     .then((response) => {
       const resData = response.user;
-      
+
       resData.getIdToken().then((idToken) => {
         dispatch(authenticate(resData.uid, idToken, email));
         const expirationDate = new Date(new Date().getTime() + parseInt(resData.createdAt) * 1000);
