@@ -24,7 +24,7 @@ const SuccessRegisterScreen = (props) => {
 
   const waitingHandler = async () => {
     props.navigation.navigate("Startup");
-    Linking.openURL('https://expo.io');
+    Linking.openURL('https://cargame.com.co/sign-up');
   };
 
   useEffect(() => {
@@ -46,23 +46,23 @@ const SuccessRegisterScreen = (props) => {
       {isLoading ? (
         <ActivityIndicator size="large" color={primaryColor} />
       ) : (
-          <View style={styles.supportContainer}>
-            <View style={styles.logoContainer}>
-              <Image style={styles.logo} source={whiteLogo} />
-            </View>
-            <View style={styles.infoTextContainer}>
-              <Text style={styles.infoText}>
-                ¡Por favor ingresa a nuestro sitio web para completar tu registro!
-            </Text>
-            </View>
-            <View style={styles.userButtonContainer}>
-              <Button title="Ir al sitio web" fontColor="white" onPress={waitingHandler} />
-            </View>
-            <View style={styles.mainCargaContainer}>
-              <Image style={styles.mainCarga} source={shortCarga} />
-            </View>
+        <View style={styles.supportContainer}>
+          <View style={styles.logoContainer}>
+            <Image style={styles.logo} source={whiteLogo} />
           </View>
-        )}
+          <View style={styles.infoTextContainer}>
+            <Text style={styles.infoText}>
+              ¡Por favor ingresa a nuestro sitio web para completar tu registro!
+            </Text>
+          </View>
+          <View style={styles.userButtonContainer}>
+            <Button title="Ir al sitio web" fontColor="white" onPress={waitingHandler} />
+          </View>
+          <View style={styles.mainCargaContainer}>
+            <Image style={styles.mainCarga} source={shortCarga} />
+          </View>
+        </View>
+      )}
     </LinearGradient>
   );
 };

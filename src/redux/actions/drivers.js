@@ -14,6 +14,7 @@ export const createDriver = ({
     phone,
     referidNumber = '',
     ipAdress,
+    city,
 }) => {
     return async (dispatch) => {
         const pushToken = await getNotificationToken();
@@ -29,7 +30,7 @@ export const createDriver = ({
                 isActive: true,
                 strikes: 0,
                 address: '',
-                city: '',
+                city,
                 drivenLicense: '',
                 email: '',
                 expireLicense: '',
@@ -48,6 +49,7 @@ export const createDriver = ({
             name,
             numberId,
             phone,
+            city,
             referidNumber: referidNumber ? referidNumber : '',
             profilePicture: null,
             pushToken

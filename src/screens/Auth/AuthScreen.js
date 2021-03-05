@@ -16,6 +16,7 @@ import {
 
 import { primaryColor, textPrimaryColor } from '../../constants/Colors';
 import { normalizeLength } from '../../styles/layout';
+import { AsyncStorage } from 'react-native';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
@@ -203,11 +204,11 @@ const AuthScreen = props => {
               {isLoading ? (
                 <ActivityIndicator size='large' color={primaryColor} />
               ) : (
-                  <Button
-                    title={isSignUp ? 'Quiero ser socio' : 'Iniciar sesión'}
-                    onPress={authHandler}
-                  />
-                )}
+                <Button
+                  title={isSignUp ? 'Quiero ser socio' : 'Iniciar sesión'}
+                  onPress={authHandler}
+                />
+              )}
             </View>
             <View style={styles.changeTextContainer}>
               <Text style={styles.changeText}>

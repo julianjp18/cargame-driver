@@ -76,6 +76,7 @@ const OfferForm = (props) => {
   const [error, setError] = useState();
   const dispatch = useDispatch();
 
+  const driverUser = useSelector(state => state.driver);
   const userAuth = useSelector(state => state.auth);
 
   if (!userAuth) {
@@ -118,7 +119,7 @@ const OfferForm = (props) => {
   const offerHandler = () => {
     const value = formState.inputValues.value;
     if (value && isMultiple(Number.parseInt(value), 5000)) {
-      const action = offerActions.realizeOffer(props.offerForm, value, props.driverId, props.index);
+      const action = offerActions.realizeOffer(props.offerForm, value, props.driverId, props.index, driverUser);
       const controller = new AbortController();
       setError(null);
       setIsLoading(true);
