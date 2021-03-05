@@ -61,11 +61,13 @@ const DriverDashboardScreen = props => {
     "Cannot update during an existing state transition (such as within `render`).",
   ]);
   const userAuth = useSelector(state => state.auth);
-  
+
   useEffect(() => {
-    dispatch(driverActions.showDriver(userAuth.driverId));
-    dispatch(driverNotificationsAction.showDriverNotifications(userAuth.driverId));
-  }, []);
+    if (userAuth.driverId) {
+      dispatch(driverActions.showDriver(userAuth.driverId));
+      dispatch(driverNotificationsAction.showDriverNotifications(userAuth.driverId));
+    }
+  }, [userAuth.driverId]);
 
   return (
     <View style={styles.servicesContainer}>

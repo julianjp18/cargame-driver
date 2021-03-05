@@ -47,8 +47,7 @@ export const changeFieldSelected = (typeFieldSelected) => dispatch => {
 export const activateService = (payload) => dispatch => {
 
   const {
-    // TODO: nfv => Cambiar cuando esten bien los identificadores
-    // driverId,
+    driverId,
     origin,
     destination,
     serviceType,
@@ -59,8 +58,7 @@ export const activateService = (payload) => dispatch => {
   payload.status = status;
 
   const newData = {
-    // TODO: nfv => Cambiar cuando esten bien los identificadores
-    driverId: 'adasdsas',
+    driverId,
     originLocation: parseToGeoPoint(origin.location),
     originAddress: origin.address,
     originCity: origin.city,
@@ -71,7 +69,7 @@ export const activateService = (payload) => dispatch => {
     dayActivate,
     status
   };
-
+  
   Firebase.findOneAndUpdate(
     COLLECTION,
     { key: 'driverId', value: newData.driverId },

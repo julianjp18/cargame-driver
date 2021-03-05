@@ -57,10 +57,10 @@ export const createDriver = ({
 
 export const showDriver = (driverId) => async dispatch => {
     if (driverId) {
-        const data = await firestoreDB
+        const data = (await firestoreDB
             .collection('Drivers')
             .doc(driverId)
-            .get().then((doc) => doc.data());
+            .get().then((doc) => doc.data())) || {};
 
         const pushToken = await getNotificationToken();
         if (pushToken && (!data.pushToken || data.pushToken !== pushToken)) {

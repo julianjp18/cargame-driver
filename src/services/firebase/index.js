@@ -18,10 +18,18 @@ export const findOneAndUpdate = (collectionName, filter, data) => {
     return new Promise((resolve) => {
         query.then((snapshot) => {
             if (snapshot.empty) {
-                collection.add(data).then(resolve).catch(reject);
+                collection.add(data)
+                    .then(resolve)
+                    .catch(error => {
+                        resolve(false);
+                    });
             }
             const doc = snapshot.docs[0];
-            collection.doc(doc.id).update(data).then(resolve).catch(reject);
+            collection.doc(doc.id).update(data)
+                .then(resolve)
+                .catch(error => {
+                    resolve(false);
+                });
         });
     });
 };
