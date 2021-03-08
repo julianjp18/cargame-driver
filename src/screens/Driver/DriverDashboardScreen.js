@@ -63,9 +63,11 @@ const DriverDashboardScreen = props => {
   const userAuth = useSelector(state => state.auth);
 
   useEffect(() => {
-    dispatch(driverActions.showDriver(userAuth.driverId));
-    dispatch(driverNotificationsAction.showDriverNotifications(userAuth.driverId));
-  }, []);
+    if (userAuth.driverId) {
+      dispatch(driverActions.showDriver(userAuth.driverId));
+      dispatch(driverNotificationsAction.showDriverNotifications(userAuth.driverId));
+    }
+  }, [userAuth.driverId]);
 
   return (
     <View style={styles.servicesContainer}>

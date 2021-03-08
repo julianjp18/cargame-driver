@@ -75,5 +75,10 @@ export const offerMessages = {
     [CONTRACTED]: 'Se te asignó la oferta por'
 };
 
-export const URBAN_SERVICE = 1;
-export const RURAL_SERVICE = 0;
+export const URBAN_SERVICE = 'URBAN_SERVICE';
+export const RURAL_SERVICE = 'RURAL_SERVICE';
+
+export const STATUS = {
+    ACTIVE: 'STATUS_ACTIVE',
+    DESACTIVE: 'STATUS_DESACTIVE'
+}

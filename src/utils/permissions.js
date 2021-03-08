@@ -24,7 +24,7 @@ const _getStandardPermission = async (permission) => {
         return status === 'granted';
     }
     catch (err) {
-        // TODO: nfv => Tratar error
+        // No se hace nada con este error
     }
     return !!status;
 }

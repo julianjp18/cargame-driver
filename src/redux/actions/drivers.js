@@ -1,4 +1,5 @@
 import { firestoreDB } from '../../constants/Firebase';
+import { getNotificationToken } from '../../utils/notifications';
 import moment from 'moment';
 
 export const CREATE_DRIVER = 'CREATE_DRIVER';
@@ -15,7 +16,8 @@ export const createDriver = ({
   ipAdress,
   city,
 }) => {
-  return dispatch => {
+  return async (dispatch) => {
+    const pushToken = await getNotificationToken();
     firestoreDB
       .collection('Drivers')
       .doc(driverId)
@@ -37,6 +39,7 @@ export const createDriver = ({
         created_at: moment().format(),
         ipAdress,
         termsAndConditions: true,
+        pushToken
       });
 
     if (referidNumber != '') {
@@ -60,16 +63,26 @@ export const createDriver = ({
       city,
       referidNumber: referidNumber ? referidNumber : '',
       profilePicture: null,
+      pushToken
     });
-  };
+  }
 };
 
 export const showDriver = (driverId) => async dispatch => {
   if (driverId) {
-    const data = await firestoreDB
+    const data = (await firestoreDB
       .collection('Drivers')
       .doc(driverId)
-      .get().then((doc) => doc.data());
+      .get().then((doc) => doc.data())) || {};
+
+    const pushToken = await getNotificationToken();
+    if (pushToken && (!data.pushToken || data.pushToken !== pushToken)) {
+      data.pushToken = pushToken;
+      firestoreDB
+        .collection('Drivers')
+        .doc(driverId)
+        .set({ pushToken });
+    }
 
     dispatch({
       type: SHOW_DRIVER,
@@ -80,6 +93,7 @@ export const showDriver = (driverId) => async dispatch => {
       phone: data.phone,
       referidNumber: data.referidNumber,
       profilePicture: data.profilePicture,
+      pushToken: data.pushToken
     });
   }
 };
