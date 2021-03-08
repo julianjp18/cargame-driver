@@ -53,7 +53,6 @@ export const getPosition = (location) => async dispatch => {
     return;
   }
   let getPositionPicked;
-  console.log(responseData);
   if (responseData.status === 'ZERO_RESULTS') {
     getPositionPicked = {
       status: responseData.status,
