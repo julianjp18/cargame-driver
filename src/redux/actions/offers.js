@@ -172,6 +172,13 @@ export const getOfferById = async (offerId) => {
     timesOffered,
   } = await dataOffer.then(doc => doc.data());
 
+  const userData = firestoreDB
+    .collection('Users')
+    .doc(userId)
+    .get();
+
+  const { numberId } = await userData.then(doc => doc.data());
+
   return {
     currentAddress,
     currentCity,
@@ -182,6 +189,7 @@ export const getOfferById = async (offerId) => {
     status,
     userId,
     timesOffered,
+    numberId,
   }
 };
 
