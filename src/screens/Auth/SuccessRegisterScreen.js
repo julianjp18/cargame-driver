@@ -24,7 +24,7 @@ const SuccessRegisterScreen = (props) => {
 
   const waitingHandler = async () => {
     props.navigation.navigate("Startup");
-    Linking.openURL('https://cargame.com.co/sign-up');
+    Linking.openURL('https://cargame.com.co');
   };
 
   useEffect(() => {

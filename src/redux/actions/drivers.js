@@ -39,7 +39,8 @@ export const createDriver = ({
         created_at: moment().format(),
         ipAdress,
         termsAndConditions: true,
-        pushToken
+        pushToken,
+        isVerified: false,
       });
 
     if (referidNumber != '') {

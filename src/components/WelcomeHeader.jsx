@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     minWidth: normalizeLength(300),
   },
   col1: {
-    width:  normalizeLength(200),
+    width: normalizeLength(200),
     height: normalizeLength(200)
   },
   titleHeader: {
@@ -53,20 +53,20 @@ const styles = StyleSheet.create({
     color: textAccentColor
   },
   col2: {
-    minWidth:  normalizeLength(100),
+    minWidth: normalizeLength(100),
     minHeight: normalizeLength(100)
   },
   logo: {
     position: 'absolute',
-    left: normalizeLength(45),
+    left: normalizeLength(50),
     top: normalizeLength(57),
     width: normalizeLength(100),
     height: normalizeLength(100),
   },
   whiteSquare: {
     position: 'absolute',
-    top: normalizeLength(55),
-    left: normalizeLength(20),
+    top: normalizeLength(50),
+    left: normalizeLength(21),
     bottom: 0,
   }
 });

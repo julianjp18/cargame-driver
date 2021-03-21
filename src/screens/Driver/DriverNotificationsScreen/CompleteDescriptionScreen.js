@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, Alert } from "react-native";
+import { StyleSheet, Text, View, Alert, ScrollView } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
@@ -12,7 +12,6 @@ import Button from '../../../components/UI/Button';
 import DriverHeader from "../../../components/DriverHeader";
 import { normalizeLength } from "../../../styles/layout";
 import { primaryColor, accentColor, textAccentColor } from "../../../constants/Colors";
-import { ScrollView } from "react-native-gesture-handler";
 
 const CompleteDescriptionScreen = (props) => {
   const dispatch = useDispatch();
@@ -101,42 +100,44 @@ const CompleteDescriptionScreen = (props) => {
               </View>
             </LinearGradient>
             <View style={styles.showInfoContainer}>
-              <View style={styles.showInfoContent}>
-                <Text style={styles.title}>Ciudad de recogida:</Text>
-                <Text style={styles.subtitle}>{offer.currentCity}</Text>
-              </View>
-              <View style={styles.showInfoContent}>
-                <Text style={styles.title}>Ciudad de destino:</Text>
-                <Text style={styles.subtitle}>{offer.destinationCity}</Text>
-              </View>
-              <View style={styles.showInfoContent}>
-                <Text style={styles.title}>Fecha de recogida:</Text>
-                <Text style={styles.subtitle}>{offer.pickUpDate}</Text>
-              </View>
-              <View style={styles.showInfoContent}>
-                <Text style={styles.title}>Franja horaria de recogida:</Text>
-                <Text style={styles.subtitle}>
-                  {offer.timeZone === 'manana' ? 'Mañana' : 'Noche'}
-                </Text>
-              </View>
-              <View style={styles.showInfoContent}>
-                <Text style={styles.title}>Nombre y apellido de quien recibe:</Text>
-                <Text style={styles.subtitle}>
-                  {offer.contact}
-                </Text>
-              </View>
-              <View style={styles.showInfoContent}>
-                <Text style={styles.title}>Celular:</Text>
-                <Text style={styles.subtitle}>
-                  {offer.phone}
-                </Text>
-              </View>
-              <View style={styles.showInfoContent}>
-                <Text style={styles.title}>Descripción de la carga:</Text>
-                <Text style={styles.subtitle}>
-                  {offer.description}
-                </Text>
-              </View>
+              <ScrollView>
+                <View style={styles.showInfoContent}>
+                  <Text style={styles.title}>Dirección de recogida:</Text>
+                  <Text style={styles.subtitle}>{`${offer.currentAddress} - ${offer.currentCity}`}</Text>
+                </View>
+                <View style={styles.showInfoContent}>
+                  <Text style={styles.title}>Ciudad de destino:</Text>
+                  <Text style={styles.subtitle}>{`${offer.destinationAddress} - ${offer.destinationCity}`}</Text>
+                </View>
+                <View style={styles.showInfoContent}>
+                  <Text style={styles.title}>Fecha de recogida:</Text>
+                  <Text style={styles.subtitle}>{offer.pickUpDate}</Text>
+                </View>
+                <View style={styles.showInfoContent}>
+                  <Text style={styles.title}>Franja horaria de recogida:</Text>
+                  <Text style={styles.subtitle}>
+                    {offer.timeZone === 'manana' ? 'Mañana' : 'Noche'}
+                  </Text>
+                </View>
+                <View style={styles.showInfoContent}>
+                  <Text style={styles.title}>Nombre y apellido de quien recibe:</Text>
+                  <Text style={styles.subtitle}>
+                    {offer.contact}
+                  </Text>
+                </View>
+                <View style={styles.showInfoContent}>
+                  <Text style={styles.title}>Celular:</Text>
+                  <Text style={styles.subtitle}>
+                    {offer.phone}
+                  </Text>
+                </View>
+                <View style={styles.showInfoContent}>
+                  <Text style={styles.title}>Descripción de la carga:</Text>
+                  <Text style={styles.subtitle}>
+                    {offer.description}
+                  </Text>
+                </View>
+              </ScrollView>
             </View>
             <View style={styles.totalContainer}>
               <Text style={styles.totalTitle}>¡Recuerda! debes verificar la carga antes de iniciar el viaje.</Text>
