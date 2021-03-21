@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { 
+import {
     View,
     ActivityIndicator,
     StyleSheet,
     AsyncStorage,
- } from "react-native";
+} from "react-native";
 import { primaryColor } from '../constants/Colors';
 import { useDispatch } from 'react-redux';
 
@@ -22,16 +22,16 @@ const StartupScreen = props => {
             }
 
             const transformedUserData = JSON.parse(userData);
-            const {token, driverId, expiredDate, email } = transformedUserData;
+            const { idToken, driverId, expiredDate, email } = transformedUserData;
             const expirationDate = new Date(expiredDate);
 
-            if (expirationDate <= new Date() || !token || !driverId) {
+            if (expirationDate <= new Date() || !idToken || !driverId) {
                 props.navigation.navigate('Index');
                 return;
             }
 
             props.navigation.navigate('ServicesList');
-            dispatch(authActions.authenticate(driverId, token, email))
+            dispatch(authActions.authenticate(driverId, idToken, email))
         }
 
         tryLogin();

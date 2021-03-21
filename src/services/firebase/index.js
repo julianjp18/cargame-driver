@@ -33,3 +33,23 @@ export const findOneAndUpdate = (collectionName, filter, data) => {
         });
     });
 };
+
+
+/**
+ * Consulta un registro o más registros
+ * @param {String} collectionName Nombre de la colección
+ * @param {Object} filter         Filtro de busqueda
+ */
+export const findOneOrMany = (collectionName, filter) => {
+    const collection = firestoreDB.collection(collectionName);
+    const { key, value, operator = '==' } = filter;
+    const query = collection.where(key, operator, value).get();
+    return new Promise((resolve) => {
+        query.then((snapshot) => {
+            if (snapshot.empty) {
+                return resolve(false);
+            }
+            return snapshot;
+        });
+    });
+};

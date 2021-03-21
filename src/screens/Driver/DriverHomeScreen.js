@@ -6,7 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { ListItem, Avatar } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { textSecondaryColor, darkGrey, primaryColor } from '../../constants/Colors';
-import { categoristList, URBAN_SERVICE, RURAL_SERVICE } from '../../constants/Utils';
+import { categoristList, URBAN_SERVICE, RURAL_SERVICE, STATUS } from '../../constants/Utils';
 
 import WelcomeHeader from '../../components/WelcomeHeader';
 import Button from '../../components/UI/Button';
@@ -140,12 +140,8 @@ const DriverHomeScreen = props => {
   const [typeTruckService, setTypeTruckService] = useState(RURAL_SERVICE);
   const places = useSelector(state => state.places);
   const [activateTypeService, setActivateTypeService] =
-    useState(places.activateUrbanService || places.activateRuralService);
-  const [date, setDate] = useState(
-    places.dayActivate
-      ? places.dayActivate
-      : new Date()
-  );
+    useState(places.status === STATUS.ACTIVE);
+  const [date, setDate] = useState(places.dayActivate ? places.dayActivate : new Date());
   const [show, setShow] = useState(false);
 
   /**
@@ -190,6 +186,8 @@ const DriverHomeScreen = props => {
   const activateService = () => {
     if (!activateTypeService) {
 
+      setActivateTypeService(true);
+
       dispatch(placesActions.activateService({
         driverId: userAuth.driverId,
         dayActivate: date,
@@ -206,9 +204,9 @@ const DriverHomeScreen = props => {
           places.destination ? places.destination.address : null,
         )
       );
-      Alert.alert('Activado exitosamente');
     } else {
-      dispatch(placesActions.deactivateService());
+      dispatch(placesActions.deactivateService(userAuth.driverId));
+      setActivateTypeService(false);
     }
 
   };
