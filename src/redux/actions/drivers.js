@@ -82,7 +82,7 @@ export const showDriver = (driverId) => async dispatch => {
       firestoreDB
         .collection('Drivers')
         .doc(driverId)
-        .set({ pushToken });
+        .set({ pushToken }, { merge: true });
     }
 
     dispatch({
