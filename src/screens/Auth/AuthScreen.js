@@ -50,6 +50,7 @@ const AuthScreen = props => {
   const [isSignUp, setIsSignUp] = useState(useSelector(state => state.auth.isSignUp));
   const dispatch = useDispatch();
   const userToken = useSelector(state => state.auth.token);
+  const userError = useSelector(state => state.auth.error);
 
   useEffect(() => {
     if (error) {
@@ -116,11 +117,18 @@ const AuthScreen = props => {
         setIsLoading(true);
         try {
           dispatch(action);
+          if (userToken) {
+            props.navigation.navigate(nextPage);
+          } else {
+            if (userError) {
+              setError(userError);
+            }
+          }
           controller.abort();
-          props.navigation.navigate(nextPage);
         } catch (err) {
           setError(err.message);
         }
+
         setIsLoading(false);
         controller.abort();
       }

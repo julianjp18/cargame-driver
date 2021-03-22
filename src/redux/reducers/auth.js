@@ -3,6 +3,7 @@ import {
   IS_SIGNUP,
   LOGOUT,
   CHANGE_TYPE_SERVICE_SELECTED,
+  ERROR,
 } from "../actions/auth";
 
 const initialState = {
@@ -11,6 +12,7 @@ const initialState = {
   isSignUp: false,
   email: null,
   typeServiceSelected: null,
+  error: null,
 };
 
 export default (state = initialState, action) => {
@@ -31,6 +33,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         typeServiceSelected: action.typeServiceSelected,
+      };
+    case ERROR:
+      return {
+        ...state,
+        error: action.message,
       };
     case LOGOUT:
       return initialState;

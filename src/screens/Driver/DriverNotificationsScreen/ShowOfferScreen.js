@@ -132,7 +132,7 @@ const ShowOfferScreen = props => {
         navigation={props.navigation}
       />
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Datos del cliente</Text>
+        <Text style={styles.title}>Datos del usuario</Text>
       </View>
       <LinearGradient
         start={{ x: -1, y: 0 }}

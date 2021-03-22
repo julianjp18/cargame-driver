@@ -330,7 +330,9 @@ export const saveOfferSelected = (offerId, id) => async dispatch => {
 
   const {
     currentCity,
+    currentAddress,
     destinationCity,
+    destinationAddress,
     timeZone,
     pickUpDate,
     offerValue,
@@ -354,6 +356,8 @@ export const saveOfferSelected = (offerId, id) => async dispatch => {
       offerSelected: {
         notificationId: id,
         currentCity,
+        currentAddress,
+        destinationAddress,
         destinationCity,
         timeZone,
         pickUpDate,

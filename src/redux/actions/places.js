@@ -1,4 +1,3 @@
-import ENV from '../../../env';
 import { URBAN_SERVICE, STATUS } from '../../constants/Utils';
 
 import * as Firebase from '../../services/firebase';
@@ -82,12 +81,12 @@ export const activateService = (payload) => dispatch => {
   })
 };
 
-export const deactivateService = () => dispatch => {
+export const deactivateService = (driverId) => dispatch => {
 
   Firebase.findOneAndUpdate(
     COLLECTION,
     { key: 'driverId', value: driverId },
-    { active: false }
+    { status: STATUS.DESACTIVE }
   );
   dispatch({
     type: DEACTIVATE_SERVICE,

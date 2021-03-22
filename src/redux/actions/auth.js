@@ -1,10 +1,11 @@
-import { firebaseAuth } from '../../constants/Firebase';
+import { firebaseAuth, firestoreDB } from '../../constants/Firebase';
 import { AsyncStorage } from 'react-native';
 
 export const AUTHENTICATE = 'AUTHENTICATE';
 export const LOGOUT = 'LOGOUT';
 export const IS_SIGNUP = 'IS_SIGNUP';
 export const CHANGE_TYPE_SERVICE_SELECTED = 'CHANGE_TYPE_SERVICE_SELECTED';
+export const ERROR = 'ERROR';
 
 export const authenticate = (uid, idToken, email) => {
   return {
@@ -12,6 +13,13 @@ export const authenticate = (uid, idToken, email) => {
     driverId: uid,
     idToken,
     email,
+  };
+};
+
+export const showError = (error) => {
+  return {
+    type: ERROR,
+    message: error,
   };
 };
 
@@ -38,6 +46,7 @@ export const signup = (email, password) => async dispatch => {
         errorMessage = 'Se ha decidido bloquear la actividad de este dispositivo. Intenta más tarde.';
       }
 
+      dispatch(showError(errorMessage));
       throw new Error(errorMessage);
     });
 };
@@ -45,13 +54,34 @@ export const signup = (email, password) => async dispatch => {
 export const signin = (email, password) => async dispatch => {
   await firebaseAuth
     .signInWithEmailAndPassword(email, password)
-    .then((response) => {
+    .then(async (response) => {
       const resData = response.user;
-      resData.getIdToken().then((idToken) => {
-        dispatch(authenticate(resData.uid, idToken, email));
-        const expirationDate = new Date(new Date().getTime() + parseInt(resData.createdAt) * 1000);
-        saveDataToStorage(idToken, resData.uid, expirationDate, email);
-      });
+
+      await firestoreDB
+        .collection('Drivers')
+        .doc(resData.uid)
+        .get().then((doc) => {
+          let isError = false;
+          if (doc.data()) {
+            const { isVerified } = doc.data();
+
+            if (isVerified) {
+              resData.getIdToken().then((idToken) => {
+                dispatch(authenticate(resData.uid, idToken, email));
+                const expirationDate = new Date(new Date().getTime() + parseInt(resData.createdAt) * 1000);
+                saveDataToStorage(idToken, resData.uid, expirationDate, email);
+              });
+            } else isError = true;
+          } else isError = true;
+
+          if (isError) {
+            const message = 'Te faltan completar datos en la plataforma. Completalos y vuelve a ingresar nuevamente.';
+            dispatch(showError(message));
+            throw new Error(message);
+          }
+        });
+
+
     })
     .catch(error => {
       let errorCode = error.code;
@@ -59,10 +89,19 @@ export const signin = (email, password) => async dispatch => {
 
       if (errorCode === 'EMAIL_NOT_FOUND') {
         errorMessage = 'No reconocemos este correo electrónico. Intentalo nuevamente.'
-      } else if (errorCode === 'INVALID_PASSWORD') {
+      } else if (
+        errorCode === 'INVALID_PASSWORD' ||
+        errorMessage === 'The password is invalid or the user does not have a password.'
+      ) {
         errorMessage = 'Usuario y/o contraseña incorrecta. Intentelo nuevamente.'
+      } else if (
+        errorCode === 'TOO_MANY_ATTEMPTS_TRY_LATER' ||
+        errorMessage === 'Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later.'
+      ) {
+        errorMessage = 'Se ha decidido bloquear la actividad de este dispositivo. Intenta más tarde.';
       }
 
+      dispatch(showError(errorMessage));
       throw new Error(errorMessage);
     });
 };
