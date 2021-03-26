@@ -48,8 +48,10 @@ export default (state = initialState, action) => {
         ...state,
         serviceType: action.payload.serviceType,
         dayActivate: action.payload.dayActivate,
+        origin: action.payload.origin,
+        destination: action.payload.destination,
         status: action.payload.status,
-      }
+      };
     case DEACTIVATE_SERVICE:
       return {
         ...state,

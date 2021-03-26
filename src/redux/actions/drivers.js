@@ -1,11 +1,15 @@
 import { firestoreDB } from '../../constants/Firebase';
 import { getNotificationToken } from '../../utils/notifications';
 import moment from 'moment';
+import { STATUS } from '../../constants/Utils';
+import { ACTIVATE_SERVICE } from './places';
+import { COLLECTIONS } from '../../services/firebase/constants';
 
 export const CREATE_DRIVER = 'CREATE_DRIVER';
 export const SHOW_DRIVER = 'SHOW_DRIVER';
 export const CHANGE_PHONE_NUMBER = 'CHANGE_PHONE_NUMBER';
 export const CHANGE_PROFILE_PICTURE = 'CHANGE_PROFILE_PICTURE';
+
 
 export const createDriver = ({
   driverId,
@@ -39,7 +43,8 @@ export const createDriver = ({
         created_at: moment().format(),
         ipAdress,
         termsAndConditions: true,
-        pushToken
+        pushToken,
+        isVerified: false,
       });
 
     if (referidNumber != '') {
@@ -81,7 +86,7 @@ export const showDriver = (driverId) => async dispatch => {
       firestoreDB
         .collection('Drivers')
         .doc(driverId)
-        .set({ pushToken });
+        .set({ pushToken }, { merge: true });
     }
 
     dispatch({
@@ -133,4 +138,38 @@ export const changeProfilePicture = (profilePicture, driverId) => async dispatch
     driverId,
     profilePicture,
   });
+};
+
+export const verifyDriverActivation = (driverId) => async dispatch => {
+  await firestoreDB
+    .collection('DriversLocation')
+    .where("driverId", "==", driverId).onSnapshot((querySnapshot) => {
+      var notificationsData = [];
+
+      querySnapshot.forEach((doc) => {
+
+        if (doc.data().status == STATUS.ACTIVE) {
+          notificationsData.push({
+            ...doc.data(),
+            origin: {
+              address: doc.data().originAddress,
+              location: doc.data().originLocation,
+            },
+            destination: {
+              address: doc.data().destinationAddress,
+              location: doc.data().destinationLocation,
+            },
+            id: doc.id,
+          });
+        }
+      });
+
+      if (notificationsData.length > 0) {
+
+        dispatch({
+          type: ACTIVATE_SERVICE,
+          payload: notificationsData[0],
+        });
+      }
+    });
 };

@@ -6,7 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { ListItem, Avatar } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { textSecondaryColor, darkGrey, primaryColor } from '../../constants/Colors';
-import { categoristList, URBAN_SERVICE, RURAL_SERVICE } from '../../constants/Utils';
+import { categoristList, URBAN_SERVICE, RURAL_SERVICE, STATUS } from '../../constants/Utils';
 
 import WelcomeHeader from '../../components/WelcomeHeader';
 import Button from '../../components/UI/Button';
@@ -140,12 +140,8 @@ const DriverHomeScreen = props => {
   const [typeTruckService, setTypeTruckService] = useState(RURAL_SERVICE);
   const places = useSelector(state => state.places);
   const [activateTypeService, setActivateTypeService] =
-    useState(places.activateUrbanService || places.activateRuralService);
-  const [date, setDate] = useState(
-    places.dayActivate
-      ? places.dayActivate
-      : new Date()
-  );
+    useState(places.status === STATUS.ACTIVE);
+  const [date, setDate] = useState(places.dayActivate ? places.dayActivate : new Date());
   const [show, setShow] = useState(false);
 
   /**
@@ -190,6 +186,8 @@ const DriverHomeScreen = props => {
   const activateService = () => {
     if (!activateTypeService) {
 
+      setActivateTypeService(true);
+
       dispatch(placesActions.activateService({
         driverId: userAuth.driverId,
         dayActivate: date,
@@ -207,7 +205,8 @@ const DriverHomeScreen = props => {
         )
       );
     } else {
-      dispatch(placesActions.deactivateService());
+      dispatch(placesActions.deactivateService(userAuth.driverId));
+      setActivateTypeService(false);
     }
 
   };
@@ -223,115 +222,113 @@ const DriverHomeScreen = props => {
   const isRural = typeTruckService == RURAL_SERVICE;
   return (
     typeServiceId ? (
-      <View style={styles.homeContainer}>
+      <ScrollView style={styles.homeContainer}>
         <WelcomeHeader />
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Servicio seleccionado</Text>
         </View>
         <View>
-          <ScrollView>
-            <ListItem containerStyle={styles.listContainer} bottomDivider>
-              <Avatar containerStyle={styles.avatarContainer} source={categorySelected.avatar_url} />
-              <ListItem.Content>
-                <ListItem.Title style={styles.titleListItem}>{categorySelected.name}</ListItem.Title>
-                <ListItem.Subtitle style={styles.subtitleListItem}>{categorySelected.subtitle}</ListItem.Subtitle>
-              </ListItem.Content>
-              <ListItem.Chevron />
-            </ListItem>
-            <View style={styles.row}>
-              <View style={styles.col1}>
-                <Text
-                  style={[
-                    styles.serviceTitle,
-                    typeTruckService === RURAL_SERVICE
-                      ? styles.serviceTitleSelected
-                      : ''
-                  ]}
-                  onPress={() => changeTypeTruckService(RURAL_SERVICE)}
-                >
-                  Servicio intermunicipial
+          <ListItem containerStyle={styles.listContainer} bottomDivider>
+            <Avatar containerStyle={styles.avatarContainer} source={categorySelected.avatar_url} />
+            <ListItem.Content>
+              <ListItem.Title style={styles.titleListItem}>{categorySelected.name}</ListItem.Title>
+              <ListItem.Subtitle style={styles.subtitleListItem}>{categorySelected.subtitle}</ListItem.Subtitle>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem>
+          <View style={styles.row}>
+            <View style={styles.col1}>
+              <Text
+                style={[
+                  styles.serviceTitle,
+                  typeTruckService === RURAL_SERVICE
+                    ? styles.serviceTitleSelected
+                    : ''
+                ]}
+                onPress={() => changeTypeTruckService(RURAL_SERVICE)}
+              >
+                Servicio intermunicipial
                 </Text>
-              </View>
-              <View style={styles.col2}>
-                <Text
-                  style={[
-                    styles.serviceTitle,
-                    typeTruckService === URBAN_SERVICE
-                      ? styles.serviceTitleSelected
-                      : '',
-                    typeTruckService !== URBAN_SERVICE
-                    && activateTypeService
-                    && styles.activateTypeService
-                  ]}
-                  onPress={() => changeTypeTruckService(URBAN_SERVICE)}
-                >
-                  Servicio Urbano
-                </Text>
-              </View>
             </View>
-            <View style={styles.infoContainer}>
+            <View style={styles.col2}>
+              <Text
+                style={[
+                  styles.serviceTitle,
+                  typeTruckService === URBAN_SERVICE
+                    ? styles.serviceTitleSelected
+                    : '',
+                  typeTruckService !== URBAN_SERVICE
+                  && activateTypeService
+                  && styles.activateTypeService
+                ]}
+                onPress={() => changeTypeTruckService(URBAN_SERVICE)}
+              >
+                Servicio Urbano
+                </Text>
+            </View>
+          </View>
+          <View style={styles.infoContainer}>
+            <View>
+              <LocationPicker
+                navigation={props.navigation}
+                label={`Ciudad de ${isRural ? 'Origen' : 'Activación'}`}
+                errorText="¡UPS! Por favor ingresa una dirección válida."
+                value={places.origin && places.origin.address}
+                location={places.origin && places.origin.location}
+                disabled={activateTypeService}
+                handleEvent={setOriginLocation}
+              />
+            </View>
+            {isRural && (
               <View>
                 <LocationPicker
                   navigation={props.navigation}
-                  label={`Ciudad de ${isRural ? 'Origen' : 'Activación'}`}
+                  label="Ciudad de Destino"
                   errorText="¡UPS! Por favor ingresa una dirección válida."
-                  value={places.origin && places.origin.address}
-                  location={places.origin && places.origin.location}
+                  value={places.destination && places.destination.address}
+                  location={places.destination && places.destination.location}
                   disabled={activateTypeService}
-                  handleEvent={setOriginLocation}
+                  handleEvent={setDestinationLocation}
                 />
-              </View>
-              {isRural && (
-                <View>
-                  <LocationPicker
-                    navigation={props.navigation}
-                    label="Ciudad de Destino"
-                    errorText="¡UPS! Por favor ingresa una dirección válida."
-                    value={places.destination && places.destination.address}
-                    location={places.destination && places.destination.location}
+                <Text
+                  style={styles.dateTravelTitle}
+                >
+                  Fecha de inicio de viaje
+                  </Text>
+                <Text
+                  onPress={showDatePickerModal}
+                  style={styles.dateTravelContent}
+                >
+                  {moment(date).format('ll')}
+                </Text>
+                {show && (
+                  <DateTimePicker
+                    testID="date-travel"
+                    value={date}
+                    mode="date"
+                    is24Hour={true}
+                    display="default"
+                    onChange={onChangeDate}
                     disabled={activateTypeService}
-                    handleEvent={setDestinationLocation}
                   />
-                  <Text
-                    style={styles.dateTravelTitle}
-                  >
-                    Fecha de inicio de viaje
-                  </Text>
-                  <Text
-                    onPress={showDatePickerModal}
-                    style={styles.dateTravelContent}
-                  >
-                    {moment(date).format('ll')}
-                  </Text>
-                  {show && (
-                    <DateTimePicker
-                      testID="date-travel"
-                      value={date}
-                      mode="date"
-                      is24Hour={true}
-                      display="default"
-                      onChange={onChangeDate}
-                      disabled={activateTypeService}
-                    />
-                  )}
-                </View>
-              )}
-              <Button
-                colorOne={activateTypeService && 'white'}
-                colorTwo={activateTypeService && 'white'}
-                fontColor={activateTypeService && primaryColor}
-                title={!activateTypeService ? 'Activarme' : 'Desactivarme'}
-                onPress={activateService}
-              />
-            </View>
-          </ScrollView>
+                )}
+              </View>
+            )}
+            <Button
+              colorOne={activateTypeService && 'white'}
+              colorTwo={activateTypeService && 'white'}
+              fontColor={activateTypeService && primaryColor}
+              title={!activateTypeService ? 'Activarme' : 'Desactivarme'}
+              onPress={activateService}
+            />
+          </View>
         </View>
-      </View>
+      </ScrollView>
     ) : (
-        <View>
-          <Text>Error</Text>
-        </View>
-      )
+      <View>
+        <Text>Error</Text>
+      </View>
+    )
   );
 };
 

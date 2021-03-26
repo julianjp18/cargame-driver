@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useReducer, useEffect,  } from 'react';
-import { Text, StyleSheet, View, Alert, ActivityIndicator } from 'react-native';
+import React, { useState, useCallback, useReducer, useEffect, } from 'react';
+import { ScrollView, Text, StyleSheet, View, Alert, ActivityIndicator } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { LinearGradient } from 'expo-linear-gradient';
 import { primaryColor, accentColor } from '../../../constants/Colors';
@@ -138,8 +138,10 @@ const OfferForm = (props) => {
     }
   };
 
+  // TODO: nfv => Crear componente Layout para los ScrollView que tenga esta funcionalidad
+  // junto con el keyboardavoid view
   return (
-    <View style={styles.offerContainer}>
+    <ScrollView style={styles.offerContainer} keyboardShouldPersistTaps='handled'>
       <View style={styles.inputContainer}>
         <TextInput
           id="value"
@@ -183,14 +185,14 @@ const OfferForm = (props) => {
           {isLoading ? (
             <ActivityIndicator size='large' color={primaryColor} />
           ) : (
-              <Button
-                title="Ofertar"
-                style={styles.offerButton}
-                paddingVertical={20}
-                fontColor='white'
-                onPress={offerHandler}
-              />
-            )}
+            <Button
+              title="Ofertar"
+              style={styles.offerButton}
+              paddingVertical={20}
+              fontColor='white'
+              onPress={offerHandler}
+            />
+          )}
         </View>
         <Button
           title="Volver"
@@ -201,7 +203,7 @@ const OfferForm = (props) => {
           onPress={() => props.changeToOfferFormHandler(null)}
         />
       </LinearGradient>
-    </View>
+    </ScrollView>
   );
 };
 

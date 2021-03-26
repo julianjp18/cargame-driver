@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { useSelector, useDispatch, useStore } from 'react-redux';
 import DriverHeader from '../../../components/DriverHeader';
-import { AntDesign, FontAwesome } from '@expo/vector-icons'; 
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import { primaryColor, accentColor } from '../../../constants/Colors';
 //import Timeline from 'react-native-timeline-flatlist';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -97,7 +97,7 @@ const TravelSelectedScreen = props => {
   const [user, setUser] = useState();
   const dispatch = useDispatch();
   const { userId, pickUpDate, offerId, status, driverId } = useSelector(state => state.travels.tripSelected);
-  
+
   useEffect(() => {
     travelsActions.getUserById(userId).then((data) => setUser(data));
   }, []);
@@ -130,39 +130,39 @@ const TravelSelectedScreen = props => {
         navigation={props.navigation}
       />
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Datos del cliente</Text>
+        <Text style={styles.title}>Datos del usuario</Text>
       </View>
       <LinearGradient
         start={{ x: -1, y: 0 }}
         end={{ x: 1, y: 0 }}
         colors={[
-            props.colorOne ? props.colorOne : primaryColor,
-            props.colorTwo ? props.colorTwo : accentColor
+          props.colorOne ? props.colorOne : primaryColor,
+          props.colorTwo ? props.colorTwo : accentColor
         ]}
       >
-          <View style={styles.row}>
-              <View style={styles.col1}>
-                  <View style={styles.row}>
-                    <View>
-                      <AntDesign name="user" size={24} color="white" />
-                    </View>
-                    <View>
-                      <Text style={styles.infoUserText}>{driverUser && driverUser.name}</Text>
-                    </View>
-                  </View>
-                  <View style={styles.row}>
-                    <View>
-                      <AntDesign name="phone" size={24} color="white" />
-                    </View>
-                    <View>
-                      <Text style={styles.infoUserText}>{driverUser && driverUser.phone}</Text>
-                    </View>
-                  </View>
+        <View style={styles.row}>
+          <View style={styles.col1}>
+            <View style={styles.row}>
+              <View>
+                <AntDesign name="user" size={24} color="white" />
               </View>
-              <View style={styles.col2}>
-                <FontAwesome name="user-circle-o" size={34} color="white" />
+              <View>
+                <Text style={styles.infoUserText}>{driverUser && driverUser.name}</Text>
               </View>
+            </View>
+            <View style={styles.row}>
+              <View>
+                <AntDesign name="phone" size={24} color="white" />
+              </View>
+              <View>
+                <Text style={styles.infoUserText}>{driverUser && driverUser.phone}</Text>
+              </View>
+            </View>
           </View>
+          <View style={styles.col2}>
+            <FontAwesome name="user-circle-o" size={34} color="white" />
+          </View>
+        </View>
       </LinearGradient>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Datos de quien recibe</Text>
@@ -171,33 +171,33 @@ const TravelSelectedScreen = props => {
         start={{ x: -1, y: 0 }}
         end={{ x: 1, y: 0 }}
         colors={[
-            props.colorOne ? props.colorOne : primaryColor,
-            props.colorTwo ? props.colorTwo : accentColor
+          props.colorOne ? props.colorOne : primaryColor,
+          props.colorTwo ? props.colorTwo : accentColor
         ]}
       >
         <View style={styles.row}>
           <View style={styles.col1}>
-              <View style={styles.row}>
-                <View>
-                  <AntDesign name="user" size={24} color="white" />
-                </View>
-                <View>
-                  <Text style={styles.infoUserText}>{user && user.name}</Text>
-                </View>
+            <View style={styles.row}>
+              <View>
+                <AntDesign name="user" size={24} color="white" />
               </View>
-              <View style={styles.row}>
-                <View>
-                  <AntDesign name="phone" size={24} color="white" />
-                </View>
-                <View>
-                  <Text style={styles.infoUserText}>{user && user.phone}</Text>
-                </View>
+              <View>
+                <Text style={styles.infoUserText}>{user && user.name}</Text>
               </View>
+            </View>
+            <View style={styles.row}>
+              <View>
+                <AntDesign name="phone" size={24} color="white" />
+              </View>
+              <View>
+                <Text style={styles.infoUserText}>{user && user.phone}</Text>
+              </View>
+            </View>
           </View>
           <View style={styles.col2}>
             <FontAwesome name="user-circle-o" size={34} color="white" />
           </View>
-      </View>
+        </View>
       </LinearGradient>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Fecha de entrega</Text>
@@ -216,7 +216,7 @@ const TravelSelectedScreen = props => {
         timeContainerStyle={{ paddingTop: '15%'}}
       />*/}
       {status !== 'DONE' && (
-        <View  style={styles.finalizeBtnContainer}>
+        <View style={styles.finalizeBtnContainer}>
           <Button
             title={'He entregado la carga'}
             onPress={endTravel}
