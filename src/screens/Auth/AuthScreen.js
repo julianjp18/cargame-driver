@@ -116,14 +116,12 @@ const AuthScreen = props => {
         setError('');
         setIsLoading(true);
         try {
-          dispatch(action);
-          if (userToken) {
+          dispatch(action).then(() => {
             props.navigation.navigate(nextPage);
-          } else {
-            if (userError) {
-              setError(userError);
-            }
-          }
+          }).catch((err) => {
+            setError(err.message);
+          });
+
           controller.abort();
         } catch (err) {
           setError(err.message);
