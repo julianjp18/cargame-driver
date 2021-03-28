@@ -1,5 +1,5 @@
 import React, { useReducer, useCallback, useState, useEffect } from 'react';
-import { StyleSheet, View, ActivityIndicator, Alert } from 'react-native';
+import { StyleSheet, View, ActivityIndicator, Alert, Platform } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { primaryColor } from '../../../constants/Colors';
 import DriverHeader from '../../../components/DriverHeader';
@@ -8,6 +8,7 @@ import TextInput from '../../../components/UI/Input';
 import Button from '../../../components/UI/Button';
 import { KeyboardAwareView } from 'react-native-keyboard-aware-view';
 import { ScrollView } from 'react-native-gesture-handler';
+import { returnKeyType } from '../../../styles/layout';
 
 import * as driverActions from '../../../redux/actions/drivers';
 
@@ -117,6 +118,7 @@ const EditPhoneNumberScreen = props => {
                                 id="phoneNumber"
                                 label="Número de teléfono"
                                 keyboardType="numeric"
+                                returnKeyType={returnKeyType}
                                 required
                                 leftAvatar={
                                     <AntDesign name="phone" size={24} color={primaryColor} />

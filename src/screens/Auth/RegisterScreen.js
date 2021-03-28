@@ -3,6 +3,7 @@ import {
   StyleSheet, View, Text,
   ActivityIndicator, Alert, Image, KeyboardAvoidingView,
   Picker, ScrollView,
+  Platform
 } from 'react-native';
 //import { Picker } from '@react-native-community/picker'; //https://github.com/react-native-picker/picker
 import { CheckBox } from 'react-native-elements';
@@ -16,7 +17,7 @@ import * as driverActions from '../../redux/actions/drivers';
 
 import { shortBrandOrangeGreyUrl } from '../../constants/Utils';
 import { primaryColor, textPrimaryColor } from '../../constants/Colors';
-import { normalizeLength } from '../../styles/layout';
+import { normalizeLength, returnKeyType } from '../../styles/layout';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
@@ -166,6 +167,7 @@ const RegisterScreen = props => {
                 id="numberId"
                 label="Cédula de ciudadania (*)"
                 keyboardType="numeric"
+                returnKeyType={returnKeyType}
                 required
                 minLength={4}
                 maxLength={10}
@@ -181,6 +183,7 @@ const RegisterScreen = props => {
                 id="phone"
                 label="Celular (*)"
                 keyboardType="numeric"
+                returnKeyType={returnKeyType}
                 required
                 minLength={10}
                 maxLength={10}
@@ -205,6 +208,7 @@ const RegisterScreen = props => {
                 id="referidNumber"
                 label="Número de referido"
                 keyboardType="numeric"
+                returnKeyType={returnKeyType}
                 minLength={6}
                 maxLength={6}
                 autoCapitalize="none"

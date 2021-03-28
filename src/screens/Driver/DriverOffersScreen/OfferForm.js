@@ -6,6 +6,8 @@ import { primaryColor, accentColor } from '../../../constants/Colors';
 import TextInput from '../../../components/UI/Input';
 import Button from '../../../components/UI/Button';
 
+import { returnKeyType } from '../../../styles/layout';
+
 import * as offerActions from '../../../redux/actions/offers';
 
 const styles = StyleSheet.create({
@@ -138,15 +140,14 @@ const OfferForm = (props) => {
     }
   };
 
-  // TODO: nfv => Crear componente Layout para los ScrollView que tenga esta funcionalidad
-  // junto con el keyboardavoid view
   return (
-    <ScrollView style={styles.offerContainer} keyboardShouldPersistTaps='handled'>
+    <ScrollView style={styles.offerContainer}>
       <View style={styles.inputContainer}>
         <TextInput
           id="value"
           label="Valor (*)"
           keyboardType="numeric"
+          returnKeyType={returnKeyType}
           required
           min={5000}
           max={1000000}
