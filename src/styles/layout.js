@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet, Platform } from 'react-native';
 import { scaleText } from 'react-native-text/lib/commonjs';
 
 const baseUnitWidth = 375;
@@ -7,6 +7,7 @@ const { width } = Dimensions.get('window');
 
 export const normalizeLength = (size) => (size / baseUnitWidth) * width;
 
+export const returnKeyType = (Platform.OS === 'ios') ? 'done' : 'next';
 export const fullHeight = Dimensions.get('window').height;
 export const fullWidth = Dimensions.get('window').width;
 
