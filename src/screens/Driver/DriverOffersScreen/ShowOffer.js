@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
   showMessageContainer: {
     backgroundColor: yellowColor,
-    padding: '10%',
+    padding: 20,
   },
   showOfferedMessage: {
     backgroundColor: offeredColor,
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   showConfirmMessage: {
     backgroundColor: successColor,
     paddingHorizontal: '6%',
-    padding: '10%',
+    padding: 20,
   },
   showCancelMessage: {
     backgroundColor: cancelColor,
