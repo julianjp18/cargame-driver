@@ -47,7 +47,6 @@ export const signup = (email, password) => async dispatch => {
       }
 
       dispatch(showError(errorMessage));
-      throw new Error(errorMessage);
     });
 };
 
