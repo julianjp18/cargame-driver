@@ -74,11 +74,11 @@ const DriverDashboardScreen = props => {
   return (
     <View style={styles.servicesContainer}>
       <WelcomeHeader />
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>Selecciona el servicio a utilizar</Text>
-      </View>
-      <View>
-        <ScrollView>
+      <ScrollView>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Selecciona el servicio a utilizar</Text>
+        </View>
+        <View>
           {
             categoristList.map((category, i) => (
               <TouchableOpacity
@@ -102,8 +102,8 @@ const DriverDashboardScreen = props => {
               </TouchableOpacity>
             ))
           }
-        </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
     </View>
   );
 };
