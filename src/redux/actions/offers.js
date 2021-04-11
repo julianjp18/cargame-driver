@@ -14,7 +14,6 @@ export const showActiveOffers = (
   ruralServiceDestinyAddress,
 ) => dispatch => {
   const currentCity = currentAddress.split(',')[0];
-  const destinyCity = ruralServiceDestinyAddress && ruralServiceDestinyAddress.split(',')[0];
 
   const data = firestoreDB
     .collection("OffersNotificationCenter");
@@ -55,6 +54,9 @@ export const showActiveOffers = (
                   status: CONTRACTED,
                 }
               });
+
+              notificationsActions.createOfferNotificationForUser(offer.data().userId, offer.id, offer.data().driverId);
+              notificationsActions.createOfferNotificationForDriver(offer.data().userId, offer.id, offer.data().driverId);
             }
           } else {
             offersData.push({
@@ -141,6 +143,13 @@ export const showActiveOffersAsync = async (
       offers: offersData
     });
   });
+};
+
+export const deactiveOffersAsync = () => {
+  return {
+    type: SHOW_ACTIVE_OFFERS,
+    offers: []
+  };
 };
 
 export const getOfferValueById = async (offerId) => {
@@ -301,7 +310,7 @@ export const realizeOffer = (offerId, newOfferValue, offerDriverId, index, drive
       status: responseUpdateData ? 'OK' : 'CANCEL',
     };
 
-    offerValue !== '' && notificationsActions.createOfferNotificationForUser(userId, offerId);
+    //offerValue !== '' && notificationsActions.createOfferNotificationForUser(userId, offerId);
   }
 
   dispatch({

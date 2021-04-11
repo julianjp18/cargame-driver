@@ -19,12 +19,12 @@ const Button = props => {
       start={{ x: -1, y: 0 }}
       end={{ x: 1, y: 0 }}
       colors={[
-          props.colorOne ? props.colorOne : primaryColor,
-          props.colorTwo ? props.colorTwo : accentColor
+        props.colorOne ? props.colorOne : primaryColor,
+        props.colorTwo ? props.colorTwo : accentColor
       ]}
       style={styles.buttonContainer}
     >
-      <Text 
+      <Text
         style={
           {
             textAlign: "center",
@@ -42,7 +42,7 @@ const Button = props => {
         }
         onPress={!props.disabled && props.onPress}
       >
-        {props.title.toUpperCase()}
+        {props.title}
       </Text>
     </LinearGradient>
   )

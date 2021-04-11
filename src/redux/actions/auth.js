@@ -32,7 +32,7 @@ export const signup = (email, password) => async dispatch => {
       resData.getIdToken().then((idToken) => {
         dispatch(authenticate(resData.uid, idToken, email));
         const expirationDate = new Date(new Date().getTime() + parseInt(resData.createdAt) * 1000);
-        saveDataToStorage(idToken, resData.uid, expirationDate, email);
+        saveDataToStorage('', resData.uid, expirationDate, email);
       });
     })
     .catch(error => {
@@ -66,9 +66,9 @@ export const signin = (email, password) => async dispatch => {
 
             if (isVerified) {
               resData.getIdToken().then((idToken) => {
-                dispatch(authenticate(resData.uid, idToken, email));
                 const expirationDate = new Date(new Date().getTime() + parseInt(resData.createdAt) * 1000);
                 saveDataToStorage(idToken, resData.uid, expirationDate, email);
+                dispatch(authenticate(resData.uid, idToken, email));
               });
             } else isError = true;
           } else isError = true;

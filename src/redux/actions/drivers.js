@@ -2,8 +2,7 @@ import { firestoreDB } from '../../constants/Firebase';
 import { getNotificationToken } from '../../utils/notifications';
 import moment from 'moment';
 import { STATUS } from '../../constants/Utils';
-import { ACTIVATE_SERVICE } from './places';
-import { COLLECTIONS } from '../../services/firebase/constants';
+import { VERIFY_ACTIVATION_SERVICE } from './places';
 
 export const CREATE_DRIVER = 'CREATE_DRIVER';
 export const SHOW_DRIVER = 'SHOW_DRIVER';
@@ -141,13 +140,14 @@ export const changeProfilePicture = (profilePicture, driverId) => async dispatch
 };
 
 export const verifyDriverActivation = (driverId) => async dispatch => {
+
   await firestoreDB
     .collection('DriversLocation')
     .where("driverId", "==", driverId).onSnapshot((querySnapshot) => {
       var notificationsData = [];
 
       querySnapshot.forEach((doc) => {
-
+        console.log('O¿M IN', driverId, doc.data());
         if (doc.data().status == STATUS.ACTIVE) {
           notificationsData.push({
             ...doc.data(),
@@ -167,7 +167,7 @@ export const verifyDriverActivation = (driverId) => async dispatch => {
       if (notificationsData.length > 0) {
 
         dispatch({
-          type: ACTIVATE_SERVICE,
+          type: VERIFY_ACTIVATION_SERVICE,
           payload: notificationsData[0],
         });
       }

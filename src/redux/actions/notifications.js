@@ -38,7 +38,7 @@ export const showDriverNotifications = (driverId) => async dispatch => {
   });
 };
 
-export const createOfferNotificationForUser = (userId, offerId, notificationId) => {
+export const createOfferNotificationForUser = (userId, offerId, driverId) => {
   firestoreDB
     .collection("NotificationsUsers")
     .add({
@@ -47,6 +47,21 @@ export const createOfferNotificationForUser = (userId, offerId, notificationId) 
       offerId,
       typeMessage: 'Information',
       userId,
+      driverId,
+      status: CONTRACTED
+    }).then(() => true);
+};
+
+export const createOfferNotificationForDriver = (userId, offerId, driverId) => {
+  firestoreDB
+    .collection("NotificationsDrivers")
+    .add({
+      date: moment(new Date()).format('ll'),
+      message: '¡Se te ha asignado una oferta! por favor revisa tu solicitud aquí',
+      offerId,
+      typeMessage: 'Information',
+      userId,
+      driverId,
       status: CONTRACTED
     }).then(() => true);
 };

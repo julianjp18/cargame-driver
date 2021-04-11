@@ -11,6 +11,7 @@ import * as authActions from '../../../redux/actions/auth';
 import * as travelActions from '../../../redux/actions/travels';
 import { getUserInfo } from '../../../utils/helpers';
 import { normalizeLength } from '../../../styles/layout';
+import Button from '../../../components/UI/Button';
 
 const IN_PROGRESS_TRAVELS = 1;
 const FINISHED_TRAVELS = 0;
@@ -22,8 +23,13 @@ const DriverTravelsScreen = props => {
   const tripsMade = useSelector(state => state.travels.tripsMade);
 
   getUserInfo().then((data) => {
-    const userInfo = JSON.parse(data);
-    if (!userInfo.idToken) {
+    if (data) {
+      const userInfo = JSON.parse(data);
+      if (userInfo.idToken === '') {
+        dispatch(authActions.logout());
+        props.navigation.navigate('Index');
+      }
+    } else {
       dispatch(authActions.logout());
       props.navigation.navigate('Index');
     }
@@ -90,10 +96,8 @@ const DriverTravelsScreen = props => {
                       color={primaryColor}
                     />
                     <ListItem.Content>
-                      <ListItem.Title style={styles.titleListItem}>
-                        <Text style={styles.titleListText}>Destino: {tripInProgress.destinationCity}</Text>
-                        <Text style={styles.titleListText}>{`\n`}Fecha de recogida: {tripInProgress.pickUpDate}</Text>
-                      </ListItem.Title>
+                      <ListItem.Title style={styles.titleListText}>Destino: {tripInProgress.destinationCity}</ListItem.Title>
+                      <ListItem.Subtitle style={styles.titleListText}>Fecha de recogida: {tripInProgress.pickUpDate}</ListItem.Subtitle>
                     </ListItem.Content>
                     <ListItem.Chevron />
                   </ListItem>
@@ -109,46 +113,38 @@ const DriverTravelsScreen = props => {
             </View>
           </ScrollView>
         ) : (
-            <ScrollView>
-              <View style={styles.infoContainer}>
-                {tripsMade.length > 0 ? tripsMade.map((tripMade) => (
-                  <TouchableOpacity key={`${tripMade.offerValue}-${tripMade.pickUpDate}`}>
-                    <ListItem
-                      onPress={() => viewTravel(tripMade)}
-                      containerStyle={styles.listContainer}
-                      bottomDivider
-                    >
-                      <Icon
-                        name='bells'
-                        type='antdesign'
-                        color={primaryColor}
-                      />
-                      <ListItem.Content>
-                        <ListItem.Title style={styles.titleListItem}>
-                          <View>
-                            <Text>
-                              Destino: {tripMade.destinationCity}
-                            </Text>
-                            <Text>
-                              Fecha de recogida: {tripMade.pickUpDate}
-                            </Text>
-                          </View>
-                        </ListItem.Title>
-                      </ListItem.Content>
-                      <ListItem.Chevron />
-                    </ListItem>
-                  </TouchableOpacity>
-                )) : (
-                  <View style={styles.notFoundContainer}>
-                    <AntDesign name="flag" size={100} color={primaryColor} />
-                    <Text style={styles.notFoundText}>
-                      No has finalizado viajes por el momento
+          <ScrollView>
+            <View style={styles.infoContainer}>
+              {tripsMade.length > 0 ? tripsMade.map((tripMade) => (
+                <TouchableOpacity key={`${tripMade.offerValue}-${tripMade.pickUpDate}`}>
+                  <ListItem
+                    onPress={() => viewTravel(tripMade)}
+                    containerStyle={styles.listContainer}
+                    bottomDivider
+                  >
+                    <Icon
+                      name='bells'
+                      type='antdesign'
+                      color={primaryColor}
+                    />
+                    <ListItem.Content>
+                      <ListItem.Title style={styles.titleListItem}>Destino: {tripMade.destinationCity}</ListItem.Title>
+                      <ListItem.Subtitle style={styles.subtitleListItem}>Fecha de recogida: {tripMade.pickUpDate}</ListItem.Subtitle>
+                    </ListItem.Content>
+                    <ListItem.Chevron />
+                  </ListItem>
+                </TouchableOpacity>
+              )) : (
+                <View style={styles.notFoundContainer}>
+                  <AntDesign name="flag" size={100} color={primaryColor} />
+                  <Text style={styles.notFoundText}>
+                    No has finalizado viajes por el momento
                     </Text>
-                  </View>
-                )}
-              </View>
-            </ScrollView>
-          )}
+                </View>
+              )}
+            </View>
+          </ScrollView>
+        )}
       </View>
     </View>
   );

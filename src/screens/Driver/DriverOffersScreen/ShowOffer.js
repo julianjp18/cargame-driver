@@ -178,7 +178,7 @@ const ShowOffer = (props) => {
         ]}
       >
         <Button
-          title="Ofertar"
+          title={response.status === IN_PROGRESS ? 'Reofertar' : 'Ofertar'}
           paddingVertical={20}
           disabled={response.status === 'REJECTED'}
           onPress={() => props.changeToOfferFormHandler(offer.offerId, props.index, props.changeToForm)}

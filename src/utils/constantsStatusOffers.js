@@ -2,10 +2,12 @@ const IN_PROGRESS = 'IN_PROGRESS';
 const CONTRACTED = 'CONTRACTED';
 const ACTIVE = 'ACTIVE';
 const OFFERED = 'OFFERED';
+const DONE = 'DONE';
 
 export {
   IN_PROGRESS,
   CONTRACTED,
   ACTIVE,
   OFFERED,
+  DONE,
 }

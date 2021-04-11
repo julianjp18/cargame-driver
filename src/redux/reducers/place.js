@@ -4,7 +4,8 @@ import {
   SET_DESTINATION_LOCATION,
   CHANGE_FIELD_SELECTED,
   ACTIVATE_SERVICE,
-  DEACTIVATE_SERVICE
+  DEACTIVATE_SERVICE,
+  VERIFY_ACTIVATION_SERVICE
 } from "../actions/places";
 
 const initialState = {
@@ -43,6 +44,7 @@ export default (state = initialState, action) => {
         typeFieldSelected: action.typeFieldSelected,
       };
 
+    case VERIFY_ACTIVATION_SERVICE:
     case ACTIVATE_SERVICE:
       return {
         ...state,
@@ -55,6 +57,7 @@ export default (state = initialState, action) => {
     case DEACTIVATE_SERVICE:
       return {
         ...state,
+        dayActivate: '',
         status: action.payload,
       }
     case GET_CURRENT_POSITION:

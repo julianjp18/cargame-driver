@@ -112,16 +112,18 @@ const DriverOffersScreen = (props) => {
       setChangeView(false);
   };
 
-  const refreshOffers = async () => {
-    offerStateAsync = true;
-    dispatch(offersActions.showActiveOffersAsync(userAuth.driverId, dayActivate));
+  const refreshOffers = async (isActive) => {
+
+    if (isActive) {
+      offerStateAsync = true;
+      dispatch(offersActions.showActiveOffersAsync(userAuth.driverId, dayActivate));
+    }
   };
 
   useEffect(() => {
     setInterval(() => {
-      if (dayActivate) {
-        refreshOffers();
-      }
+
+      refreshOffers(dayActivate ? true : false);
     }, 5000);
   }, []);
 
