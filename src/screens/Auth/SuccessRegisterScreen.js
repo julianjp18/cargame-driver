@@ -61,6 +61,9 @@ const SuccessRegisterScreen = (props) => {
           <View style={styles.userButtonContainer}>
             <Button title="Ir al sitio web" fontColor="white" onPress={waitingHandler} />
           </View>
+          <View style={styles.userButtonContainer}>
+            <Button title="Ir al sitio web" fontColor="white" onPress={() => props.navigation.navigate("Index")} />
+          </View>
           <View style={styles.mainCargaContainer}>
             <Image style={styles.mainCarga} source={shortCarga} />
           </View>

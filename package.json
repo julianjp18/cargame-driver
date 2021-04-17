@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.15.2",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/datetimepicker": "2.2.2",
     "@react-native-community/masked-view": "0.1.6",
@@ -27,6 +28,7 @@
     "firebase": "7.9.0",
     "moment": "^2.27.0",
     "react": "~16.9.0",
+    "react-devtools": "^3",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-37.0.1.tar.gz",
     "react-native-elements": "^2.0.2",

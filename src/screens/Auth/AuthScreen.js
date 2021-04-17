@@ -16,7 +16,6 @@ import {
 
 import { primaryColor, textPrimaryColor } from '../../constants/Colors';
 import { normalizeLength } from '../../styles/layout';
-import { AsyncStorage } from 'react-native';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
@@ -49,7 +48,8 @@ const AuthScreen = props => {
   const [isSelected, setSelection] = useState(false);
   const [isSignUp, setIsSignUp] = useState(useSelector(state => state.auth.isSignUp));
   const dispatch = useDispatch();
-  const userToken = useSelector(state => state.auth.token);
+  const isFromRegister = props.navigation.getParam('fromRegister');
+  const userToken = isFromRegister ? '' : useSelector(state => state.auth.token);
   const userError = useSelector(state => state.auth.error);
 
   useEffect(() => {

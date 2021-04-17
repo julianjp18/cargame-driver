@@ -66,7 +66,6 @@ const DriverDashboardScreen = props => {
 
     if (userAuth.driverId) {
       dispatch(driverActions.showDriver(userAuth.driverId));
-      console.log('YEEEEEEEEEEEEES');
       dispatch(driverActions.verifyDriverActivation(userAuth.driverId));
       dispatch(driverNotificationsAction.showDriverNotifications(userAuth.driverId));
     }

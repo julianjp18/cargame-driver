@@ -74,7 +74,7 @@ const RegisterScreen = props => {
       referidNumber,
     } = formState.inputValues;
 
-    if (driverId && isSelected) {
+    if (isSelected) {
       if (
         name &&
         numberId &&
@@ -110,6 +110,10 @@ const RegisterScreen = props => {
     } else {
       Alert.alert('', 'Por favor acepta los términos y condiciones', error, [{ text: 'Está bien' }]);
     }
+  };
+
+  const backToAuthHandler = () => {
+    props.navigation.navigate('Auth', { fromRegister: true });
   };
 
   const inputChangeHandler = useCallback(
@@ -242,6 +246,15 @@ const RegisterScreen = props => {
                   onPress={registerHandler}
                 />
               }
+            </View>
+            <View style={styles.btnActionContainer}>
+              <Button
+                title="Volver"
+                colorOne={'white'}
+                colorTwo={'white'}
+                fontColor={primaryColor}
+                onPress={backToAuthHandler}
+              />
             </View>
           </View>
         </View>

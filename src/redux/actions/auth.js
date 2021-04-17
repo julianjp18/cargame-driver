@@ -1,5 +1,5 @@
 import { firebaseAuth, firestoreDB } from '../../constants/Firebase';
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const AUTHENTICATE = 'AUTHENTICATE';
 export const LOGOUT = 'LOGOUT';
@@ -24,30 +24,11 @@ export const showError = (error) => {
 };
 
 export const signup = (email, password) => async dispatch => {
-  await firebaseAuth
-    .createUserWithEmailAndPassword(email, password)
-    .then((response) => {
-      const resData = response.user;
-
-      resData.getIdToken().then((idToken) => {
-        dispatch(authenticate(resData.uid, idToken, email));
-        const expirationDate = new Date(new Date().getTime() + parseInt(resData.createdAt) * 1000);
-        saveDataToStorage('', resData.uid, expirationDate, email);
-      });
-    })
-    .catch(error => {
-      let errorCode = error.code;
-      let errorMessage = error.message;
-      if (errorCode === 'auth/email-already-in-use') {
-        errorMessage = 'El correo electrónico se encuentra en uso. Intentalo nuevamente.'
-      } else if (errorCode === 'OPERATION_NOT_ALLOWED') {
-        errorMessage = 'Usuario y/o contraseña incorrecta. Intentelo nuevamente.'
-      } else if (errorCode === 'TOO_MANY_ATTEMPTS_TRY_LATER') {
-        errorMessage = 'Se ha decidido bloquear la actividad de este dispositivo. Intenta más tarde.';
-      }
-
-      dispatch(showError(errorMessage));
-    });
+  const jsonValue = JSON.stringify({
+    email,
+    password,
+  });
+  await AsyncStorage.setItem('userForSignUp', jsonValue);
 };
 
 export const signin = (email, password) => async dispatch => {
@@ -105,7 +86,7 @@ export const signin = (email, password) => async dispatch => {
     });
 };
 
-const saveDataToStorage = (idToken, uid, expirationDate, email) => {
+export const saveDataToStorage = (idToken, uid, expirationDate, email) => {
   AsyncStorage.setItem(
     'driverData',
     JSON.stringify({
