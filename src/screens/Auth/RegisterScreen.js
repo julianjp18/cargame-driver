@@ -3,6 +3,7 @@ import {
   StyleSheet, View, Text,
   ActivityIndicator, Alert, Image, KeyboardAvoidingView,
   Picker, ScrollView,
+  Platform
 } from 'react-native';
 //import { Picker } from '@react-native-community/picker'; //https://github.com/react-native-picker/picker
 import { CheckBox } from 'react-native-elements';
@@ -16,7 +17,7 @@ import * as driverActions from '../../redux/actions/drivers';
 
 import { shortBrandOrangeGreyUrl } from '../../constants/Utils';
 import { primaryColor, textPrimaryColor } from '../../constants/Colors';
-import { normalizeLength } from '../../styles/layout';
+import { normalizeLength, returnKeyType } from '../../styles/layout';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
@@ -73,7 +74,7 @@ const RegisterScreen = props => {
       referidNumber,
     } = formState.inputValues;
 
-    if (driverId && isSelected) {
+    if (isSelected) {
       if (
         name &&
         numberId &&
@@ -109,6 +110,10 @@ const RegisterScreen = props => {
     } else {
       Alert.alert('', 'Por favor acepta los términos y condiciones', error, [{ text: 'Está bien' }]);
     }
+  };
+
+  const backToAuthHandler = () => {
+    props.navigation.navigate('Auth', { fromRegister: true });
   };
 
   const inputChangeHandler = useCallback(
@@ -166,6 +171,7 @@ const RegisterScreen = props => {
                 id="numberId"
                 label="Cédula de ciudadania (*)"
                 keyboardType="numeric"
+                returnKeyType={returnKeyType}
                 required
                 minLength={4}
                 maxLength={10}
@@ -181,6 +187,7 @@ const RegisterScreen = props => {
                 id="phone"
                 label="Celular (*)"
                 keyboardType="numeric"
+                returnKeyType={returnKeyType}
                 required
                 minLength={10}
                 maxLength={10}
@@ -205,6 +212,7 @@ const RegisterScreen = props => {
                 id="referidNumber"
                 label="Número de referido"
                 keyboardType="numeric"
+                returnKeyType={returnKeyType}
                 minLength={6}
                 maxLength={6}
                 autoCapitalize="none"
@@ -238,6 +246,15 @@ const RegisterScreen = props => {
                   onPress={registerHandler}
                 />
               }
+            </View>
+            <View style={styles.btnActionContainer}>
+              <Button
+                title="Volver"
+                colorOne={'white'}
+                colorTwo={'white'}
+                fontColor={primaryColor}
+                onPress={backToAuthHandler}
+              />
             </View>
           </View>
         </View>

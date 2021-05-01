@@ -19,7 +19,6 @@ import * as offersActions from '../../redux/actions/offers';
 import * as placesActions from '../../redux/actions/places';
 import * as authActions from '../../redux/actions/auth';
 import * as travelsActions from '../../redux/actions/travels';
-import { getUserInfo } from '../../utils/helpers';
 import { normalizeLength } from '../../styles/layout';
 
 const styles = StyleSheet.create({
@@ -124,24 +123,21 @@ const DriverHomeScreen = props => {
 
   const userAuth = useSelector(state => state.auth);
 
-  getUserInfo().then((data) => {
-    const userInfo = JSON.parse(data);
-    if (!userInfo.idToken) {
+  useEffect(() => {
+    if (userAuth.token) {
+      dispatch(travelsActions.getTripsInProgressByDriverId(userAuth.driverId));
+      dispatch(travelsActions.getTripsMadeByDriverId(userAuth.driverId));
+    } else {
       dispatch(authActions.logout());
       props.navigation.navigate('Index');
     }
-  });
-
-  useEffect(() => {
-    dispatch(travelsActions.getTripsInProgressByDriverId(userAuth.driverId));
-    dispatch(travelsActions.getTripsMadeByDriverId(userAuth.driverId));
   }, []);
 
   const [typeTruckService, setTypeTruckService] = useState(RURAL_SERVICE);
   const places = useSelector(state => state.places);
   const [activateTypeService, setActivateTypeService] =
     useState(places.status === STATUS.ACTIVE);
-  const [date, setDate] = useState(places.dayActivate ? places.dayActivate : new Date());
+  const [date, setDate] = useState(places.dayActivate ? places.dayActivate : new Date().getTime());
   const [show, setShow] = useState(false);
 
   /**
@@ -163,6 +159,16 @@ const DriverHomeScreen = props => {
 
   useEffect(() => {
     places.urbanServiceActivateAddress && setTypeTruckService(URBAN_SERVICE);
+
+    if (places.origin)
+      dispatch(
+        offersActions.showActiveOffers(
+          userAuth.driverId,
+          date,
+          places.origin.address,
+          places.destination ? places.destination.address : '',
+        )
+      );
   }, []);
 
   const typeServiceId = userAuth.typeServiceSelected;
@@ -174,9 +180,9 @@ const DriverHomeScreen = props => {
   };
 
   const onChangeDate = (selectedDate) => {
-    const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
-    setDate(currentDate.nativeEvent.timestamp);
+    if (selectedDate) setDate(selectedDate.nativeEvent.timestamp);
+    else setDate(new Date().getTime());
   };
 
   const showDatePickerModal = () => {
@@ -186,11 +192,12 @@ const DriverHomeScreen = props => {
   const activateService = () => {
     if (!activateTypeService) {
 
+      const dayActivate = date ? date : new Date().getTime();
       setActivateTypeService(true);
 
       dispatch(placesActions.activateService({
         driverId: userAuth.driverId,
-        dayActivate: date,
+        dayActivate: dayActivate,
         origin: places.origin,
         destination: places.destination,
         serviceType: typeTruckService
@@ -199,13 +206,15 @@ const DriverHomeScreen = props => {
       dispatch(
         offersActions.showActiveOffers(
           userAuth.driverId,
-          date ? date : new Date(),
+          dayActivate,
           places.origin.address,
-          places.destination ? places.destination.address : null,
+          places.destination ? places.destination.address : '',
         )
       );
+
     } else {
       dispatch(placesActions.deactivateService(userAuth.driverId));
+      dispatch(offersActions.deactiveOffersAsync());
       setActivateTypeService(false);
     }
 

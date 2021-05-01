@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
   showMessageContainer: {
     backgroundColor: yellowColor,
-    padding: '10%',
+    padding: 20,
   },
   showOfferedMessage: {
     backgroundColor: offeredColor,
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   showConfirmMessage: {
     backgroundColor: successColor,
     paddingHorizontal: '6%',
-    padding: '10%',
+    padding: 20,
   },
   showCancelMessage: {
     backgroundColor: cancelColor,
@@ -178,7 +178,7 @@ const ShowOffer = (props) => {
         ]}
       >
         <Button
-          title="Ofertar"
+          title={response.status === IN_PROGRESS ? 'Reofertar' : 'Ofertar'}
           paddingVertical={20}
           disabled={response.status === 'REJECTED'}
           onPress={() => props.changeToOfferFormHandler(offer.offerId, props.index, props.changeToForm)}

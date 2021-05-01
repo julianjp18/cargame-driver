@@ -16,8 +16,13 @@ const EndOfferScreen = props => {
   const dispatch = useDispatch();
 
   getUserInfo().then((data) => {
-    const userInfo = JSON.parse(data);
-    if (!userInfo.idToken) {
+    if (data) {
+      const userInfo = JSON.parse(data);
+      if (userInfo.idToken === '') {
+        dispatch(authActions.logout());
+        props.navigation.navigate('Index');
+      }
+    } else {
       dispatch(authActions.logout());
       props.navigation.navigate('Index');
     }

@@ -66,19 +66,19 @@ const DriverDashboardScreen = props => {
 
     if (userAuth.driverId) {
       dispatch(driverActions.showDriver(userAuth.driverId));
-      dispatch(driverNotificationsAction.showDriverNotifications(userAuth.driverId));
       dispatch(driverActions.verifyDriverActivation(userAuth.driverId));
+      dispatch(driverNotificationsAction.showDriverNotifications(userAuth.driverId));
     }
   }, [userAuth.driverId]);
 
   return (
     <View style={styles.servicesContainer}>
       <WelcomeHeader />
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>Selecciona el servicio a utilizar</Text>
-      </View>
-      <View>
-        <ScrollView>
+      <ScrollView>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Selecciona el servicio a utilizar</Text>
+        </View>
+        <View>
           {
             categoristList.map((category, i) => (
               <TouchableOpacity
@@ -102,8 +102,8 @@ const DriverDashboardScreen = props => {
               </TouchableOpacity>
             ))
           }
-        </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
     </View>
   );
 };

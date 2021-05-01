@@ -1,15 +1,15 @@
-import { firestoreDB } from '../../constants/Firebase';
+import { firebaseAuth, firestoreDB } from '../../constants/Firebase';
 import { getNotificationToken } from '../../utils/notifications';
 import moment from 'moment';
 import { STATUS } from '../../constants/Utils';
-import { ACTIVATE_SERVICE } from './places';
-import { COLLECTIONS } from '../../services/firebase/constants';
+import { VERIFY_ACTIVATION_SERVICE } from './places';
+import { authenticate, showError, saveDataToStorage } from './auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const CREATE_DRIVER = 'CREATE_DRIVER';
 export const SHOW_DRIVER = 'SHOW_DRIVER';
 export const CHANGE_PHONE_NUMBER = 'CHANGE_PHONE_NUMBER';
 export const CHANGE_PROFILE_PICTURE = 'CHANGE_PROFILE_PICTURE';
-
 
 export const createDriver = ({
   driverId,
@@ -21,55 +21,82 @@ export const createDriver = ({
   city,
 }) => {
   return async (dispatch) => {
-    const pushToken = await getNotificationToken();
-    firestoreDB
-      .collection('Drivers')
-      .doc(driverId)
-      .set({
-        name,
-        numberId,
-        phone,
-        referidNumber,
-        profilePicture: null,
-        isActive: true,
-        strikes: 0,
-        address: '',
-        city,
-        drivenLicense: '',
-        email: '',
-        expireLicense: '',
-        expiresPropertyCard: '',
-        propertyCard: '',
-        created_at: moment().format(),
-        ipAdress,
-        termsAndConditions: true,
-        pushToken,
-        isVerified: false,
-      });
+    const jsonValue = await AsyncStorage.getItem('userForSignUp')
+    const { email, password } = JSON.parse(jsonValue);
+    await firebaseAuth
+      .createUserWithEmailAndPassword(email, password)
+      .then(async (response) => {
+        const resData = response.user;
 
-    if (referidNumber != '') {
-      firestoreDB
-        .collection('Referrals')
-        .doc()
-        .set({
-          identification: numberId,
-          referralId: referidNumber,
-          created_at: moment().format(),
+        resData.getIdToken().then((idToken) => {
+          dispatch(authenticate(resData.uid, idToken, email));
+          const expirationDate = new Date(new Date().getTime() + parseInt(resData.createdAt) * 1000);
+          saveDataToStorage('', resData.uid, expirationDate, email);
         });
-    }
 
-    dispatch({
-      type: CREATE_DRIVER,
-      driverId,
-      id: name,
-      name,
-      numberId,
-      phone,
-      city,
-      referidNumber: referidNumber ? referidNumber : '',
-      profilePicture: null,
-      pushToken
-    });
+        const pushToken = await getNotificationToken();
+        firestoreDB
+          .collection('Drivers')
+          .doc(resData.uid)
+          .set({
+            name,
+            numberId,
+            phone,
+            referidNumber,
+            profilePicture: null,
+            isActive: true,
+            strikes: 0,
+            address: '',
+            city,
+            drivenLicense: '',
+            email: '',
+            expireLicense: '',
+            expiresPropertyCard: '',
+            propertyCard: '',
+            created_at: moment().format(),
+            ipAdress,
+            termsAndConditions: true,
+            pushToken,
+            isVerified: false,
+          });
+
+        if (referidNumber != '') {
+          firestoreDB
+            .collection('Referrals')
+            .doc()
+            .set({
+              identification: numberId,
+              referralId: referidNumber,
+              created_at: moment().format(),
+            });
+        }
+
+        dispatch({
+          type: CREATE_DRIVER,
+          driverId,
+          id: name,
+          name,
+          numberId,
+          phone,
+          city,
+          referidNumber: referidNumber ? referidNumber : '',
+          profilePicture: null,
+          pushToken
+        });
+      })
+      .catch(error => {
+        let errorCode = error.code;
+        let errorMessage = error.message;
+        if (errorCode === 'auth/email-already-in-use') {
+          errorMessage = 'El correo electrónico se encuentra en uso. Intentalo nuevamente.'
+        } else if (errorCode === 'OPERATION_NOT_ALLOWED') {
+          errorMessage = 'Usuario y/o contraseña incorrecta. Intentelo nuevamente.'
+        } else if (errorCode === 'TOO_MANY_ATTEMPTS_TRY_LATER') {
+          errorMessage = 'Se ha decidido bloquear la actividad de este dispositivo. Intenta más tarde.';
+        }
+
+        dispatch(showError(errorMessage));
+      });
   }
 };
 
@@ -141,13 +168,13 @@ export const changeProfilePicture = (profilePicture, driverId) => async dispatch
 };
 
 export const verifyDriverActivation = (driverId) => async dispatch => {
+
   await firestoreDB
     .collection('DriversLocation')
     .where("driverId", "==", driverId).onSnapshot((querySnapshot) => {
       var notificationsData = [];
 
       querySnapshot.forEach((doc) => {
-
         if (doc.data().status == STATUS.ACTIVE) {
           notificationsData.push({
             ...doc.data(),
@@ -167,7 +194,7 @@ export const verifyDriverActivation = (driverId) => async dispatch => {
       if (notificationsData.length > 0) {
 
         dispatch({
-          type: ACTIVATE_SERVICE,
+          type: VERIFY_ACTIVATION_SERVICE,
           payload: notificationsData[0],
         });
       }
